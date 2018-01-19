@@ -1,0 +1,7 @@
+item.mob_stick.name=Mob Enrager
+item.mob_kill.name=Mob Killer
+item.mob_heal.name=Mob Healer
+item.mob_group.name=Mob Enrager (Multi)
+item.mob_effect.name=Effect Remover
+
+itemGroup.mobbattle=Mob Battle
