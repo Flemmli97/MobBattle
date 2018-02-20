@@ -5,6 +5,7 @@ import com.flemmli97.mobbattle.items.MobEffect;
 import com.flemmli97.mobbattle.items.MobGroup;
 import com.flemmli97.mobbattle.items.MobHeal;
 import com.flemmli97.mobbattle.items.MobKill;
+import com.flemmli97.mobbattle.items.MobMount;
 import com.flemmli97.mobbattle.items.MobStick;
 
 import net.minecraft.item.Item;
@@ -23,6 +24,7 @@ public class ModItems {
 	public static Item mobEffect;
 	public static Item mobGroup;
 	public static Item mobArmor;
+	public static Item mobMount;
 	
 	public static final void init() {
 		
@@ -32,6 +34,7 @@ public class ModItems {
 		mobEffect = new MobEffect();
 		mobGroup = new MobGroup();
 		mobArmor = new MobArmor();
+		mobMount = new MobMount();
     
 	}
 	
@@ -44,5 +47,6 @@ public class ModItems {
 		((MobHeal) mobHeal).initModel();
 		((MobGroup) mobGroup).initModel();
 		((MobArmor) mobArmor).initModel();
+		((MobMount) mobMount).initModel();
 	}
 }
