@@ -5,6 +5,7 @@ import com.flemmli97.mobbattle.items.MobEffect;
 import com.flemmli97.mobbattle.items.MobGroup;
 import com.flemmli97.mobbattle.items.MobHeal;
 import com.flemmli97.mobbattle.items.MobKill;
+import com.flemmli97.mobbattle.items.MobMount;
 import com.flemmli97.mobbattle.items.MobStick;
 
 import net.minecraft.item.Item;
@@ -29,6 +30,7 @@ public class ModItems {
 	public static Item mobEffect = new MobEffect();
 	public static Item mobGroup = new MobGroup();
 	public static Item mobArmor = new MobArmor();
+	public static Item mobMount = new MobMount();
 
 	@SubscribeEvent
 	public static final void registerItems(RegistryEvent.Register<Item> event) {
@@ -38,7 +40,7 @@ public class ModItems {
 	    event.getRegistry().register(mobEffect);
 	    event.getRegistry().register(mobGroup);
 	    event.getRegistry().register(mobArmor);
-	    System.out.println("items");
+	    event.getRegistry().register(mobMount);
 	}
 	
 	@SubscribeEvent
@@ -51,6 +53,7 @@ public class ModItems {
 		((MobHeal) mobHeal).initModel();
 		((MobGroup) mobGroup).initModel();
 		((MobArmor) mobArmor).initModel();
+		((MobMount) mobMount).initModel();
 	}
 	
 	@SubscribeEvent
