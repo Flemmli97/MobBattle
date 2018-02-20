@@ -34,7 +34,12 @@ public class ContainerArmor extends Container{
         });
         this.addSlotToContainer(new Slot(inv, 2, 44, 17)
         {
-        	@SideOnly(Side.CLIENT)
+	        	@Override
+	    		public int getSlotStackLimit()
+	        {
+	            return 1;
+	        }
+	        	@SideOnly(Side.CLIENT)
             public String getSlotTexture()
             {
                 return "minecraft:items/empty_armor_slot_helmet";
@@ -42,8 +47,12 @@ public class ContainerArmor extends Container{
         });
         this.addSlotToContainer(new Slot(inv, 3, 44, 35)
         {
-        	
-        	@Override
+	        	@Override
+	    		public int getSlotStackLimit()
+	        {
+	            return 1;
+	        }
+	        	@Override
 			public boolean isItemValid(ItemStack stack) {
         		if (stack == null)
                 {
@@ -63,7 +72,12 @@ public class ContainerArmor extends Container{
         });
         this.addSlotToContainer(new Slot(inv, 4, 116, 17)
         {
-        	@Override
+	        	@Override
+	    		public int getSlotStackLimit()
+	        {
+	            return 1;
+	        }
+	        	@Override
 			public boolean isItemValid(ItemStack stack) {
         		if (stack == null)
                 {
@@ -82,7 +96,12 @@ public class ContainerArmor extends Container{
         });
         this.addSlotToContainer(new Slot(inv, 5, 116, 35)
         {
-        	@Override
+	        	@Override
+	    		public int getSlotStackLimit()
+	        {
+	            return 1;
+	        }
+	        	@Override
 			public boolean isItemValid(ItemStack stack) {
         		if (stack == null)
                 {
@@ -161,23 +180,12 @@ public class ContainerArmor extends Container{
             	slot1.onSlotChanged();
             	itemstack1.stackSize--;          		
             }
-            else if(!((Slot)this.inventorySlots.get(0)).getHasStack())
-            {
-            	Slot slot1 = ((Slot)this.inventorySlots.get(0));
-            	slot1.putStack(itemstack);
-            	slot1.onSlotChanged();
-            	itemstack1.stackSize--;          		
-            }
-            else if(!((Slot)this.inventorySlots.get(1)).getHasStack())
-            {
-            	Slot slot1 = ((Slot)this.inventorySlots.get(1));
-            	slot1.putStack(itemstack);
-            	slot1.onSlotChanged();
-            	itemstack1.stackSize--;          		
-            }
             else
             {
-            	return null;
+            		if (!this.mergeItemStack(itemstack1, 0, 2, true))
+                {
+                    return null;
+                }
             }
             if (itemstack1.stackSize == 0)
             {

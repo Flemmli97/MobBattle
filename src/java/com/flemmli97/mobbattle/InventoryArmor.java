@@ -31,6 +31,6 @@ public class InventoryArmor extends InventoryBasic{
 
 	@Override
 	public int getInventoryStackLimit() {
-		return 1;
+		return 64;
 	}
 }
