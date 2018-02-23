@@ -19,7 +19,7 @@ public class MobBattle {
 
     public static final String MODID = "mobbattle";
     public static final String MODNAME = "Mob Battle Mod";
-    public static final String VERSION = "2.0.2[1.10.2]";
+    public static final String VERSION = "2.1.0[1.10.2]";
     public static final Logger logger = LogManager.getLogger(MobBattle.MODID);
         
     @Instance

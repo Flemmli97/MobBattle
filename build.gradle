@@ -12,7 +12,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "1.0"
 group= "com.flemmli97.mobbattle" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "Mob Battle Mod 2.0.2 [1.10.2]"
+archivesBaseName = "Mob Battle Mod 2.1.0 [1.10.2]"
 
 sourceCompatibility = targetCompatibility = "1.6" // Need this here so eclipse task generates correctly.
 compileJava {
