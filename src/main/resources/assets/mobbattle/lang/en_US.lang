@@ -4,5 +4,6 @@ item.mob_heal.name=Mob Healer
 item.mob_group.name=Mob Enrager (Multi)
 item.mob_effect.name=Effect Remover
 item.mob_armor.name=Armor Editor
+item.mob_mount.name=Mob Mount
 
 itemGroup.mobbattle=Mob Battle
