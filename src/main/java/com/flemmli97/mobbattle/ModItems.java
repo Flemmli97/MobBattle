@@ -1,6 +1,7 @@
 package com.flemmli97.mobbattle;
 
 import com.flemmli97.mobbattle.items.MobArmor;
+import com.flemmli97.mobbattle.items.MobArmy;
 import com.flemmli97.mobbattle.items.MobEffect;
 import com.flemmli97.mobbattle.items.MobGroup;
 import com.flemmli97.mobbattle.items.MobHeal;
@@ -31,6 +32,7 @@ public class ModItems {
 	public static Item mobGroup = new MobGroup();
 	public static Item mobArmor = new MobArmor();
 	public static Item mobMount = new MobMount();
+	public static Item mobArmy = new MobArmy();
 
 	@SubscribeEvent
 	public static final void registerItems(RegistryEvent.Register<Item> event) {
@@ -40,6 +42,7 @@ public class ModItems {
 	    event.getRegistry().register(mobEffect);
 	    event.getRegistry().register(mobGroup);
 	    event.getRegistry().register(mobArmor);
+	    event.getRegistry().register(mobArmy);
 	    event.getRegistry().register(mobMount);
 	}
 	
@@ -54,6 +57,7 @@ public class ModItems {
 		((MobGroup) mobGroup).initModel();
 		((MobArmor) mobArmor).initModel();
 		((MobMount) mobMount).initModel();
+		((MobArmy) mobArmy).initModel();
 	}
 	
 	@SubscribeEvent

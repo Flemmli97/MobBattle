@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.flemmli97.mobbattle.MobBattle;
 import com.flemmli97.mobbattle.ModItems;
+import com.flemmli97.mobbattle.items.entityManager.Team;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
@@ -19,8 +20,10 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -32,16 +35,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MobGroup extends ItemSword{
-	
-	List<EntityLiving> entityList = new ArrayList<EntityLiving>();
-	
+		
 	public MobGroup()
 	{
 		super(ModItems.mob_mat);
         this.setUnlocalizedName("mob_group");
         this.setMaxStackSize(1);
         this.setCreativeTab(MobBattle.customTab);
-        this.setRegistryName(new ResourceLocation(MobBattle.MODID, "mob_group"));	
+        this.setRegistryName(new ResourceLocation(MobBattle.MODID, "mob_group"));
 	}
 	
 	@Override
@@ -55,70 +56,84 @@ public class MobGroup extends ItemSword{
 	}
 	
 	@Override
-	public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn) {
-		
-		if(entityList.size() > 0)
-		{
-			list.add(TextFormatting.GREEN + "Stored " + entityList.size() + " entity");
-		}
+	public void addInformation(ItemStack stack, World player, List<String> list, ITooltipFlag b) {
 		list.add(TextFormatting.AQUA + "Left click to select entities");
 		list.add(TextFormatting.AQUA + "Right click on entity to set the target");
-		list.add(TextFormatting.AQUA + "Right click to remove last added entity");
 		list.add(TextFormatting.AQUA + "Shift right click to reset");
 	}
 	
 	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player,
 			EntityLivingBase entity, EnumHand hand) {
-		if(!player.isSneaking() && entityList != null && !player.world.isRemote)
+		if(!player.isSneaking() && !player.world.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey("EntityList"))
 		{			
-			int size = entityList.size();
-			for(int i = size; i > 0; i --)
+			NBTTagList list = stack.getTagCompound().getTagList("EntityList", 8);
+			for(int i = 0; i < list.tagCount(); i ++)
 			{
-				EntityLiving e = (EntityLiving) entityList.get(i-1);
-				if (entity instanceof EntityLiving && entity != e)
-				{		
+				EntityLiving e = Team.fromUUID(player.world, list.getStringTagAt(i));
+				if (entity instanceof EntityLiving && entity != e && e!=null)
+				{			
 					EntityLiving living = (EntityLiving) entity;
-					living.attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) e), 0.0F);
 					living.setAttackTarget(e);
-					e.attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) entity), 0.0F);
 					e.setAttackTarget(living);
-					entityList.remove(i-1);
 				}
 			}
+			stack.getTagCompound().removeTag("EntityList");
+			player.setHeldItem(hand, stack);
 		}
 		return true;
 	}
-
+	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-		if(!entityList.isEmpty() && !player.world.isRemote)
+		ItemStack stack = player.getHeldItem(hand);
+		if(!player.world.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey("EntityList"))
 		{
-			if(!player.isSneaking())
+			if(!player.isSneaking() && stack.getTagCompound().getTagList("EntityList", 8).tagCount()>0)
 			{
-				int size = entityList.size();
-				entityList.remove(size-1);
+				NBTTagList list = stack.getTagCompound().getTagList("EntityList", 8);
+				list.removeTag(list.tagCount()-1);
+				stack.getTagCompound().setTag("EntityList", list);
 				player.sendMessage(new TextComponentString(TextFormatting.RED + "Removed an entity"));
 			}
 			else
 			{
-				entityList.clear();
+				stack.getTagCompound().removeTag("EntityList");
 				player.sendMessage(new TextComponentString(TextFormatting.RED + "Reset all entities"));
 			}
 		}
-		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 	}
 
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
-		if (entity instanceof EntityLiving && !player.world.isRemote && !entityList.contains(entity))
+		if (entity instanceof EntityLiving && !player.world.isRemote)
 		{		
-			entityList.add((EntityLiving) entity);
-			player.sendMessage(new TextComponentString(TextFormatting.GOLD + "Added an entity"));
+			NBTTagCompound compound = new NBTTagCompound();
+			if(stack.hasTagCompound())
+				compound = stack.getTagCompound();
+			ArrayList<String> list = new ArrayList<String>();
+
+			if(compound.hasKey("EntityList"))
+			{
+				for(int i = 0; i <compound.getTagList("EntityList", 8).tagCount();i++)
+				{
+					list.add(compound.getTagList("EntityList", 8).getStringTagAt(i));
+				}
+			}
+			if(!list.contains(entity.getCachedUniqueIdString()))
+			{
+	            NBTTagList nbttaglist = new NBTTagList();
+	            if(compound.hasKey("EntityList"))
+	            		nbttaglist = compound.getTagList("EntityList", 8);
+				nbttaglist.appendTag(new NBTTagString(entity.getCachedUniqueIdString()));
+				compound.setTag("EntityList", nbttaglist);
+				stack.setTagCompound(compound);
+				player.sendMessage(new TextComponentString(TextFormatting.GOLD + "Added an entity"));
+			}
 		}
 	    return true;
 	}
-	
 	
 	 @SideOnly(Side.CLIENT)
 	    public void initModel() {
