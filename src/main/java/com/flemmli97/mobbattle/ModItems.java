@@ -1,6 +1,7 @@
 package com.flemmli97.mobbattle;
 
 import com.flemmli97.mobbattle.items.MobArmor;
+import com.flemmli97.mobbattle.items.MobArmy;
 import com.flemmli97.mobbattle.items.MobEffect;
 import com.flemmli97.mobbattle.items.MobGroup;
 import com.flemmli97.mobbattle.items.MobHeal;
@@ -24,6 +25,7 @@ public class ModItems {
 	public static Item mobEffect;
 	public static Item mobGroup;
 	public static Item mobArmor;
+	public static Item mobArmy;
 	public static Item mobMount;
 	
 	public static final void init() {
@@ -34,6 +36,7 @@ public class ModItems {
 		mobEffect = new MobEffect();
 		mobGroup = new MobGroup();
 		mobArmor = new MobArmor();
+		mobArmy = new MobArmy();
 		mobMount = new MobMount();
     
 	}
@@ -48,5 +51,6 @@ public class ModItems {
 		((MobGroup) mobGroup).initModel();
 		((MobArmor) mobArmor).initModel();
 		((MobMount) mobMount).initModel();
+		((MobArmy) mobArmy).initModel();
 	}
 }

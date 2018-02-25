@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.flemmli97.mobbattle.MobBattle;
 import com.flemmli97.mobbattle.ModItems;
+import com.flemmli97.mobbattle.items.entityManager.Team;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
@@ -16,6 +17,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.model.ModelLoader;
@@ -24,8 +26,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MobMount extends ItemSword{
-
-	private 	EntityLiving storedEntity = null;
 
 	public MobMount() 
 	{
@@ -54,20 +54,30 @@ public class MobMount extends ItemSword{
 		
 	 @Override
 	public boolean hasEffect(ItemStack stack) {
-		return this.storedEntity!=null;
+		return stack.hasTagCompound() && stack.getTagCompound().hasKey("StoredEntity");
 	}
 
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
 		if(entity instanceof EntityLiving && !player.world.isRemote)
 		{
-			if(this.storedEntity!=null && this.storedEntity!=entity && !this.passengerContainsEntity(storedEntity, entity))
+			if (stack.hasTagCompound() && stack.getTagCompound().hasKey("StoredEntity"))
 			{
-				this.storedEntity.startRiding(entity);
-				this.storedEntity=null;
+				EntityLiving storedEntity = Team.fromUUID(player.world, stack.getTagCompound().getString("StoredEntity"));
+				if(storedEntity!=null && storedEntity!=entity && !this.passengerContainsEntity(storedEntity, entity))
+				{
+					storedEntity.startRiding(entity);
+					stack.getTagCompound().removeTag("StoredEntity");
+				}
 			}
-			else if(this.storedEntity==null)
-				this.storedEntity = (EntityLiving) entity;	
+			else
+			{
+				NBTTagCompound compound = new NBTTagCompound();
+				if(stack.hasTagCompound())
+					compound = stack.getTagCompound();
+				compound.setString("StoredEntity", entity.getCachedUniqueIdString());
+				stack.setTagCompound(compound);
+			}
 		}
 		return true;
 	}

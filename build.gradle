@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "1.0"
 group = "com.flemmli97.mobbattle"
-archivesBaseName = "Mob Battle Mod 2.1.0 [1.11.2]"
+archivesBaseName = "Mob Battle Mod 2.2.0 [1.11.2]"
 
 sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
 compileJava {
