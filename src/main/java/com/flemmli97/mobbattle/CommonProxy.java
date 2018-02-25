@@ -1,11 +1,14 @@
 package com.flemmli97.mobbattle;
 
+import com.flemmli97.mobbattle.items.entityManager.EventHandler;
+
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -23,10 +26,11 @@ public class CommonProxy
 
     public void preInit(FMLPreInitializationEvent e) {
     	ModItems.init();
-    	dispatcher.registerMessage(EquipMessage.Handler.class, EquipMessage.class, 0, Side.SERVER);
+    		dispatcher.registerMessage(EquipMessage.Handler.class, EquipMessage.class, 0, Side.SERVER);
     }
 
     public void init(FMLInitializationEvent e) {
+    		MinecraftForge.EVENT_BUS.register(new EventHandler());
     }
 
     public void postInit(FMLPostInitializationEvent e) {
@@ -53,4 +57,5 @@ public class CommonProxy
 	public static final void sendToServer(IMessage message) {
 		dispatcher.sendToServer(message);
 	}
+	
 }

@@ -4,21 +4,21 @@ import java.util.List;
 
 import com.flemmli97.mobbattle.MobBattle;
 import com.flemmli97.mobbattle.ModItems;
+import com.flemmli97.mobbattle.items.entityManager.Team;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -31,9 +31,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MobStick extends ItemSword{
-	
-	EntityLiving storedEntity = null;
-	
+		
 	public MobStick()
 	{
 		super(ModItems.mob_mat);
@@ -41,7 +39,6 @@ public class MobStick extends ItemSword{
         this.setMaxStackSize(1);
         this.setCreativeTab(MobBattle.customTab);
         GameRegistry.register(this, new ResourceLocation(MobBattle.MODID, "mob_stick"));
-
 	}
 	
 	@Override
@@ -57,9 +54,9 @@ public class MobStick extends ItemSword{
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean b) {
 
-		if(storedEntity != null)
+		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("StoredEntityName"))
 		{
-			list.add(TextFormatting.GREEN + "Asigned entity: " + storedEntity.getClass().getSimpleName());
+			list.add(TextFormatting.GREEN + "Asigned entity: " + stack.getTagCompound().getString("StoredEntityName"));
 		}
 		list.add(TextFormatting.AQUA + "Left click to asign an entity");
 		list.add(TextFormatting.AQUA + "Right click to reset");
@@ -68,13 +65,11 @@ public class MobStick extends ItemSword{
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
 		if(!player.worldObj.isRemote)
-		if(storedEntity != null)
+		if(stack.hasTagCompound())
 		{
-			storedEntity = null;
-			if (!player.worldObj.isRemote)
-			{
-				player.addChatMessage(new TextComponentString(TextFormatting.RED + "Reset entities"));
-			}	
+			stack.getTagCompound().removeTag("StoredEntity");
+			stack.getTagCompound().removeTag("StoredEntityName");
+			player.addChatMessage(new TextComponentString(TextFormatting.RED + "Reset entities"));
 		}
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 	}
@@ -82,28 +77,30 @@ public class MobStick extends ItemSword{
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
 		if(!player.worldObj.isRemote)
-		if (storedEntity != null)
-		{
-			if (entity instanceof EntityLiving && entity != storedEntity)
-			{		
-				EntityLiving living = (EntityLiving) entity;
-				living.attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) storedEntity), 0.0F);
-				living.setAttackTarget(storedEntity);
-				storedEntity.attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) entity), 0.0F);
-				storedEntity.setAttackTarget(living);
-				storedEntity = null;
-				return true;
-			}			
-		}
-		else if (storedEntity == null && entity instanceof EntityLiving)
-		{
-			storedEntity = (EntityLiving) entity;
-			if (!player.worldObj.isRemote)
+			if (stack.hasTagCompound() && stack.getTagCompound().hasKey("StoredEntity"))
 			{
-				player.addChatMessage(new TextComponentString(TextFormatting.GOLD + "First entity set, hit another entity to set target"));
+				EntityLiving storedEntity = Team.fromUUID(player.worldObj, stack.getTagCompound().getString("StoredEntity"));
+				if (entity instanceof EntityLiving && entity != storedEntity)
+				{		
+					EntityLiving living = (EntityLiving) entity;
+					living.setAttackTarget(storedEntity);
+					storedEntity.setAttackTarget(living);
+					stack.getTagCompound().removeTag("StoredEntity");
+					stack.getTagCompound().removeTag("StoredEntityName");
+					return true;
+				}			
 			}
-			return true;
-		}
+			else if (entity instanceof EntityLiving)
+			{
+				NBTTagCompound compound = new NBTTagCompound();
+				if(stack.hasTagCompound())
+					compound = stack.getTagCompound();
+				compound.setString("StoredEntity", entity.getCachedUniqueIdString());
+				compound.setString("StoredEntityName", entity.getClass().getSimpleName());
+				stack.setTagCompound(compound);
+				player.addChatMessage(new TextComponentString(TextFormatting.GOLD + "First entity set, hit another entity to set target"));
+				return true;
+			}
 	    return true;
 	}
 	
