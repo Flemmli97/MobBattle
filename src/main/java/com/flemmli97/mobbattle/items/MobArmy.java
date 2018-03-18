@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.flemmli97.mobbattle.MobBattle;
 import com.flemmli97.mobbattle.ModItems;
-import com.flemmli97.mobbattle.items.entityManager.EntityAITeamTarget;
 import com.flemmli97.mobbattle.items.entityManager.Team;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -153,16 +152,13 @@ public class MobArmy extends ItemSword{
 				{
 					if(!player.world.isRemote)
 					{
-						Team.addEntityToTeam(living, this.getTeamMeta(stack));
-						living.targetTasks.addTask(1, new EntityAITeamTarget(living, false, true));
+						Team.updateEntity(this.getTeamMeta(stack), living);
 					}
 				}
 				if(!player.world.isRemote)
 				{
 					player.sendMessage(new TextComponentString(TextFormatting.GOLD + "Added entities in the box to team " + this.getTeamMeta(stack)));
 				}
-				stack.getTagCompound().removeTag("Position1");
-				stack.getTagCompound().removeTag("Position2");
 			}
 		}
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
@@ -174,9 +170,8 @@ public class MobArmy extends ItemSword{
 		{		
 			if(stack.getMetadata()==1 || stack.getMetadata()==3)
 			{			
-				Team.addEntityToTeam(entity, this.getTeamMeta(stack));
+				Team.updateEntity(this.getTeamMeta(stack), (EntityCreature) entity);
 				player.sendMessage(new TextComponentString(TextFormatting.GOLD + "Added entity to team " + this.getTeamMeta(stack)));
-				((EntityCreature)entity).targetTasks.addTask(1, new EntityAITeamTarget((EntityCreature) entity, false, true));
 			}
 		}
 	    return true;
