@@ -8,6 +8,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -16,6 +17,9 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickItem;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -44,10 +48,30 @@ public class EventHandler {
     @SubscribeEvent
     public void addTeamTarget(EntityJoinWorldEvent event)
     {
-    		if(event.getEntity() instanceof EntityCreature && event.getEntity().getTeam()!=null)
+    		if(event.getEntity() instanceof EntityCreature)
     		{
-    			if(event.getEntity().getTeam().getName().equals("BLUE")|| event.getEntity().getTeam().getName().equals("RED"))
-    				((EntityCreature)event.getEntity()).targetTasks.addTask(1, new EntityAITeamTarget((EntityCreature)event.getEntity(), false, true));
+    			if(event.getEntity().getTeam()!=null && (event.getEntity().getTeam().getName().equals("BLUE")|| event.getEntity().getTeam().getName().equals("RED")))
+    				Team.updateEntity(event.getEntity().getTeam().getName(), (EntityCreature) event.getEntity());
+    		}
+    }
+    
+    @SubscribeEvent
+    public void spawnEggUse(PlayerInteractEvent event)
+    {
+    		if(!event.getEntityPlayer().world.isRemote && (event instanceof RightClickItem || event instanceof RightClickBlock))
+    		{
+    			ItemStack stack = event.getEntityPlayer().getHeldItemMainhand();
+    			ItemStack off = event.getEntityPlayer().getHeldItemOffhand();
+    			if(stack.getItem() instanceof ItemMonsterPlacer &&(stack.getDisplayName().equals("BLUE") || stack.getDisplayName().equals("RED")))
+    			{
+    				event.setCanceled(true);
+    				Team.applyTeamModSpawnEgg(event.getEntityPlayer(), stack);
+    			}
+    			else if(off.getItem() instanceof ItemMonsterPlacer &&(off.getDisplayName().equals("BLUE") || off.getDisplayName().equals("RED")))
+    			{
+    				event.setCanceled(true);
+    				Team.applyTeamModSpawnEgg(event.getEntityPlayer(), off);
+    			}
     		}
     }
     

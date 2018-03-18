@@ -8,23 +8,28 @@ import com.google.common.base.Predicate;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITarget;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 
 public class EntityAITeamTarget extends EntityAITarget
 {
-    protected EntityLiving targetEntity;
-    private Predicate<EntityLiving> pred;
+    protected EntityLivingBase targetEntity;
+    private Predicate<EntityLivingBase> pred;
     public EntityAITeamTarget(EntityCreature creature, boolean checkSight, boolean onlyNearby)
     {
         super(creature, checkSight, onlyNearby);
         this.setMutexBits(1);
-        this.pred = new Predicate<EntityLiving>()
+        this.pred = new Predicate<EntityLivingBase>()
         {
-            public boolean apply(@Nullable EntityLiving living)
+            public boolean apply(@Nullable EntityLivingBase living)
             {
-                return living == null ? false : Team.isOppositeTeam(taskOwner, living);
+            		if(living == null)
+            			return false;
+            		if(living instanceof EntityPlayer && ((EntityPlayer)living).capabilities.isCreativeMode)
+            			return false;
+                return Team.isOppositeTeam(taskOwner, living);
             }
         };
     }
@@ -40,7 +45,7 @@ public class EntityAITeamTarget extends EntityAITarget
         }
         else if(this.taskOwner.getTeam()!=null)
         {
-            List<EntityLiving> list = this.taskOwner.world.<EntityLiving>getEntitiesWithinAABB(EntityLiving.class, this.getTargetableArea(this.getTargetDistance()*2), this.pred);
+            List<EntityLivingBase> list = this.taskOwner.world.<EntityLivingBase>getEntitiesWithinAABB(EntityLivingBase.class, this.getTargetableArea(this.getTargetDistance()*2), this.pred);
     			list.remove(this.taskOwner);
     			
             if (list.isEmpty())
@@ -56,10 +61,10 @@ public class EntityAITeamTarget extends EntityAITarget
         return false;
     }
     
-    private EntityLiving getRandEntList(List<EntityLiving> list)
+    private EntityLivingBase getRandEntList(List<EntityLivingBase> list)
     {
     		Entity living = list.get(this.taskOwner.world.rand.nextInt(list.size()));
-    		return (EntityLiving) living;
+    		return (EntityLivingBase) living;
     }
 
     protected AxisAlignedBB getTargetableArea(double targetDistance)
