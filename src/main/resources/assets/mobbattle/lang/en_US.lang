@@ -6,5 +6,6 @@ item.mob_effect.name=Effect Remover
 item.mob_armor.name=Armor Editor
 item.mob_army.name=Mob Army
 item.mob_mount.name=Mob Mount
+item.mob_equip.name=Mob Equip
 
 itemGroup.mobbattle=Mob Battle

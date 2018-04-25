@@ -1,7 +1,8 @@
-package com.flemmli97.mobbattle.items.entityManager;
+package com.flemmli97.mobbattle.items.entitymanager;
 
 import com.flemmli97.mobbattle.ModItems;
 import com.flemmli97.mobbattle.items.MobArmy;
+import com.flemmli97.mobbattle.items.MobEquip;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -43,6 +44,14 @@ public class EventHandler {
     					this.renderBlockOutline(player, pos, pos2, event.getPartialTicks());
     			}
     		}
+    		else if(heldItem!=null && heldItem.getItem() == ModItems.mobEquip)
+    		{
+    			MobEquip item = (MobEquip) heldItem.getItem();
+				BlockPos pos = item.getSelPos(heldItem)[0];
+				BlockPos pos2 = item.getSelPos(heldItem)[1];
+				if(pos!=null)
+					this.renderBlockOutline(player, pos, pos2, event.getPartialTicks());
+    		}
     }
     
     @SubscribeEvent
@@ -52,6 +61,8 @@ public class EventHandler {
     		{
     			if(event.getEntity().getTeam()!=null && (event.getEntity().getTeam().getRegisteredName().equals("BLUE")|| event.getEntity().getTeam().getRegisteredName().equals("RED")))
     				Team.updateEntity(event.getEntity().getTeam().getRegisteredName(), (EntityCreature) event.getEntity());
+    			if(event.getEntity().getTags().contains("PickUp"))
+    				((EntityCreature)event.getEntity()).tasks.addTask(10, new EntityAIItemPickup((EntityCreature) event.getEntity()));
     		}
     }
     
@@ -111,7 +122,7 @@ public class EventHandler {
     
     private void renderBlockOutline(EntityPlayerSP player,  BlockPos pos, BlockPos pos2, float partialTicks)
     {
-    		AxisAlignedBB aabb = Team.getBoundingBoxPositions(pos, pos2);
+    		AxisAlignedBB aabb = Team.getBoundingBoxPositions(pos, pos2).contract(0.1);
 		double d0 = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
         double d1 = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks ;
         double d2 = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks;

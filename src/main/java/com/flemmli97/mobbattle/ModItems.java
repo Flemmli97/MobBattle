@@ -3,6 +3,7 @@ package com.flemmli97.mobbattle;
 import com.flemmli97.mobbattle.items.MobArmor;
 import com.flemmli97.mobbattle.items.MobArmy;
 import com.flemmli97.mobbattle.items.MobEffect;
+import com.flemmli97.mobbattle.items.MobEquip;
 import com.flemmli97.mobbattle.items.MobGroup;
 import com.flemmli97.mobbattle.items.MobHeal;
 import com.flemmli97.mobbattle.items.MobKill;
@@ -27,7 +28,8 @@ public class ModItems {
 	public static Item mobArmor;
 	public static Item mobArmy;
 	public static Item mobMount;
-	
+	public static Item mobEquip;
+
 	public static final void init() {
 		
 		mobStick = new MobStick();
@@ -38,7 +40,7 @@ public class ModItems {
 		mobArmor = new MobArmor();
 		mobArmy = new MobArmy();
 		mobMount = new MobMount();
-    
+		mobEquip = new MobEquip();
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -52,5 +54,6 @@ public class ModItems {
 		((MobArmor) mobArmor).initModel();
 		((MobMount) mobMount).initModel();
 		((MobArmy) mobArmy).initModel();
+		((MobEquip) mobEquip).initModel();
 	}
 }

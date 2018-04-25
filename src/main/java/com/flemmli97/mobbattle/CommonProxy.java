@@ -1,6 +1,6 @@
 package com.flemmli97.mobbattle;
 
-import com.flemmli97.mobbattle.items.entityManager.EventHandler;
+import com.flemmli97.mobbattle.items.entitymanager.EventHandler;
 
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;

@@ -1,4 +1,4 @@
-package com.flemmli97.mobbattle.items.entityManager;
+package com.flemmli97.mobbattle.items.entitymanager;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.scoreboard.Team.CollisionRule;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -45,7 +46,10 @@ public class Team {
     {
     		Scoreboard score = entity.world.getScoreboard();
     		if(score.getTeam(team)==null)
+    		{
     			score.createTeam(team);
+    			score.getTeam(team).setCollisionRule(CollisionRule.HIDE_FOR_OTHER_TEAMS);
+    		}
     		score.addPlayerToTeam(entity.getCachedUniqueIdString(), team);
     }
     

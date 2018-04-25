@@ -1,4 +1,4 @@
-package com.flemmli97.mobbattle.items.entityManager;
+package com.flemmli97.mobbattle.items.entitymanager;
 
 import java.util.List;
 
