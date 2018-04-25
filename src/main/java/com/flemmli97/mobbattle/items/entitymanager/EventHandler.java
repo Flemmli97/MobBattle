@@ -1,13 +1,15 @@
-package com.flemmli97.mobbattle.items.entityManager;
+package com.flemmli97.mobbattle.items.entitymanager;
 
 import com.flemmli97.mobbattle.ModItems;
 import com.flemmli97.mobbattle.items.MobArmy;
+import com.flemmli97.mobbattle.items.MobEquip;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
@@ -43,16 +45,30 @@ public class EventHandler {
     					this.renderBlockOutline(player, pos, pos2, event.getPartialTicks());
     			}
     		}
+    		else if(heldItem!=null && heldItem.getItem() == ModItems.mobEquip)
+    		{
+    			MobEquip item = (MobEquip) heldItem.getItem();
+    			if(heldItem.getMetadata()==0 || heldItem.getMetadata()==2)
+    			{
+    				BlockPos pos = item.getSelPos(heldItem)[0];
+    				BlockPos pos2 = item.getSelPos(heldItem)[1];
+    				if(pos!=null)
+    					this.renderBlockOutline(player, pos, pos2, event.getPartialTicks());
+    			}
+    		}
     }
     
     @SubscribeEvent
     public void addTeamTarget(EntityJoinWorldEvent event)
     {
-    		if(event.getEntity() instanceof EntityCreature)
-    		{
-    			if(event.getEntity().getTeam()!=null && (event.getEntity().getTeam().getName().equals("BLUE")|| event.getEntity().getTeam().getName().equals("RED")))
-    				Team.updateEntity(event.getEntity().getTeam().getName(), (EntityCreature) event.getEntity());
-    		}
+		if(event.getEntity() instanceof EntityCreature)
+		{
+			if(event.getEntity().getTeam()!=null && (event.getEntity().getTeam().getName().equals("BLUE")|| event.getEntity().getTeam().getName().equals("RED")))
+				Team.updateEntity(event.getEntity().getTeam().getName(), (EntityCreature) event.getEntity());
+			if(event.getEntity().getTags().contains("PickUp"))
+				((EntityCreature)event.getEntity()).tasks.addTask(10, new EntityAIItemPickup((EntityCreature) event.getEntity()));
+
+		}
     }
     
     @SubscribeEvent
@@ -78,12 +94,12 @@ public class EventHandler {
     @SubscribeEvent
     public void teamFriendlyFire(LivingAttackEvent event)
     {
-		if(event.getEntity() instanceof EntityCreature && event.getEntity().getTeam()!=null)
+		if(event.getEntity() instanceof EntityLivingBase && event.getEntity().getTeam()!=null)
 		{
 			EntityCreature ent = (EntityCreature) event.getEntity();
 			if(ent.getTeam()!=null && (ent.getTeam().getName().equals("BLUE")|| ent.getTeam().getName().equals("RED")))
 			{
-				if(event.getSource().getTrueSource() instanceof EntityCreature && event.getSource().getTrueSource().getTeam()!=null)
+				if(event.getSource().getTrueSource() instanceof EntityLivingBase && event.getSource().getTrueSource().getTeam()!=null)
 				{
 					if(ent.isOnSameTeam(event.getSource().getTrueSource()))
 						event.setCanceled(true);
@@ -111,7 +127,7 @@ public class EventHandler {
     
     private void renderBlockOutline(EntityPlayerSP player,  BlockPos pos, BlockPos pos2, float partialTicks)
     {
-    		AxisAlignedBB aabb = Team.getBoundingBoxPositions(pos, pos2);
+    		AxisAlignedBB aabb = Team.getBoundingBoxPositions(pos, pos2).shrink(0.1);
 		double d0 = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
         double d1 = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks ;
         double d2 = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks;
