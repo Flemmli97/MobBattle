@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.flemmli97.mobbattle.MobBattle;
 import com.flemmli97.mobbattle.ModItems;
-import com.flemmli97.mobbattle.items.entityManager.Team;
+import com.flemmli97.mobbattle.items.entitymanager.Team;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
