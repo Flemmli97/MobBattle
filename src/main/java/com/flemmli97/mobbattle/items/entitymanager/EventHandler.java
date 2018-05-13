@@ -125,6 +125,7 @@ public class EventHandler {
     		}
     }
     
+    @SideOnly(value=Side.CLIENT)
     private void renderBlockOutline(EntityPlayerSP player,  BlockPos pos, BlockPos pos2, float partialTicks)
     {
     		AxisAlignedBB aabb = Team.getBoundingBoxPositions(pos, pos2).shrink(0.1);
