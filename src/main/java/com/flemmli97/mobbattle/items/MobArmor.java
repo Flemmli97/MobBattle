@@ -2,7 +2,6 @@ package com.flemmli97.mobbattle.items;
 
 import java.util.List;
 
-import com.flemmli97.mobbattle.CommonProxy;
 import com.flemmli97.mobbattle.MobBattle;
 import com.flemmli97.mobbattle.ModItems;
 import com.google.common.collect.HashMultimap;
@@ -62,9 +61,9 @@ public class MobArmor extends ItemSword{
 	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target,
 			EnumHand hand) {
-		if(target instanceof EntityLiving)
+		if(target instanceof EntityLiving && !target.world.isRemote)
 		{
-			CommonProxy.openArmorGui(player, target);			
+			player.openGui(MobBattle.instance, 0, player.world, target.getEntityId(), 0, 0);
 			return true;
 		}
 		return false;

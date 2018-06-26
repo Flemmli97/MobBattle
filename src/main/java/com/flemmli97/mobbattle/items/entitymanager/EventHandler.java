@@ -48,13 +48,10 @@ public class EventHandler {
     		else if(heldItem!=null && heldItem.getItem() == ModItems.mobEquip)
     		{
     			MobEquip item = (MobEquip) heldItem.getItem();
-    			if(heldItem.getMetadata()==0 || heldItem.getMetadata()==2)
-    			{
-    				BlockPos pos = item.getSelPos(heldItem)[0];
-    				BlockPos pos2 = item.getSelPos(heldItem)[1];
-    				if(pos!=null)
-    					this.renderBlockOutline(player, pos, pos2, event.getPartialTicks());
-    			}
+				BlockPos pos = item.getSelPos(heldItem)[0];
+				BlockPos pos2 = item.getSelPos(heldItem)[1];
+				if(pos!=null)
+					this.renderBlockOutline(player, pos, pos2, event.getPartialTicks());
     		}
     }
     
@@ -63,11 +60,10 @@ public class EventHandler {
     {
 		if(event.getEntity() instanceof EntityCreature)
 		{
-			if(event.getEntity().getTeam()!=null && (event.getEntity().getTeam().getName().equals("BLUE")|| event.getEntity().getTeam().getName().equals("RED")))
+			if(event.getEntity().getTeam()!=null)
 				Team.updateEntity(event.getEntity().getTeam().getName(), (EntityCreature) event.getEntity());
 			if(event.getEntity().getTags().contains("PickUp"))
 				((EntityCreature)event.getEntity()).tasks.addTask(10, new EntityAIItemPickup((EntityCreature) event.getEntity()));
-
 		}
     }
     
@@ -96,14 +92,12 @@ public class EventHandler {
     {
 		if(event.getEntity() instanceof EntityLivingBase && event.getEntity().getTeam()!=null)
 		{
-			EntityCreature ent = (EntityCreature) event.getEntity();
-			if(ent.getTeam()!=null && (ent.getTeam().getName().equals("BLUE")|| ent.getTeam().getName().equals("RED")))
+			EntityLivingBase ent = (EntityLivingBase) event.getEntity();
+			if(event.getSource().getTrueSource() instanceof EntityLivingBase)
 			{
-				if(event.getSource().getTrueSource() instanceof EntityLivingBase && event.getSource().getTrueSource().getTeam()!=null)
-				{
-					if(ent.isOnSameTeam(event.getSource().getTrueSource()))
-						event.setCanceled(true);
-				}
+				EntityLivingBase attacker = (EntityLivingBase) event.getSource().getTrueSource();
+				if(Team.isOnSameTeam(ent, attacker) && !ent.getTeam().getAllowFriendlyFire())
+					event.setCanceled(true);
 			}
 		}
     }
@@ -111,18 +105,16 @@ public class EventHandler {
     @SubscribeEvent
     public void teamParticle(LivingEvent event)
     {
-    		if(event.getEntityLiving() instanceof EntityCreature && event.getEntityLiving().world.isRemote)
-    		{
+		if(event.getEntityLiving() instanceof EntityCreature && event.getEntityLiving().world.isRemote)
+		{
 			EntityCreature e =  (EntityCreature) event.getEntityLiving();
-    			if(Team.getTeam(e).equals("BLUE"))
-    			{
-    				e.world.spawnParticle(EnumParticleTypes.REDSTONE, e.posX, e.posY+e.height+0.5, e.posZ, 0.01, 0, 1);
-    			}
-    			else if(Team.getTeam(e).equals("RED"))
-    			{
-    				e.world.spawnParticle(EnumParticleTypes.REDSTONE, e.posX, e.posY+e.height+0.5, e.posZ, 0, 0, 0);
-    			}
+			if(e.getTeam()!=null)
+			{
+				double[] color = Team.teamColor.get(e.getTeam().getColor());
+				if(color!=null)
+					e.world.spawnParticle(EnumParticleTypes.REDSTONE, e.posX, e.posY+e.height+0.5, e.posZ, color[0], color[1], color[2]);
     		}
+		}
     }
     
     @SideOnly(value=Side.CLIENT)

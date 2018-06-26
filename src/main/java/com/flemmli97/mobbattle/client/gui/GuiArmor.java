@@ -1,4 +1,7 @@
-package com.flemmli97.mobbattle;
+package com.flemmli97.mobbattle.client.gui;
+
+import com.flemmli97.mobbattle.MobBattle;
+import com.flemmli97.mobbattle.inv.ContainerArmor;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;

@@ -1,10 +1,12 @@
 package com.flemmli97.mobbattle.items.entitymanager;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Maps;
 
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.Entity;
@@ -23,24 +25,44 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public class Team {
     
-    public static boolean isOppositeTeam(Entity entity, Entity target)
-    {
-    		if(entity.getTeam()==null ||target.getTeam()==null)
-    			return false;
-    		if(entity.getTeam().getName().equals("RED") && target.getTeam().getName().equals("BLUE"))
-    			return true;
-    		if(entity.getTeam().getName().equals("BLUE") && target.getTeam().getName().equals("RED"))
-    			return true;
-    		return false;
-    }
+	public static Map<TextFormatting, double[]> teamColor = Maps.newHashMap();
+	static
+	{
+		teamColor.put(TextFormatting.AQUA, new double[] {0.01,0.9,1});
+		teamColor.put(TextFormatting.BLACK, new double[] {0.01,0,0});
+		teamColor.put(TextFormatting.BLUE, new double[] {0.2,0.2,1});
+		teamColor.put(TextFormatting.DARK_AQUA, new double[] {0.01,0.4,0.5});
+		teamColor.put(TextFormatting.DARK_BLUE, new double[] {0.01,0,0.4});
+		teamColor.put(TextFormatting.DARK_GRAY, new double[] {0.2,0.2,0.2});
+		teamColor.put(TextFormatting.DARK_GREEN,  new double[] {0.01,0.5,0});
+		teamColor.put(TextFormatting.DARK_PURPLE, new double[] {0.3,0,0.4});
+		teamColor.put(TextFormatting.DARK_RED, new double[] {0.5,0,0});
+		teamColor.put(TextFormatting.GOLD, new double[] {1,0.6,0});
+		teamColor.put(TextFormatting.GRAY, new double[] {0.4,0.4,0.4});
+		teamColor.put(TextFormatting.GREEN, new double[] {0.01,1,0});
+		teamColor.put(TextFormatting.LIGHT_PURPLE, new double[] {0.6,0,0.7});
+		teamColor.put(TextFormatting.RED, new double[] {1,0.2,0.2});
+		teamColor.put(TextFormatting.WHITE, new double[] {1,1,1});
+		teamColor.put(TextFormatting.YELLOW, new double[] {1,1,0});
+	}
     
     public static String getTeam(Entity entity)
     {
     		return entity.getTeam()!=null?entity.getTeam().getName():"none";
+    }
+    
+    public static boolean isOnSameTeam(Entity entity, Entity entity2)
+    {
+    	if(entity.getTeam()==null)
+    		return true;
+    	if(entity2.getTeam()==null)
+    		return true;
+    	return entity.isOnSameTeam(entity2);
     }
     
     public static void addEntityToTeam(Entity entity, String team)
@@ -62,7 +84,7 @@ public class Team {
     
     public static void updateEntity(String team, EntityCreature e)
 	{
-		Team.addEntityToTeam(e, team);
+		addEntityToTeam(e, team);
 		e.targetTasks.taskEntries.removeIf(new Predicate<EntityAITaskEntry>() {
 			@Override
 			public boolean apply(EntityAITaskEntry input) {
@@ -171,7 +193,7 @@ public class Team {
                     	stack.shrink(1);
                     }
                     player.addStat(StatList.getObjectUseStats(stack.getItem()));
-                    if (entity instanceof EntityCreature && stack.getDisplayName().equals("BLUE") || stack.getDisplayName().equals("RED"))
+                    if (entity instanceof EntityCreature)
                     {
                         Team.updateEntity(stack.getDisplayName(), (EntityCreature) entity);
                     }

@@ -71,7 +71,7 @@ public class MobGroup extends ItemSword{
 			for(int i = 0; i < list.tagCount(); i ++)
 			{
 				EntityLiving e = Team.fromUUID(player.world, list.getStringTagAt(i));
-				if (entity instanceof EntityLiving && entity != e && e!=null)
+				if (entity != e && e!=null)
 				{			
 					EntityLiving living = (EntityLiving) entity;
 					living.setAttackTarget(e);

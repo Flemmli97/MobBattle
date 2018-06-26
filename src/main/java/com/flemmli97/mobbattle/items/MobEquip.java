@@ -104,32 +104,33 @@ public class MobEquip extends ItemSword{
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 		ItemStack stack = player.getHeldItem(hand);
-		if(player.isSneaking() && stack.hasTagCompound())
-		{
-			stack.getTagCompound().removeTag("Position1");
-			stack.getTagCompound().removeTag("Position2");
-			if(!player.world.isRemote)
-				player.sendMessage(new TextComponentString(TextFormatting.RED + "Reset Positions"));
-		}
-		else if(stack.getTagCompound().hasKey("Position1") && stack.getTagCompound().hasKey("Position2"))
-		{
-			BlockPos pos1 = new BlockPos(stack.getTagCompound().getIntArray("Position1")[0],stack.getTagCompound().getIntArray("Position1")[1],stack.getTagCompound().getIntArray("Position1")[2]);
-			BlockPos pos2 = new BlockPos(stack.getTagCompound().getIntArray("Position2")[0],stack.getTagCompound().getIntArray("Position2")[1],stack.getTagCompound().getIntArray("Position2")[2]);
-			AxisAlignedBB bb = Team.getBoundingBoxPositions(pos1, pos2);
-			List<EntityCreature> list = player.world.getEntitiesWithinAABB(EntityCreature.class, bb);
-			for(EntityCreature living : list)
+		if(stack.hasTagCompound())
+			if(player.isSneaking())
 			{
+				stack.getTagCompound().removeTag("Position1");
+				stack.getTagCompound().removeTag("Position2");
+				if(!player.world.isRemote)
+					player.sendMessage(new TextComponentString(TextFormatting.RED + "Reset Positions"));
+			}
+			else if(stack.getTagCompound().hasKey("Position1") && stack.getTagCompound().hasKey("Position2"))
+			{
+				BlockPos pos1 = new BlockPos(stack.getTagCompound().getIntArray("Position1")[0],stack.getTagCompound().getIntArray("Position1")[1],stack.getTagCompound().getIntArray("Position1")[2]);
+				BlockPos pos2 = new BlockPos(stack.getTagCompound().getIntArray("Position2")[0],stack.getTagCompound().getIntArray("Position2")[1],stack.getTagCompound().getIntArray("Position2")[2]);
+				AxisAlignedBB bb = Team.getBoundingBoxPositions(pos1, pos2);
+				List<EntityCreature> list = player.world.getEntitiesWithinAABB(EntityCreature.class, bb);
+				for(EntityCreature living : list)
+				{
+					if(!player.world.isRemote)
+					{
+						living.addTag("PickUp");
+						living.tasks.addTask(10, new EntityAIItemPickup(living));
+					}
+				}
 				if(!player.world.isRemote)
 				{
-					living.addTag("PickUp");
-					living.tasks.addTask(10, new EntityAIItemPickup(living));
+					player.sendMessage(new TextComponentString(TextFormatting.GOLD + "Entities in box can now pickup items"));
 				}
 			}
-			if(!player.world.isRemote)
-			{
-				player.sendMessage(new TextComponentString(TextFormatting.GOLD + "Entities in box can now pickup items"));
-			}
-		}
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 	}
 
