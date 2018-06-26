@@ -23,6 +23,7 @@ public class CommonProxy {
     	dispatcher.registerMessage(EquipMessage.Handler.class, EquipMessage.class, 0, Side.SERVER);
     	dispatcher.registerMessage(ItemStackUpdate.Handler.class, ItemStackUpdate.class, 1, Side.SERVER);
     }
+    
 
     public void init(FMLInitializationEvent e) {
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
