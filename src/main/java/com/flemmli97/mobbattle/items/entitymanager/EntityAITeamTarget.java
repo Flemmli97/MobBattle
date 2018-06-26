@@ -28,7 +28,7 @@ public class EntityAITeamTarget extends EntityAITarget
 	        			return false;
 	        		if(living instanceof EntityPlayer && ((EntityPlayer)living).capabilities.isCreativeMode)
 	        			return false;
-	            return Team.isOppositeTeam(taskOwner, living);
+	                return !Team.isOnSameTeam(living, taskOwner);
             }
         };
     }

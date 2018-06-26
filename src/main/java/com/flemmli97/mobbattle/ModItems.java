@@ -3,6 +3,7 @@ package com.flemmli97.mobbattle;
 import com.flemmli97.mobbattle.items.MobArmor;
 import com.flemmli97.mobbattle.items.MobArmy;
 import com.flemmli97.mobbattle.items.MobEffect;
+import com.flemmli97.mobbattle.items.MobEffectGive;
 import com.flemmli97.mobbattle.items.MobEquip;
 import com.flemmli97.mobbattle.items.MobGroup;
 import com.flemmli97.mobbattle.items.MobHeal;
@@ -29,6 +30,8 @@ public class ModItems {
 	public static Item mobArmy;
 	public static Item mobMount;
 	public static Item mobEquip;
+	public static Item mobEffectGiver;
+
 
 	public static final void init() {
 		
@@ -41,6 +44,7 @@ public class ModItems {
 		mobArmy = new MobArmy();
 		mobMount = new MobMount();
 		mobEquip = new MobEquip();
+		mobEffectGiver = new MobEffectGive();
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -55,5 +59,6 @@ public class ModItems {
 		((MobMount) mobMount).initModel();
 		((MobArmy) mobArmy).initModel();
 		((MobEquip) mobEquip).initModel();
+		((MobEffectGive) mobEffectGiver).initModel();
 	}
 }

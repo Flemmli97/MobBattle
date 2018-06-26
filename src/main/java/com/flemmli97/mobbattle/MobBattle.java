@@ -18,14 +18,14 @@ public class MobBattle {
 
     public static final String MODID = "mobbattle";
     public static final String MODNAME = "Mob Battle Mod";
-    public static final String VERSION = "2.2.3[1.11.2]";
+    public static final String VERSION = "2.2.4[1.11.2]";
     public static final Logger logger = LogManager.getLogger(MobBattle.MODID);
         
     @Instance
     public static MobBattle instance = new MobBattle();
         
      
-    @SidedProxy(clientSide="com.flemmli97.mobbattle.ClientProxy", serverSide="com.flemmli97.mobbattle.ServerProxy")
+    @SidedProxy(clientSide="com.flemmli97.mobbattle.ClientProxy", serverSide="com.flemmli97.mobbattle.CommonProxy")
     public static CommonProxy proxy;
 
     @EventHandler

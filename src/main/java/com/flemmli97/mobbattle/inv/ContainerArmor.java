@@ -1,4 +1,7 @@
-package com.flemmli97.mobbattle;
+package com.flemmli97.mobbattle.inv;
+
+import com.flemmli97.mobbattle.CommonProxy;
+import com.flemmli97.mobbattle.MobBattle;
 
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
