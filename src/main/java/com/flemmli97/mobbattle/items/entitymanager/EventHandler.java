@@ -9,6 +9,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
@@ -57,13 +58,13 @@ public class EventHandler {
     @SubscribeEvent
     public void addTeamTarget(EntityJoinWorldEvent event)
     {
-    		if(event.getEntity() instanceof EntityCreature)
-    		{
-    			if(event.getEntity().getTeam()!=null && (event.getEntity().getTeam().getRegisteredName().equals("BLUE")|| event.getEntity().getTeam().getRegisteredName().equals("RED")))
-    				Team.updateEntity(event.getEntity().getTeam().getRegisteredName(), (EntityCreature) event.getEntity());
-    			if(event.getEntity().getTags().contains("PickUp"))
-    				((EntityCreature)event.getEntity()).tasks.addTask(10, new EntityAIItemPickup((EntityCreature) event.getEntity()));
-    		}   		
+		if(event.getEntity() instanceof EntityCreature)
+		{
+			if(event.getEntity().getTeam()!=null)
+				Team.updateEntity(event.getEntity().getTeam().getRegisteredName(), (EntityCreature) event.getEntity());
+			if(event.getEntity().getTags().contains("PickUp"))
+				((EntityCreature)event.getEntity()).tasks.addTask(10, new EntityAIItemPickup((EntityCreature) event.getEntity()));
+		}   		
     }
     
     @SubscribeEvent
@@ -89,16 +90,14 @@ public class EventHandler {
     @SubscribeEvent
     public void teamFriendlyFire(LivingAttackEvent event)
     {
-		if(event.getEntity() instanceof EntityCreature && event.getEntity().getTeam()!=null)
+		if(event.getEntity() instanceof EntityLivingBase && event.getEntity().getTeam()!=null)
 		{
-			EntityCreature ent = (EntityCreature) event.getEntity();
-			if(ent.getTeam()!=null && (ent.getTeam().getRegisteredName().equals("BLUE")|| ent.getTeam().getRegisteredName().equals("RED")))
+			EntityLivingBase ent = (EntityLivingBase) event.getEntity();
+			if(event.getSource().getSourceOfDamage() instanceof EntityLivingBase)
 			{
-				if(event.getSource().getEntity() instanceof EntityCreature && event.getSource().getEntity().getTeam()!=null)
-				{
-					if(ent.isOnSameTeam(event.getSource().getEntity()))
-						event.setCanceled(true);
-				}
+				EntityLivingBase attacker = (EntityLivingBase) event.getSource().getSourceOfDamage();
+				if(Team.isOnSameTeam(ent, attacker) && !ent.getTeam().getAllowFriendlyFire())
+					event.setCanceled(true);
 			}
 		}
     }
@@ -106,18 +105,16 @@ public class EventHandler {
     @SubscribeEvent
     public void teamParticle(LivingEvent event)
     {
-    		if(event.getEntityLiving() instanceof EntityCreature && event.getEntityLiving().worldObj.isRemote)
-    		{
+		if(event.getEntityLiving() instanceof EntityCreature && event.getEntityLiving().worldObj.isRemote)
+		{
 			EntityCreature e =  (EntityCreature) event.getEntityLiving();
-    			if(Team.getTeam(e).equals("BLUE"))
-    			{
-    				e.worldObj.spawnParticle(EnumParticleTypes.REDSTONE, e.posX, e.posY+e.height+0.5, e.posZ, 0.01, 0, 1);
-    			}
-    			else if(Team.getTeam(e).equals("RED"))
-    			{
-    				e.worldObj.spawnParticle(EnumParticleTypes.REDSTONE, e.posX, e.posY+e.height+0.5, e.posZ, 0, 0, 0);
-    			}
+			if(e.getTeam()!=null)
+			{
+				double[] color = Team.teamColor.get(e.getTeam().getChatFormat());
+				if(color!=null)
+					e.worldObj.spawnParticle(EnumParticleTypes.REDSTONE, e.posX, e.posY+e.height+0.5, e.posZ, color[0], color[1], color[2]);
     		}
+		}
     }
 
     @SideOnly(value=Side.CLIENT)

@@ -102,6 +102,7 @@ public class MobEquip extends ItemSword{
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World worldIn, EntityPlayer player, EnumHand hand) {
+		if(stack.hasTagCompound())
 		if(player.isSneaking() && stack.hasTagCompound())
 		{
 			stack.getTagCompound().removeTag("Position1");

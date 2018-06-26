@@ -1,4 +1,7 @@
-package com.flemmli97.mobbattle;
+package com.flemmli97.mobbattle.inv;
+
+import com.flemmli97.mobbattle.CommonProxy;
+import com.flemmli97.mobbattle.MobBattle;
 
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +22,8 @@ public class ContainerArmor extends Container{
 	    {
 			@SideOnly(Side.CLIENT)
 	        public String getSlotTexture()
-	        {	
+	        {
+				
 	            return MobBattle.MODID + ":gui/armor_slot_sword";
 	        }
 
@@ -39,7 +43,7 @@ public class ContainerArmor extends Container{
 	        {
 	            return 1;
 	        }
-	        	@SideOnly(Side.CLIENT)
+        		@SideOnly(Side.CLIENT)
             public String getSlotTexture()
             {
                 return "minecraft:items/empty_armor_slot_helmet";
@@ -144,6 +148,7 @@ public class ContainerArmor extends Container{
         if (slot != null && slot.getHasStack())
         {
             ItemStack itemstack1 = slot.getStack();
+            int size = itemstack1.stackSize;
             itemstack = itemstack1.copy();
             if (index < 6)
             {
@@ -157,28 +162,36 @@ public class ContainerArmor extends Container{
             	Slot slot1 = ((Slot)this.inventorySlots.get(2));
             	slot1.putStack(itemstack);
             	slot1.onSlotChanged();
-            	itemstack1.stackSize--;          		
+            	size--;
+            	itemstack1.stackSize=size; 
+                return null;
             }
             else if(!((Slot)this.inventorySlots.get(3)).getHasStack() && itemstack1.getItem().isValidArmor(itemstack1, CommonProxy.slot[3], null))
             {
             	Slot slot1 = ((Slot)this.inventorySlots.get(3));
             	slot1.putStack(itemstack);
             	slot1.onSlotChanged();
-            	itemstack1.stackSize--;          		
+            	size--;
+            	itemstack1.stackSize=size; 
+                return null;
             }
             else if(!((Slot)this.inventorySlots.get(4)).getHasStack() && itemstack1.getItem().isValidArmor(itemstack1, CommonProxy.slot[4], null))
             {
             	Slot slot1 = ((Slot)this.inventorySlots.get(4));
             	slot1.putStack(itemstack);
             	slot1.onSlotChanged();
-            	itemstack1.stackSize--;          		
+            	size--;
+            	itemstack1.stackSize=size; 
+                return null;            
             }
             else if(!((Slot)this.inventorySlots.get(5)).getHasStack() && itemstack1.getItem().isValidArmor(itemstack1, CommonProxy.slot[5], null))
             {
             	Slot slot1 = ((Slot)this.inventorySlots.get(5));
             	slot1.putStack(itemstack);
             	slot1.onSlotChanged();
-            	itemstack1.stackSize--;          		
+            	size--;
+            	itemstack1.stackSize=size; 
+                return null;
             }
             else
             {
@@ -187,9 +200,9 @@ public class ContainerArmor extends Container{
                     return null;
                 }
             }
-            if (itemstack1.stackSize == 0)
+            if (itemstack1.stackSize==0)
             {
-                slot.putStack((ItemStack)null);
+                slot.putStack(null);
             }
             else
             {
@@ -199,4 +212,6 @@ public class ContainerArmor extends Container{
 		
         return itemstack;
 	}
+	
+	
 }

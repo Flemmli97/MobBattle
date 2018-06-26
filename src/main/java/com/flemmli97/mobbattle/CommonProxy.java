@@ -1,15 +1,10 @@
 package com.flemmli97.mobbattle;
 
+import com.flemmli97.mobbattle.client.gui.GuiHandler;
 import com.flemmli97.mobbattle.items.entitymanager.EventHandler;
 
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -26,33 +21,17 @@ public class CommonProxy
 
     public void preInit(FMLPreInitializationEvent e) {
     	ModItems.init();
-    		dispatcher.registerMessage(EquipMessage.Handler.class, EquipMessage.class, 0, Side.SERVER);
+		dispatcher.registerMessage(EquipMessage.Handler.class, EquipMessage.class, 0, Side.SERVER);
+    	dispatcher.registerMessage(ItemStackUpdate.Handler.class, ItemStackUpdate.class, 1, Side.SERVER);
     }
 
     public void init(FMLInitializationEvent e) {
     		MinecraftForge.EVENT_BUS.register(new EventHandler());
+            NetworkRegistry.INSTANCE.registerGuiHandler(MobBattle.instance, new GuiHandler());
     }
 
     public void postInit(FMLPostInitializationEvent e) {
     }
-
-	public static void openArmorGui(EntityPlayer player, EntityLivingBase target)
-	{
-		if(player instanceof EntityPlayerMP)
-		{
-			Container container = new ContainerArmor(player.inventory, (EntityLiving) target);
-            EntityPlayerMP entityPlayerMP = (EntityPlayerMP) player;
-            entityPlayerMP.getNextWindowId();
-            entityPlayerMP.closeContainer();
-            int windowId = entityPlayerMP.currentWindowId;
-            entityPlayerMP.openContainer = container;
-            entityPlayerMP.openContainer.windowId = windowId;
-            entityPlayerMP.openContainer.addListener(entityPlayerMP);
-			net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerContainerEvent.Open(player, container));
-		}
-		else if(FMLCommonHandler.instance().getSide().equals(Side.CLIENT))
-			FMLCommonHandler.instance().showGuiScreen(new GuiArmor(player.inventory, (EntityLiving) target));
-	}
 	
 	public static final void sendToServer(IMessage message) {
 		dispatcher.sendToServer(message);

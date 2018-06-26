@@ -49,7 +49,7 @@ public class MobArmy extends ItemSword{
 	
 	@Override
 	public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
-	    for (int i = 0; i < 4; i ++) {
+	    for (int i = 0; i < 2; i ++) {
 	        list.add(new ItemStack(item, 1, i));
 	    }
 	}
@@ -70,20 +70,11 @@ public class MobArmy extends ItemSword{
 		{
 			case 0:
 				list.add(TextFormatting.AQUA + "Right click block to set first, and then second corner of the box");
-				list.add(TextFormatting.AQUA + "Right click into air to to add entities in the box to " + TextFormatting.DARK_BLUE + "BLUE" + " team");
+				list.add(TextFormatting.AQUA + "Right click into air to to add entities in the box to the team with the name of this item (if exists, else DEFAULT)");
 				list.add(TextFormatting.AQUA + "Shift-Right click to reset box");
 				break;
 			case 1:
-				list.add(TextFormatting.AQUA + "Left click to add entities to " + TextFormatting.DARK_BLUE + "BLUE" + " team");
-
-				break;
-			case 2:
-				list.add(TextFormatting.AQUA + "Right click block to set first, and then second corner of the box");
-				list.add(TextFormatting.AQUA + "Right click into air to to add entities in the box to " + TextFormatting.DARK_RED + "RED" + " team");
-				list.add(TextFormatting.AQUA + "Shift-Right click to reset box");
-				break;
-			case 3:
-				list.add(TextFormatting.AQUA + "Left click to add entities to " + TextFormatting.DARK_RED + "RED" + " team");
+				list.add(TextFormatting.AQUA + "Left click to add entities to the team with the name of this item (if exists, else DEFAULT)");
 				break;
 			default:
 				break;
@@ -109,7 +100,7 @@ public class MobArmy extends ItemSword{
 	@Override
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
 			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		if(stack.getMetadata()==0 || stack.getMetadata()==2)
+		if(stack.getMetadata()==0)
 		{
 			NBTTagCompound compound = stack.getTagCompound();
 			if(compound==null)
@@ -130,7 +121,7 @@ public class MobArmy extends ItemSword{
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
-		if(stack.getMetadata()==0 || stack.getMetadata()==2)
+		if(stack.getMetadata()==0)
 		{
 			if(player.isSneaking() && stack.hasTagCompound())
 			{
@@ -145,16 +136,17 @@ public class MobArmy extends ItemSword{
 				BlockPos pos2 = new BlockPos(stack.getTagCompound().getIntArray("Position2")[0],stack.getTagCompound().getIntArray("Position2")[1],stack.getTagCompound().getIntArray("Position2")[2]);
 				AxisAlignedBB bb = Team.getBoundingBoxPositions(pos1, pos2);
 				List<EntityCreature> list = player.worldObj.getEntitiesWithinAABB(EntityCreature.class, bb);
+				String team = stack.hasDisplayName()?stack.getDisplayName():"DEFAULT";
 				for(EntityCreature living : list)
 				{
 					if(!player.worldObj.isRemote)
 					{
-						Team.updateEntity(this.getTeamMeta(stack), living);
+						Team.updateEntity(team, living);
 					}
 				}
 				if(!player.worldObj.isRemote)
 				{
-					player.addChatMessage(new TextComponentString(TextFormatting.GOLD + "Added entities in the box to team " + this.getTeamMeta(stack)));
+					player.addChatMessage(new TextComponentString(TextFormatting.GOLD + "Added entities in the box to team " + team));
 				}
 			}
 		}
@@ -165,20 +157,14 @@ public class MobArmy extends ItemSword{
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
 		if (entity instanceof EntityCreature && !player.worldObj.isRemote)
 		{		
-			if(stack.getMetadata()==1 || stack.getMetadata()==3)
+			if(stack.getMetadata()==1)
 			{			
-				Team.updateEntity(this.getTeamMeta(stack), (EntityCreature) entity);
-				player.addChatMessage(new TextComponentString(TextFormatting.GOLD + "Added entity to team " + this.getTeamMeta(stack)));
+				String team = stack.hasDisplayName()?stack.getDisplayName():"DEFAULT";
+				Team.updateEntity(team, (EntityCreature) entity);
+				player.addChatMessage(new TextComponentString(TextFormatting.GOLD + "Added entity to team " + team));
 			}
 		}
 	    return true;
-	}
-	
-	private String getTeamMeta(ItemStack stack)
-	{
-		if(stack.getMetadata()==0 || stack.getMetadata()==1)
-			return "BLUE";
-		return "RED";
 	}
 	
 	 @SideOnly(Side.CLIENT)
