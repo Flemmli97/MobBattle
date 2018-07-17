@@ -70,21 +70,15 @@ public class EventHandler {
     @SubscribeEvent
     public void spawnEggUse(PlayerInteractEvent event)
     {
-    		if(!event.getEntityPlayer().world.isRemote && (event instanceof RightClickItem || event instanceof RightClickBlock))
-    		{
-    			ItemStack stack = event.getEntityPlayer().getHeldItemMainhand();
-    			ItemStack off = event.getEntityPlayer().getHeldItemOffhand();
-    			if(stack.getItem() instanceof ItemMonsterPlacer &&(stack.getDisplayName().equals("BLUE") || stack.getDisplayName().equals("RED")))
-    			{
-    				event.setCanceled(true);
-    				Team.applyTeamModSpawnEgg(event.getEntityPlayer(), stack);
-    			}
-    			else if(off.getItem() instanceof ItemMonsterPlacer &&(off.getDisplayName().equals("BLUE") || off.getDisplayName().equals("RED")))
-    			{
-    				event.setCanceled(true);
-    				Team.applyTeamModSpawnEgg(event.getEntityPlayer(), off);
-    			}
-    		}
+		if(!event.getEntityPlayer().world.isRemote && (event instanceof RightClickItem || event instanceof RightClickBlock))
+		{
+			ItemStack stack = event.getEntityPlayer().getHeldItem(event.getHand());
+			if(stack.getItem() instanceof ItemMonsterPlacer && !event.getEntityPlayer().isSneaking() && stack.hasDisplayName())
+			{
+				event.setCanceled(true);
+				Team.applyTeamModSpawnEgg(event.getEntityPlayer(), stack);
+			}
+		}
     }
     
     @SubscribeEvent
@@ -120,22 +114,22 @@ public class EventHandler {
     @SideOnly(value=Side.CLIENT)
     private void renderBlockOutline(EntityPlayerSP player,  BlockPos pos, BlockPos pos2, float partialTicks)
     {
-    		AxisAlignedBB aabb = Team.getBoundingBoxPositions(pos, pos2).shrink(0.1);
+		AxisAlignedBB aabb = Team.getBoundingBoxPositions(pos, pos2).shrink(0.1);
 		double d0 = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
         double d1 = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks ;
         double d2 = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks;
-    		if(aabb!=null)
-    		{
-    			GlStateManager.pushMatrix();
-    			GlStateManager.enableBlend();
-    			GlStateManager.disableTexture2D();
+		if(aabb!=null)
+		{
+			GlStateManager.pushMatrix();
+			GlStateManager.enableBlend();
+			GlStateManager.disableTexture2D();
             GlStateManager.glLineWidth(2);
             GlStateManager.depthMask(false);
-    			RenderGlobal.drawSelectionBoundingBox(aabb.grow(0.0020000000949949026D).offset(-d0, -d1, -d2), 1, 0.5F, 0.5F, 1);
-    			GlStateManager.depthMask(true);
+			RenderGlobal.drawSelectionBoundingBox(aabb.grow(0.0020000000949949026D).offset(-d0, -d1, -d2), 1, 0.5F, 0.5F, 1);
+			GlStateManager.depthMask(true);
             GlStateManager.enableTexture2D();
             GlStateManager.disableBlend();
-    			GlStateManager.popMatrix();
-    		}	
+			GlStateManager.popMatrix();
+		}	
     }
 }

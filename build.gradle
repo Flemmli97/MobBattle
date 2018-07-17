@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = ""
 group = "com.flemmli97.mobbattle"
-archivesBaseName = "MobBattleMod-2.2.4[1.12.2]"
+archivesBaseName = "MobBattleMod-2.2.5[1.12.2]"
 
 sourceCompatibility = targetCompatibility = '1.8' 
 compileJava {
