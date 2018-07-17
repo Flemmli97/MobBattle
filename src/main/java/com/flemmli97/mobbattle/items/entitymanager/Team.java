@@ -191,7 +191,7 @@ public class Team {
                     		--stack.stackSize;
                     }
                     player.addStat(StatList.getObjectUseStats(stack.getItem()));
-                    if (entity instanceof EntityCreature && stack.getDisplayName().equals("BLUE") || stack.getDisplayName().equals("RED"))
+                    if (entity instanceof EntityCreature)
                     {
                         Team.updateEntity(stack.getDisplayName(), (EntityCreature) entity);
                     }

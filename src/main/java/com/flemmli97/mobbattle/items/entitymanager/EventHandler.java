@@ -70,21 +70,15 @@ public class EventHandler {
     @SubscribeEvent
     public void spawnEggUse(PlayerInteractEvent event)
     {
-    		if(!event.getEntityPlayer().worldObj.isRemote && (event instanceof RightClickItem || event instanceof RightClickBlock))
-    		{
-    			ItemStack stack = event.getEntityPlayer().getHeldItemMainhand();
-    			ItemStack off = event.getEntityPlayer().getHeldItemOffhand();
-    			if(stack!=null && stack.getItem() instanceof ItemMonsterPlacer &&(stack.getDisplayName().equals("BLUE") || stack.getDisplayName().equals("RED")))
-    			{
-    				event.setCanceled(true);
-    				Team.applyTeamModSpawnEgg(event.getEntityPlayer(), stack);
-    			}
-    			else if(off!=null && off.getItem() instanceof ItemMonsterPlacer &&(off.getDisplayName().equals("BLUE") || off.getDisplayName().equals("RED")))
-    			{
-    				event.setCanceled(true);
-    				Team.applyTeamModSpawnEgg(event.getEntityPlayer(), off);
-    			}
-    		}
+		if(!event.getEntityPlayer().worldObj.isRemote && (event instanceof RightClickItem || event instanceof RightClickBlock))
+		{
+			ItemStack stack = event.getEntityPlayer().getHeldItem(event.getHand());
+			if(stack.getItem() instanceof ItemMonsterPlacer && !event.getEntityPlayer().isSneaking() && stack.hasDisplayName())
+			{
+				event.setCanceled(true);
+				Team.applyTeamModSpawnEgg(event.getEntityPlayer(), stack);
+			}
+		}
     }
     
     @SubscribeEvent
