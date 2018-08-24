@@ -1,5 +1,6 @@
 package com.flemmli97.mobbattle;
 
+import com.flemmli97.mobbattle.items.ItemExtendedSpawnEgg;
 import com.flemmli97.mobbattle.items.MobArmor;
 import com.flemmli97.mobbattle.items.MobArmy;
 import com.flemmli97.mobbattle.items.MobEffect;
@@ -37,7 +38,8 @@ public class ModItems {
 	public static Item mobArmy = new MobArmy();
 	public static Item mobEquip = new MobEquip();
 	public static Item mobEffectGiver = new MobEffectGive();
-
+	public static Item spawner = new ItemExtendedSpawnEgg();
+	
 	@SubscribeEvent
 	public static final void registerItems(RegistryEvent.Register<Item> event) {
 	    event.getRegistry().register(mobStick);
@@ -50,6 +52,7 @@ public class ModItems {
 	    event.getRegistry().register(mobMount);
 	    event.getRegistry().register(mobEquip);
 	    event.getRegistry().register(mobEffectGiver);
+	    event.getRegistry().register(spawner);
 	}
 	
 	@SubscribeEvent
@@ -66,6 +69,7 @@ public class ModItems {
 		((MobArmy) mobArmy).initModel();
 		((MobEquip) mobEquip).initModel();
 		((MobEffectGive) mobEffectGiver).initModel();
+		((ItemExtendedSpawnEgg)spawner).initModel();
 	}
 	
 	@SubscribeEvent

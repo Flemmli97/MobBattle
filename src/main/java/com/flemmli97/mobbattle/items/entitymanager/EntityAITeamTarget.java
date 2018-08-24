@@ -63,8 +63,8 @@ public class EntityAITeamTarget extends EntityAITarget
     
     private EntityLivingBase getRandEntList(List<EntityLivingBase> list)
     {
-    		Entity living = list.get(this.taskOwner.world.rand.nextInt(list.size()));
-    		return (EntityLivingBase) living;
+		Entity living = list.get(this.taskOwner.world.rand.nextInt(list.size()));
+		return (EntityLivingBase) living;
     }
 
     protected AxisAlignedBB getTargetableArea(double targetDistance)

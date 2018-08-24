@@ -8,5 +8,5 @@ item.mob_armor.name=Armor Editor
 item.mob_army.name=Mob Army
 item.mob_mount.name=Mob Mount
 item.mob_equip.name=Mob Equip
-
+item.egg_ex.name=Mob Spawner
 itemGroup.mobbattle=Mob Battle

@@ -11,9 +11,9 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = ""
+version = "1.12.2-2.3.0"
 group = "com.flemmli97.mobbattle"
-archivesBaseName = "MobBattleMod-2.2.5[1.12.2]"
+archivesBaseName = "MobBattleMod"
 
 sourceCompatibility = targetCompatibility = '1.8' 
 compileJava {
@@ -21,14 +21,23 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12.2-14.23.1.2590"
+    version = "1.12.2-14.23.4.2750"
     runDir = "run"
     mappings = "snapshot_20171003"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
-dependencies {
+repositories {
+    	maven {
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/maven/"
+    }
+}
 
+dependencies {
+   //deobfCompile 'com.flemmli97.fatemod:FateUBW:a0.0.0[1.12.2]'
+   //deobfCompile 'com.flemmli97.runecraftory:RuneCraftory:a0.2.0[1.12.2]'
+    compile 'runecraftory:RuneCraftory-1.12.2:release'
 }
 
 processResources {
