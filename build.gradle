@@ -10,9 +10,9 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 
-version = ""
+version = "1.10.2-2.2.6"
 group= "com.flemmli97.mobbattle" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "MobBattleMo-2.2.5[1.10.2]"
+archivesBaseName = "MobBattleMod"
 
 sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
 compileJava {
