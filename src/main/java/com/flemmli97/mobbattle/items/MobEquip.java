@@ -11,7 +11,7 @@ import com.google.common.collect.Multimap;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -117,8 +117,8 @@ public class MobEquip extends ItemSword{
 			BlockPos pos1 = new BlockPos(stack.getTagCompound().getIntArray("Position1")[0],stack.getTagCompound().getIntArray("Position1")[1],stack.getTagCompound().getIntArray("Position1")[2]);
 			BlockPos pos2 = new BlockPos(stack.getTagCompound().getIntArray("Position2")[0],stack.getTagCompound().getIntArray("Position2")[1],stack.getTagCompound().getIntArray("Position2")[2]);
 			AxisAlignedBB bb = Team.getBoundingBoxPositions(pos1, pos2);
-			List<EntityCreature> list = player.world.getEntitiesWithinAABB(EntityCreature.class, bb);
-			for(EntityCreature living : list)
+			List<EntityLiving> list = player.world.getEntitiesWithinAABB(EntityLiving.class, bb);
+			for(EntityLiving living : list)
 			{
 				if(!player.world.isRemote)
 				{
@@ -136,10 +136,10 @@ public class MobEquip extends ItemSword{
 
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
-		if (entity instanceof EntityCreature && !player.world.isRemote)
+		if (entity instanceof EntityLiving && !player.world.isRemote)
 		{		
 			entity.addTag("PickUp");
-			((EntityCreature)entity).tasks.addTask(10, new EntityAIItemPickup((EntityCreature) entity));
+			((EntityLiving)entity).tasks.addTask(10, new EntityAIItemPickup((EntityLiving) entity));
 			player.sendMessage(new TextComponentString(TextFormatting.GOLD + "Entity can pickup items now"));
 		}
 	    return true;

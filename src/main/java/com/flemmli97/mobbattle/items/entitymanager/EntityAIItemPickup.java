@@ -3,7 +3,6 @@ package com.flemmli97.mobbattle.items.entitymanager;
 import java.util.List;
 
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -21,9 +20,9 @@ import net.minecraft.util.SoundCategory;
 
 public class EntityAIItemPickup extends EntityAIBase
 {
-    private EntityCreature entity;
+    private EntityLiving entity;
     private List<EntityItem> nearby;
-    public EntityAIItemPickup(EntityCreature creature)
+    public EntityAIItemPickup(EntityLiving creature)
     {
         this.setMutexBits(1);
         this.entity=creature;

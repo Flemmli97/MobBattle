@@ -9,7 +9,6 @@ import com.google.common.collect.Multimap;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
@@ -57,7 +56,7 @@ public class MobEffect extends ItemSword{
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
 		if(entity instanceof EntityLivingBase)
 		{
-			EntityLiving e = (EntityLiving) entity;
+			EntityLivingBase e = (EntityLivingBase) entity;
 			e.clearActivePotions();
 			if (!player.world.isRemote)
 			{
