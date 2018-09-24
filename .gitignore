@@ -6,7 +6,7 @@ bin
 
 # forge
 run
-lib
+libs
 
 # github
 .git
