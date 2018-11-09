@@ -21,6 +21,8 @@ public class CommonProxy {
 	private static final SimpleNetworkWrapper dispatcher = NetworkRegistry.INSTANCE.newSimpleChannel(MobBattle.MODID);
 	public static boolean fate;
 	public static boolean runecraftory;
+	public static boolean animania;
+
     public void preInit(FMLPreInitializationEvent e) {
     	dispatcher.registerMessage(EquipMessage.Handler.class, EquipMessage.class, 0, Side.SERVER);
     	dispatcher.registerMessage(ItemStackUpdate.Handler.class, ItemStackUpdate.class, 1, Side.SERVER);
@@ -34,6 +36,9 @@ public class CommonProxy {
         }
         if (Loader.isModLoaded("fatemod")) {
             fate=true;
+        }
+        if (Loader.isModLoaded("animania")) {
+        	animania=true;
         }
     }
 

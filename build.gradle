@@ -11,7 +11,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = "1.12.2-2.3.0"
+version = "1.12.2-2.3.1"
 group = "com.flemmli97.mobbattle"
 archivesBaseName = "MobBattleMod"
 
@@ -37,7 +37,7 @@ repositories {
 dependencies {
    //deobfCompile 'com.flemmli97.fatemod:FateUBW:a0.0.0[1.12.2]'
    //deobfCompile 'com.flemmli97.runecraftory:RuneCraftory:a0.2.0[1.12.2]'
-    compile 'runecraftory:RuneCraftory-1.12.2:release'
+    //compile 'runecraftory:RuneCraftory-1.12.2:release'
 }
 
 processResources {
