@@ -5,9 +5,12 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.flemmli97.mobbattle.CommonProxy;
 import com.flemmli97.mobbattle.MobBattle;
 import com.flemmli97.mobbattle.items.entitymanager.Team;
 
+import mca.entity.EntityVillagerMCA;
+import mca.enums.EnumGender;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
@@ -40,7 +43,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemExtendedSpawnEgg extends Item{
 	
-	private static final String tagString = MobBattle.MODID + ":Entity";
+	public static final String tagString = MobBattle.MODID + ":Entity";
+
 	public ItemExtendedSpawnEgg()
 	{
 		super();
@@ -60,9 +64,13 @@ public class ItemExtendedSpawnEgg extends Item{
 		list.add(TextFormatting.AQUA + "Left click an entity to save it. Shift while doing saves nbt too.");
 		if(ItemExtendedSpawnEgg.hasSavedEntity(stack))
 		{
-			String entity = EntityList.getTranslationName(new ResourceLocation(stack.getTagCompound().getCompoundTag(tagString).getString("id")));
+			NBTTagCompound compound = stack.getTagCompound().getCompoundTag(tagString);
+			String entity = EntityList.getTranslationName(new ResourceLocation(compound.getString("id")));
 			if(entity!=null)
-				list.add(TextFormatting.GOLD + "Spawns "+I18n.format("entity." + entity +".name"));
+			{
+				String entityName = compound.hasKey("CustomName")?compound.getString("CustomName"):I18n.format("entity." + entity +".name");
+				list.add(TextFormatting.GOLD + "Spawns " + entityName + (compound.getSize()>1?" (+NBT)":""));
+			}
 		}
 	}
 	
@@ -71,24 +79,32 @@ public class ItemExtendedSpawnEgg extends Item{
 		if(entity instanceof EntityLiving)
 		{
 			EntityLiving e = (EntityLiving) entity;
+			boolean nbt = false;
 			NBTTagCompound compound = stack.getTagCompound();
 			if(compound==null)
 				compound = new NBTTagCompound();
 			NBTTagCompound tag = new NBTTagCompound();
 			if(player.isSneaking())
+			{
 				e.writeToNBTAtomically(tag);
+				nbt=true;
+			}
 			else
 			{
 		        ResourceLocation name = EntityList.getKey(e);
 		        if(name!=null)
 		            tag.setString("id", name.toString());
+				if(CommonProxy.mca && e instanceof EntityVillagerMCA)
+				{
+					tag.setInteger("MCAGender", ((EntityVillagerMCA)e).attributes.getGender().getId());
+				}
 			}
 			compound.setTag(tagString, tag);
 			stack.setTagCompound(compound);
 
 			if (!player.world.isRemote)
 			{
-				player.sendMessage(new TextComponentString(TextFormatting.GOLD + "Saved Entity"));
+				player.sendMessage(new TextComponentString(TextFormatting.GOLD + "Saved Entity" + (nbt?" + nbt":"")));
 			}
 		}
 	    return true;
@@ -136,7 +152,7 @@ public class ItemExtendedSpawnEgg extends Item{
 
             BlockPos blockpos = pos.offset(facing);
             double d0 = this.getYOffset(world, blockpos);
-            Entity entity = this.spawnEntity(world, itemstack, blockpos.getX() + 0.5D, blockpos.getY() + d0, blockpos.getZ() + 0.5D);
+            Entity entity = ItemExtendedSpawnEgg.spawnEntity(world, itemstack, blockpos.getX() + 0.5D, blockpos.getY() + d0, blockpos.getZ() + 0.5D);
 
             if (entity != null)
             {
@@ -144,7 +160,7 @@ public class ItemExtendedSpawnEgg extends Item{
                 {
                     itemstack.shrink(1);
                 }
-                this.applyEntityNBT(entity, itemstack);
+                ItemExtendedSpawnEgg.applyEntityNBT(entity, itemstack);
             }
 
             return EnumActionResult.SUCCESS;
@@ -173,7 +189,7 @@ public class ItemExtendedSpawnEgg extends Item{
                 }
                 else if (world.isBlockModifiable(player, blockpos) && player.canPlayerEdit(blockpos, raytraceresult.sideHit, itemstack))
                 {
-                    Entity entity = this.spawnEntity(world, itemstack, blockpos.getX() + 0.5D, blockpos.getY() + 0.5D, blockpos.getZ() + 0.5D);
+                    Entity entity = ItemExtendedSpawnEgg.spawnEntity(world, itemstack, blockpos.getX() + 0.5D, blockpos.getY() + 0.5D, blockpos.getZ() + 0.5D);
                     if (entity == null)
                     {
                         return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
@@ -184,7 +200,7 @@ public class ItemExtendedSpawnEgg extends Item{
                         {
                             itemstack.shrink(1);
                         }
-                        this.applyEntityNBT(entity, itemstack);
+                        ItemExtendedSpawnEgg.applyEntityNBT(entity, itemstack);
                         return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
                     }
                 }
@@ -222,7 +238,7 @@ public class ItemExtendedSpawnEgg extends Item{
         }
     }
 	
-	private Entity spawnEntity(World world, ItemStack stack, double x, double y, double z)
+	public static Entity spawnEntity(World world, ItemStack stack, double x, double y, double z)
 	{
 		Entity entity = null;
 		if(ItemExtendedSpawnEgg.hasSavedEntity(stack))
@@ -231,6 +247,15 @@ public class ItemExtendedSpawnEgg extends Item{
 	        if (entity instanceof EntityLiving)
 	        {
 	            EntityLiving entityliving = (EntityLiving)entity;
+	            if(CommonProxy.mca && entityliving instanceof EntityVillagerMCA && stack.getTagCompound().getCompoundTag(tagString).hasKey("MCAGender"))
+	            {
+	            	EntityVillagerMCA villager = (EntityVillagerMCA) entityliving;
+					villager.attributes.setGender(EnumGender.byId(stack.getTagCompound().getCompoundTag(tagString).getInteger("MCAGender")));
+					villager.attributes.assignRandomName();
+					villager.attributes.assignRandomProfession();
+					villager.attributes.assignRandomPersonality();
+					villager.attributes.assignRandomSkin();
+	            }
 	            entity.setLocationAndAngles(x, y, z, MathHelper.wrapDegrees(world.rand.nextFloat() * 360.0F), 0.0F);
 	            entityliving.rotationYawHead = entityliving.rotationYaw;
 	            entityliving.renderYawOffset = entityliving.rotationYaw;
@@ -249,7 +274,7 @@ public class ItemExtendedSpawnEgg extends Item{
 		return false;
 	}
 	
-	private void applyEntityNBT(Entity e, ItemStack stack)
+	public static void applyEntityNBT(Entity e, ItemStack stack)
 	{
 		if(stack.hasTagCompound() && stack.getTagCompound().hasKey(tagString))
 		{

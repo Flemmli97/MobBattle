@@ -22,7 +22,7 @@ public class CommonProxy {
 	public static boolean fate;
 	public static boolean runecraftory;
 	public static boolean animania;
-
+	public static boolean mca;
     public void preInit(FMLPreInitializationEvent e) {
     	dispatcher.registerMessage(EquipMessage.Handler.class, EquipMessage.class, 0, Side.SERVER);
     	dispatcher.registerMessage(ItemStackUpdate.Handler.class, ItemStackUpdate.class, 1, Side.SERVER);
@@ -39,6 +39,9 @@ public class CommonProxy {
         }
         if (Loader.isModLoaded("animania")) {
         	animania=true;
+        }
+        if (Loader.isModLoaded("mca")) {
+        	mca=true;
         }
     }
 

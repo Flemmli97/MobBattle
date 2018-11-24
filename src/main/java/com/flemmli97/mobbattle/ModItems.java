@@ -12,9 +12,16 @@ import com.flemmli97.mobbattle.items.MobKill;
 import com.flemmli97.mobbattle.items.MobMount;
 import com.flemmli97.mobbattle.items.MobStick;
 
+import net.minecraft.block.BlockDispenser;
+import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
+import net.minecraft.dispenser.IBlockSource;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.util.EnumHelper;
@@ -53,6 +60,24 @@ public class ModItems {
 	    event.getRegistry().register(mobEquip);
 	    event.getRegistry().register(mobEffectGiver);
 	    event.getRegistry().register(spawner);
+	    BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.spawner, new BehaviorDefaultDispenseItem()
+        {
+            public ItemStack dispenseStack(IBlockSource source, ItemStack stack)
+            {
+                EnumFacing enumfacing = (EnumFacing)source.getBlockState().getValue(BlockDispenser.FACING);
+                double x = source.getX() + (double)enumfacing.getFrontOffsetX();
+                double y = (double)(source.getBlockPos().getY() + enumfacing.getFrontOffsetY() + 0.2F);
+                double z = source.getZ() + (double)enumfacing.getFrontOffsetZ();
+                BlockPos blockpos = new BlockPos(x,y,z);
+                Entity entity = ItemExtendedSpawnEgg.spawnEntity(source.getWorld(), stack, blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D);
+                if (entity != null)
+                {
+                    stack.shrink(1);
+                    ItemExtendedSpawnEgg.applyEntityNBT(entity, stack);
+                }
+                return stack;
+            }
+        });
 	}
 	
 	@SubscribeEvent
