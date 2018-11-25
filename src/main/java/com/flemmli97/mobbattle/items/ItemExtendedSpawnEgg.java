@@ -1,7 +1,6 @@
 package com.flemmli97.mobbattle.items;
 
 import java.util.List;
-import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -78,33 +77,41 @@ public class ItemExtendedSpawnEgg extends Item{
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
 		if(entity instanceof EntityLiving)
 		{
-			EntityLiving e = (EntityLiving) entity;
-			boolean nbt = false;
-			NBTTagCompound compound = stack.getTagCompound();
-			if(compound==null)
-				compound = new NBTTagCompound();
-			NBTTagCompound tag = new NBTTagCompound();
-			if(player.isSneaking())
+			if(player.capabilities.isCreativeMode )//|| player.canUseCommand(2, ""))
 			{
-				e.writeToNBTAtomically(tag);
-				nbt=true;
+				EntityLiving e = (EntityLiving) entity;
+				boolean nbt = false;
+				NBTTagCompound compound = stack.getTagCompound();
+				if(compound==null)
+					compound = new NBTTagCompound();
+				NBTTagCompound tag = new NBTTagCompound();
+				if(player.isSneaking())
+				{
+					e.writeToNBTAtomically(tag);
+					this.removeMobSpecifigTags(tag);
+					nbt=true;
+				}
+				else
+				{
+			        ResourceLocation name = EntityList.getKey(e);
+			        if(name!=null)
+			            tag.setString("id", name.toString());
+					if(CommonProxy.mca && e instanceof EntityVillagerMCA)
+					{
+						tag.setInteger("MCAGender", ((EntityVillagerMCA)e).attributes.getGender().getId());
+					}
+				}
+				compound.setTag(tagString, tag);
+				stack.setTagCompound(compound);
+	
+				if (!player.world.isRemote)
+				{
+					player.sendMessage(new TextComponentString(TextFormatting.GOLD + "Saved Entity" + (nbt?" + nbt":"")));
+				}
 			}
 			else
 			{
-		        ResourceLocation name = EntityList.getKey(e);
-		        if(name!=null)
-		            tag.setString("id", name.toString());
-				if(CommonProxy.mca && e instanceof EntityVillagerMCA)
-				{
-					tag.setInteger("MCAGender", ((EntityVillagerMCA)e).attributes.getGender().getId());
-				}
-			}
-			compound.setTag(tagString, tag);
-			stack.setTagCompound(compound);
-
-			if (!player.world.isRemote)
-			{
-				player.sendMessage(new TextComponentString(TextFormatting.GOLD + "Saved Entity" + (nbt?" + nbt":"")));
+				player.sendMessage(new TextComponentString(TextFormatting.DARK_RED + "Needs to be in creative mode to copy entity"));
 			}
 		}
 	    return true;
@@ -279,19 +286,29 @@ public class ItemExtendedSpawnEgg extends Item{
 		if(stack.hasTagCompound() && stack.getTagCompound().hasKey(tagString))
 		{
 			NBTTagCompound compound = stack.getTagCompound().getCompoundTag(tagString);
-			UUID uuid = e.getUniqueID();
-			compound.removeTag("Pos");
-			compound.removeTag("Motion");
-			compound.removeTag("Rotation");
+			//UUID uuid = e.getUniqueID();
+			//compound.removeTag("Pos");
+			//compound.removeTag("Motion");
+			//compound.removeTag("Rotation");
 			NBTTagCompound nbt = e.writeToNBT(new NBTTagCompound());            
             nbt.merge(compound);
             e.readFromNBT(nbt);
-            e.setUniqueId(uuid);
+            //e.setUniqueId(uuid);
 		}
 		if(stack.hasDisplayName() && e instanceof EntityCreature)
 		{
             Team.updateEntity(stack.getDisplayName(), (EntityCreature) e);
 		}
+	}
+	
+	private void removeMobSpecifigTags(NBTTagCompound compound)
+	{
+		compound.removeTag("Pos");
+		compound.removeTag("Motion");
+		compound.removeTag("Rotation");
+		compound.removeTag("UUID");
+		//Vanilla-fix incompability
+		compound.removeTag("VFAABB");
 	}
 	
     @Nullable
@@ -307,7 +324,6 @@ public class ItemExtendedSpawnEgg extends Item{
             {
             	stack.getTagCompound().getCompoundTag(tagString).setString("id", resourcelocation.toString());
             }
-
             return resourcelocation;
     	}
     	return null;
