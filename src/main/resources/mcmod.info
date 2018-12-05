@@ -1,0 +1,12 @@
+[{
+  "modid": "mobbattle",
+  "name": "Mob Battle Mod",
+  "description": "Creative utensils in creating spectacular mob battles",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateJSON": "",
+  "authorList": ["Flemmli97"],
+  "credits": "",
+  "logoFile": ""
+}]
