@@ -20,16 +20,17 @@ public class ContainerArmor extends Container{
 		inv.openInventory(playerInv.player);
         this.addSlotToContainer(new Slot(inv, 0, 80, 17)
 	    {
+			@Override
 			@SideOnly(Side.CLIENT)
 	        public String getSlotTexture()
 	        {
-				
 	            return MobBattle.MODID + ":gui/armor_slot_sword";
 	        }
 
         });
         this.addSlotToContainer(new Slot(inv, 1, 80, 35)
         {
+             @Override
         	 @SideOnly(Side.CLIENT)
              public String getSlotTexture()
              {
@@ -38,12 +39,14 @@ public class ContainerArmor extends Container{
         });
         this.addSlotToContainer(new Slot(inv, 2, 44, 17)
         {
-	        	@Override
-	    		public int getSlotStackLimit()
+        	@Override
+    		public int getSlotStackLimit()
 	        {
 	            return 1;
 	        }
-        		@SideOnly(Side.CLIENT)
+
+            @Override
+    		@SideOnly(Side.CLIENT)
             public String getSlotTexture()
             {
                 return "minecraft:items/empty_armor_slot_helmet";
@@ -51,12 +54,12 @@ public class ContainerArmor extends Container{
         });
         this.addSlotToContainer(new Slot(inv, 3, 44, 35)
         {
-	        	@Override
-	    		public int getSlotStackLimit()
+        	@Override
+    		public int getSlotStackLimit()
 	        {
 	            return 1;
 	        }
-	        	@Override
+        	@Override
 			public boolean isItemValid(ItemStack stack) {
         		if (stack == null)
                 {
@@ -68,6 +71,7 @@ public class ContainerArmor extends Container{
                 }
 			}
 
+            @Override
 			@SideOnly(Side.CLIENT)
             public String getSlotTexture()
             {
@@ -92,7 +96,8 @@ public class ContainerArmor extends Container{
                     return stack.getItem().isValidArmor(stack, CommonProxy.slot[4], living);
                 }
 			}
-        	@SideOnly(Side.CLIENT)
+        	@Override
+			@SideOnly(Side.CLIENT)
             public String getSlotTexture()
             {
                 return "minecraft:items/empty_armor_slot_leggings";
@@ -116,7 +121,8 @@ public class ContainerArmor extends Container{
                     return stack.getItem().isValidArmor(stack, CommonProxy.slot[5], living);
                 }
 			}
-        	@SideOnly(Side.CLIENT)
+        	@Override
+			@SideOnly(Side.CLIENT)
             public String getSlotTexture()
             {
                 return "minecraft:items/empty_armor_slot_boots";

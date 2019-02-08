@@ -23,6 +23,7 @@ public class EntityAITeamTarget extends EntityAITarget
         this.setMutexBits(1);
         this.pred = new Predicate<EntityLivingBase>()
         {
+        	@Override
             public boolean apply(@Nullable EntityLivingBase living)
             {
             		if(living == null)
@@ -34,9 +35,7 @@ public class EntityAITeamTarget extends EntityAITarget
         };
     }
 
-    /**
-     * Returns whether the EntityAIBase should begin execution.
-     */
+    @Override
     public boolean shouldExecute()
     {
     		if (this.taskOwner.getRNG().nextInt(5) != 0)
@@ -72,9 +71,7 @@ public class EntityAITeamTarget extends EntityAITarget
         return this.taskOwner.getEntityBoundingBox().grow(targetDistance, 4.0D, targetDistance);
     }
 
-    /**
-     * Execute a one shot task or start executing a continuous task
-     */
+    @Override
     public void startExecuting()
     {
         this.taskOwner.setAttackTarget(this.targetEntity);

@@ -20,6 +20,7 @@ public class GuiArmor extends GuiContainer{
 		chatComponent = living.getDisplayName();
 	}
 
+	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
         String s = this.chatComponent.getUnformattedText();

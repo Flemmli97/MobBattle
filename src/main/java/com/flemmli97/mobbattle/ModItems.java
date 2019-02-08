@@ -62,6 +62,7 @@ public class ModItems {
 	    event.getRegistry().register(spawner);
 	    BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.spawner, new BehaviorDefaultDispenseItem()
         {
+	        @Override
             public ItemStack dispenseStack(IBlockSource source, ItemStack stack)
             {
                 EnumFacing enumfacing = (EnumFacing)source.getBlockState().getValue(BlockDispenser.FACING);
