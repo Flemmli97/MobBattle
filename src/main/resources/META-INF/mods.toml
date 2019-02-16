@@ -1,0 +1,13 @@
+modLoader="javafml"
+loaderVersion="[25,)"
+issueTrackerURL="https://github.com/Flemmli97/MobBattle/issues"
+displayURL="https://github.com/Flemmli97/MobBattle"
+# logoFile=""
+credits=""
+authors="Flemmli97"
+[[mods]] 
+modId="mobbattle" 
+version="${file.jarVersion}"
+displayName="Mob Battle Mod"
+# updateJSONURL=""
+description='''Creative utensils in creating spectacular mob battles'''

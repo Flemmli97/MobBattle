@@ -1,0 +1,69 @@
+buildscript {
+    repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+    }
+}
+apply plugin: 'net.minecraftforge.gradle'
+//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'eclipse'
+
+version = "${mcversion}-${modversion}"
+group = "com.flemmli97.mobbattle"
+archivesBaseName = "MobBattleMod"
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+
+minecraft {
+    mappings channel: 'snapshot', version: mcp_mapping
+    //makeObfSourceJar = false
+    
+    //accessTransformer = file('my_at.cfg')
+
+    // default run configurations.
+    // these can be tweaked, removed, or duplicated as needed.
+    runs {
+        client = {
+            // recommended logging data for a userdev environment
+            properties 'forge.logging.markers': 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // recommended logging level for the console
+            properties 'forge.logging.console.level': 'debug'
+            workingDirectory project.file('run').canonicalPath
+            source sourceSets.main
+        }
+        server = {
+            // recommended logging data for a userdev environment
+            properties 'forge.logging.markers': 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // recommended logging level for the console
+            properties 'forge.logging.console.level': 'debug'
+            workingDirectory project.file('run').canonicalPath
+            source sourceSets.main
+        }
+    }
+}
+
+repositories {
+    maven {
+      name = "CurseForge"
+      url = "https://minecraft.curseforge.com/api/maven/"
+      }
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.13.2-25.0.13'
+    //compile animania_dep
+  	//compile mca_dep
+ 	//compile runecraftory_dep
+  	//compile fate_dep
+}
+
+jar {
+    manifest {
+        attributes([
+                    "Implementation-Version": "${modversion}"])
+    }
+}
