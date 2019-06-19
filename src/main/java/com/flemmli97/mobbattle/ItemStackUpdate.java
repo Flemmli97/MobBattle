@@ -4,7 +4,6 @@ package com.flemmli97.mobbattle;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -38,11 +37,9 @@ public class ItemStackUpdate  implements IMessage{
         @Override
         public IMessage onMessage(ItemStackUpdate msg, MessageContext ctx) {
         	EntityPlayer player = ctx.getServerHandler().player;
-        	if(player!=null)
+        	if(player!=null && player.getHeldItemMainhand().getItem()==ModItems.mobEffectGiver)
         	{
-        		ItemStack stack = player.getHeldItemMainhand();
-        		if(!stack.isEmpty())
-        			stack.setTagCompound(msg.compound);
+        		player.getHeldItemMainhand().setTagCompound(msg.compound);
         	}
             return null;
         }

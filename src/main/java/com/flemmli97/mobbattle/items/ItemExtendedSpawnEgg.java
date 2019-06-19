@@ -306,7 +306,8 @@ public class ItemExtendedSpawnEgg extends Item{
 		compound.removeTag("Pos");
 		compound.removeTag("Motion");
 		compound.removeTag("Rotation");
-		compound.removeTag("UUID");
+		compound.removeTag("UUIDMost");
+		compound.removeTag("UUIDLeast");
 		//Vanilla-fix incompability
 		compound.removeTag("VFAABB");
 	}

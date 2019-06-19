@@ -53,17 +53,18 @@ public class EquipMessage  implements IMessage{
         @Override
         public IMessage onMessage(EquipMessage msg, MessageContext ctx) {
         	World world = ctx.getServerHandler().player.world;
-        	for (final Object obj : world.loadedEntityList)
-			{
-        		if(obj instanceof EntityLiving)
-        		{
-        			EntityLiving entity = (EntityLiving) obj;
-					if (entity.getUniqueID().equals(UUID.fromString(msg.uuid)))
-					{
-						entity.setItemStackToSlot(CommonProxy.slot[msg.slot], msg.equipment);
+        	if(ctx.getServerHandler().player.getHeldItemMainhand().getItem()==ModItems.mobArmor)
+	        	for (final Object obj : world.loadedEntityList)
+				{
+	        		if(obj instanceof EntityLiving)
+	        		{
+	        			EntityLiving entity = (EntityLiving) obj;
+						if (entity.getUniqueID().equals(UUID.fromString(msg.uuid)))
+						{
+							entity.setItemStackToSlot(CommonProxy.slot[msg.slot], msg.equipment);
+						}
 					}
 				}
-			}
             return null;
         }
     }

@@ -91,8 +91,10 @@ public class Team {
 				return input.action instanceof EntityAITarget;
 			}});
 		e.setAttackTarget(null);
-		e.setHealth(e.getMaxHealth());
+		//Idk why this line is here anymore...
+		//e.setHealth(e.getMaxHealth());
 		e.targetTasks.addTask(1, new EntityAITeamTarget(e, false, true));
+		e.addTag("AddedAI");
 	}
     
     public static AxisAlignedBB getBoundingBoxPositions(BlockPos pos, @Nullable BlockPos pos2)

@@ -24,6 +24,7 @@ public class CommonProxy {
 	public static boolean animania;
 	public static boolean mca;
     public void preInit(FMLPreInitializationEvent e) {
+    	Config.load();
     	dispatcher.registerMessage(EquipMessage.Handler.class, EquipMessage.class, 0, Side.SERVER);
     	dispatcher.registerMessage(ItemStackUpdate.Handler.class, ItemStackUpdate.class, 1, Side.SERVER);
     }
