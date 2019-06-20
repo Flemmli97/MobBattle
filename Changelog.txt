@@ -1,0 +1,10 @@
+Mob Battle 2.3.2
+================
+
+- Added MCA support
+- Dispenser now use the spawn eggs
+- Spawn egg changing now needs creative mode
+- Fixed Vanilla-Fix incompability
+- Added auto target of mobs from other teams (configurable)
+- Fixed nbt with spawnegg being broken
+- Particles display for teams is can now be turned off in config
