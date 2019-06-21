@@ -1,8 +1,8 @@
 package com.flemmli97.mobbattle.client.gui;
 
-import com.flemmli97.mobbattle.ItemStackUpdate;
 import com.flemmli97.mobbattle.MobBattle;
-import com.flemmli97.mobbattle.PacketHandler;
+import com.flemmli97.mobbattle.network.ItemStackUpdate;
+import com.flemmli97.mobbattle.network.PacketHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -124,7 +124,7 @@ public class GuiEffect extends GuiScreen{
              }
         };
         this.addButton(this.button);
-        this.button.checkUncheck(this.stack.hasTag()?this.stack.getTag().getBoolean(MobBattle.MODID+":show"):true);
+        this.button.checkUncheck(this.stack.getTag().getBoolean(MobBattle.MODID+":show"));
     }
 
     @Override

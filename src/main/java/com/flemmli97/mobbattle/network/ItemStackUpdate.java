@@ -1,6 +1,8 @@
-package com.flemmli97.mobbattle;
+package com.flemmli97.mobbattle.network;
 
 import java.util.function.Supplier;
+
+import com.flemmli97.mobbattle.ModItems;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -26,13 +28,14 @@ public class ItemStackUpdate{
 	}
 	
     public static void onMessage(ItemStackUpdate msg, Supplier<NetworkEvent.Context> ctx) {
+    	if(ctx.get().getSender()==null || ctx.get().getSender().getHeldItemMainhand().getItem()!=ModItems.mobEffectGiver)
+			return;
+    	ctx.get().enqueueWork(()->{
     	EntityPlayer player = ctx.get().getSender();
-    	if(player!=null)
-    	{
-    		ItemStack stack = player.getHeldItemMainhand();
-    		if(!stack.isEmpty())
-    			stack.setTag(msg.compound);
-    	}
+		ItemStack stack = player.getHeldItemMainhand();
+		if(!stack.isEmpty())
+			stack.setTag(msg.compound);
+		});
         ctx.get().setPacketHandled(true);
     }
 }

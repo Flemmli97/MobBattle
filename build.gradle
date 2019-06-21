@@ -54,7 +54,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.13.2-25.0.13'
+    minecraft 'net.minecraftforge:forge:${mcversion}-${forge_version}'
     //compile animania_dep
   	//compile mca_dep
  	//compile runecraftory_dep

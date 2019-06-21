@@ -1,6 +1,5 @@
 package com.flemmli97.mobbattle.inv;
 
-import com.flemmli97.mobbattle.ServerProxy;
 import com.flemmli97.mobbattle.MobBattle;
 
 import net.minecraft.entity.EntityLiving;
@@ -14,9 +13,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ContainerArmor extends Container{
 	
+	private InventoryArmor inv;
 	public ContainerArmor(InventoryPlayer playerInv, EntityLiving living)
 	{
-		InventoryArmor inv = new InventoryArmor(living);
+		inv = new InventoryArmor(living);
 		inv.openInventory(playerInv.player);
         this.addSlot(new Slot(inv, 0, 80, 17)
 	    {
@@ -34,7 +34,7 @@ public class ContainerArmor extends Container{
              @OnlyIn(Dist.CLIENT)
              public String getSlotTexture()
              {
-                 return "minecraft:items/empty_armor_slot_shield";
+                 return "minecraft:item/empty_armor_slot_shield";
              }
         });
         this.addSlot(new Slot(inv, 2, 44, 17)
@@ -49,7 +49,7 @@ public class ContainerArmor extends Container{
             @OnlyIn(Dist.CLIENT)
             public String getSlotTexture()
             {
-                return "minecraft:items/empty_armor_slot_helmet";
+                return "minecraft:item/empty_armor_slot_helmet";
             }
         });
         this.addSlot(new Slot(inv, 3, 44, 35)
@@ -67,7 +67,7 @@ public class ContainerArmor extends Container{
                 }
                 else
                 {
-                    return stack.getItem().canEquip(stack, ServerProxy.slot[3], living);
+                    return stack.getItem().canEquip(stack, MobBattle.slot[3], living);
                 }
 			}
 
@@ -75,7 +75,7 @@ public class ContainerArmor extends Container{
             @OnlyIn(Dist.CLIENT)
             public String getSlotTexture()
             {
-                return "minecraft:items/empty_armor_slot_chestplate";
+                return "minecraft:item/empty_armor_slot_chestplate";
             }
         });
         this.addSlot(new Slot(inv, 4, 116, 17)
@@ -93,14 +93,14 @@ public class ContainerArmor extends Container{
                 }
                 else
                 {
-                    return stack.getItem().canEquip(stack, ServerProxy.slot[4], living);
+                    return stack.getItem().canEquip(stack, MobBattle.slot[4], living);
                 }
 			}
         	@Override
         	@OnlyIn(Dist.CLIENT)
             public String getSlotTexture()
             {
-                return "minecraft:items/empty_armor_slot_leggings";
+                return "minecraft:item/empty_armor_slot_leggings";
             }
         });
         this.addSlot(new Slot(inv, 5, 116, 35)
@@ -118,14 +118,14 @@ public class ContainerArmor extends Container{
                 }
                 else
                 {
-                    return stack.getItem().canEquip(stack, ServerProxy.slot[5], living);
+                    return stack.getItem().canEquip(stack, MobBattle.slot[5], living);
                 }
 			}
         	@Override
         	@OnlyIn(Dist.CLIENT)
             public String getSlotTexture()
             {
-                return "minecraft:items/empty_armor_slot_boots";
+                return "minecraft:item/empty_armor_slot_boots";
             }
         });
 		for (int column = 0; column < 3; ++column)
@@ -163,7 +163,7 @@ public class ContainerArmor extends Container{
                     return ItemStack.EMPTY;
                 }
             }
-            else if(!this.inventorySlots.get(2).getHasStack() && itemstack1.getItem().canEquip(itemstack1, ServerProxy.slot[2], null))
+            else if(!this.inventorySlots.get(2).getHasStack() && itemstack1.getItem().canEquip(itemstack1, MobBattle.slot[2], null))
             {
             	Slot slot1 = (this.inventorySlots.get(2));
             	slot1.putStack(itemstack);
@@ -172,7 +172,7 @@ public class ContainerArmor extends Container{
             	itemstack1.setCount(size); 
                 return ItemStack.EMPTY;
             }
-            else if(!this.inventorySlots.get(3).getHasStack() && itemstack1.getItem().canEquip(itemstack1, ServerProxy.slot[3], null))
+            else if(!this.inventorySlots.get(3).getHasStack() && itemstack1.getItem().canEquip(itemstack1, MobBattle.slot[3], null))
             {
             	Slot slot1 = (this.inventorySlots.get(3));
             	slot1.putStack(itemstack);
@@ -181,7 +181,7 @@ public class ContainerArmor extends Container{
             	itemstack1.setCount(size); 
                 return ItemStack.EMPTY;
             }
-            else if(!this.inventorySlots.get(4).getHasStack() && itemstack1.getItem().canEquip(itemstack1, ServerProxy.slot[4], null))
+            else if(!this.inventorySlots.get(4).getHasStack() && itemstack1.getItem().canEquip(itemstack1, MobBattle.slot[4], null))
             {
             	Slot slot1 = (this.inventorySlots.get(4));
             	slot1.putStack(itemstack);
@@ -190,7 +190,7 @@ public class ContainerArmor extends Container{
             	itemstack1.setCount(size); 
                 return ItemStack.EMPTY;            
             }
-            else if(!this.inventorySlots.get(5).getHasStack() && itemstack1.getItem().canEquip(itemstack1, ServerProxy.slot[5], null))
+            else if(!this.inventorySlots.get(5).getHasStack() && itemstack1.getItem().canEquip(itemstack1, MobBattle.slot[5], null))
             {
             	Slot slot1 = (this.inventorySlots.get(5));
             	slot1.putStack(itemstack);

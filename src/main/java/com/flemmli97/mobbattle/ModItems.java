@@ -14,7 +14,6 @@ import com.flemmli97.mobbattle.items.MobStick;
 import com.flemmli97.mobbattle.items.entitymanager.Team;
 
 import net.minecraft.block.BlockDispenser;
-import net.minecraft.client.Minecraft;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.entity.Entity;
@@ -24,11 +23,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -97,13 +92,5 @@ public class ModItems {
                 return stack;
             }
         });
-	}
-	
-	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
-	public static final void registerTextureSprite(TextureStitchEvent.Pre event)
-	{
-		ResourceLocation res = new ResourceLocation(MobBattle.MODID + ":gui/armor_slot_sword");
-		event.getMap().registerSprite(Minecraft.getInstance().getResourceManager(), res);
 	}
 }

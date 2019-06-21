@@ -89,7 +89,6 @@ public class Team {
 				return input.action instanceof EntityAITarget;
 			}});
 		e.setAttackTarget(null);
-		e.setHealth(e.getMaxHealth());
 		e.targetTasks.addTask(1, new EntityAITeamTarget(e, false, true));
 	}
     

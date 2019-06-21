@@ -1,6 +1,9 @@
 package com.flemmli97.mobbattle.items.entitymanager;
 
+import com.flemmli97.mobbattle.Config;
+import com.flemmli97.mobbattle.MobBattle;
 import com.flemmli97.mobbattle.ModItems;
+import com.flemmli97.mobbattle.client.gui.MultiItemColor;
 import com.flemmli97.mobbattle.items.MobArmy;
 import com.flemmli97.mobbattle.items.MobEquip;
 
@@ -12,18 +15,37 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.RedstoneParticleData;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber(modid = MobBattle.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EventHandler {
 
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public static final void registerTextureSprite(TextureStitchEvent.Pre event)
+	{
+		ResourceLocation res = new ResourceLocation(MobBattle.MODID, "gui/armor_slot_sword");
+		event.getMap().registerSprite(Minecraft.getInstance().getResourceManager(), res);
+	}
+	
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+    public static void spawnEggColor(ColorHandlerEvent.Item e) {
+        e.getItemColors().register(new MultiItemColor(), ModItems.spawner);
+    }
+	
     @SubscribeEvent
     @OnlyIn(value=Dist.CLIENT)
 	public void render(RenderWorldLastEvent event) 
@@ -77,16 +99,23 @@ public class EventHandler {
     }
     
     @SubscribeEvent
-    public void teamParticle(LivingEvent event)
+    public void livingTick(LivingUpdateEvent event)
     {
-		if(event.getEntityLiving() instanceof EntityCreature && event.getEntityLiving().world.isRemote)
+		if(event.getEntityLiving() instanceof EntityCreature)
 		{
 			EntityCreature e =  (EntityCreature) event.getEntityLiving();
 			if(e.getTeam()!=null)
 			{
-				double[] color = Team.teamColor.get(e.getTeam().getColor());
-				if(color!=null)
-					e.world.spawnParticle(RedstoneParticleData.REDSTONE_DUST, e.posX, e.posY+e.height+0.5, e.posZ, color[0], color[1], color[2]);
+				if(Config.clientConf.showTeamParticles.get() && e.world.isRemote)
+				{
+					double[] color = Team.teamColor.get(e.getTeam().getColor());
+					if(color!=null)
+						e.world.spawnParticle(RedstoneParticleData.REDSTONE_DUST, e.posX, e.posY+e.height+0.5, e.posZ, color[0], color[1], color[2]);
+				}
+				else if(Config.serverConf.autoAddAI.get() && !e.getTags().contains("AddedAI"))
+				{
+					Team.updateEntity(e.getTeam().getName(), e);
+				}
     		}
 		}
     }

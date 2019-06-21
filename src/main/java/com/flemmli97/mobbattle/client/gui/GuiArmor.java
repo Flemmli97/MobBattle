@@ -13,7 +13,7 @@ import net.minecraft.util.text.ITextComponent;
 public class GuiArmor extends GuiContainer{
 
 	private final ITextComponent chatComponent;
-    private static final ResourceLocation armorGui = new ResourceLocation(MobBattle.MODID + ":textures/gui/armor.png");
+    private static final ResourceLocation armorGui = new ResourceLocation(MobBattle.MODID, "textures/gui/armor.png");
 
 	public GuiArmor(InventoryPlayer playerInv, EntityLiving living) {
 		super(new ContainerArmor(playerInv, living));

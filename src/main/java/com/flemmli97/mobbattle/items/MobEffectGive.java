@@ -48,7 +48,7 @@ public class MobEffectGive extends Item{
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 		if(hand==EnumHand.MAIN_HAND)
-			MobBattle.instance.proxy.openEffectGUI(player);
+			MobBattle.proxy.openEffectGUI(player);
         return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(hand));	
 		}
 	

@@ -1,27 +1,29 @@
 package com.flemmli97.mobbattle;
 
+import java.util.function.Supplier;
+
+import com.flemmli97.mobbattle.client.gui.GuiArmor;
 import com.flemmli97.mobbattle.client.gui.GuiEffect;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.network.FMLPlayMessages;
+import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class ClientProxy implements IProxy{
 
 	@Override
-	public void openArmorGUI(EntityPlayer player, EntityLiving living) {}
+	public void openArmorGUI(EntityPlayer player, EntityLiving living) {
+		Minecraft.getInstance().displayGuiScreen(new GuiArmor(player.inventory, living));
+	}
 
 	@Override
 	public void openEffectGUI(EntityPlayer player) {
 		Minecraft.getInstance().displayGuiScreen(new GuiEffect());
 	}
 
-	public static GuiScreen openGui(FMLPlayMessages.OpenContainer msg)
-	{
-		//if(msg.getId().getPath().equals("armor"))
-		//	return new GuiArmor();
-		return null;
+	@Override
+	public EntityPlayer getPlayer(Supplier<Context> ctx) {
+		return Minecraft.getInstance().player;
 	}
 }
