@@ -47,7 +47,7 @@ jar {
 dependencies {
   compile animania_dep
   compile mca_dep
-  compile runecraftory_dep
+  //compile runecraftory_dep
   compile fate_dep
 }
 
