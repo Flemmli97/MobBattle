@@ -2,6 +2,8 @@ package com.flemmli97.mobbattle.items;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.flemmli97.mobbattle.MobBattle;
 import com.flemmli97.mobbattle.ModItems;
 import com.flemmli97.mobbattle.items.entitymanager.Team;
@@ -78,9 +80,10 @@ public class MobStick extends ItemSword{
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
 		if(!player.world.isRemote)
-			if (stack.hasTagCompound() && stack.getTagCompound().hasKey("StoredEntity"))
+		{
+			EntityLiving storedEntity = this.getStoredEntity(player.world, stack);
+			if (storedEntity!=null)
 			{
-				EntityLiving storedEntity = Team.fromUUID(player.world, stack.getTagCompound().getString("StoredEntity"));
 				if (entity instanceof EntityLiving && entity != storedEntity)
 				{		
 					EntityLiving living = (EntityLiving) entity;
@@ -102,7 +105,16 @@ public class MobStick extends ItemSword{
 				player.sendMessage(new TextComponentString(TextFormatting.GOLD + "First entity set, hit another entity to set target"));
 				return true;
 			}
+		}
 	    return true;
+	}
+	
+	@Nullable
+	private EntityLiving getStoredEntity(World world, ItemStack stack)
+	{
+		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("StoredEntity"))
+			return Team.fromUUID(world, stack.getTagCompound().getString("StoredEntity"));
+		return null;
 	}
 	
 	 @SideOnly(Side.CLIENT)
