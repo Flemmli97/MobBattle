@@ -8,3 +8,4 @@ Mob Battle 2.3.2
 - Added auto target of mobs from other teams (configurable)
 - Fixed nbt with spawnegg being broken
 - Particles display for teams is can now be turned off in config
+- Fixed #5
