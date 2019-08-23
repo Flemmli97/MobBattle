@@ -10,5 +10,7 @@
 "item.mobbattle.mob_mount":"Mob Mount",
 "item.mobbattle.mob_equip":"Mob Equip",
 "item.mobbattle.egg_ex":"Mob Spawner",
-"itemGroup.mobbattle":"Mob Battle"
+"itemGroup.mobbattle":"Mob Battle",
+"conf.mobbattle.particle":"Show Team Particles",
+"conf.mobbattle.addai":"Auto add team-target-ai"
 }
