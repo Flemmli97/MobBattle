@@ -1,4 +1,3 @@
-Mob Battle 1.13.2-1.0.0
+Mob Battle 2.3.2
 ===============
-- Port to 1.13.2
-- MobArmor doesn't work atm
+- Port to 1.14.4
