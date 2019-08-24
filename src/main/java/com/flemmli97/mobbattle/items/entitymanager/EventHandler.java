@@ -93,7 +93,7 @@ public class EventHandler {
 					if(color!=null)
 						e.world.spawnParticle(EnumParticleTypes.REDSTONE, e.posX, e.posY+e.height+0.5, e.posZ, color[0], color[1], color[2]);
 				}
-				else if(Config.autoAddAI && !e.getTags().contains("AddedAI"))
+				else if(Config.autoAddAI && !e.getTags().contains("mobbattle:AddedAI"))
 				{
 					Team.updateEntity(e.getTeam().getName(), e);
 				}

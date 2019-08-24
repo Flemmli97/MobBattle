@@ -94,7 +94,7 @@ public class Team {
 		//Idk why this line is here anymore...
 		//e.setHealth(e.getMaxHealth());
 		e.targetTasks.addTask(1, new EntityAITeamTarget(e, false, true));
-		e.addTag("AddedAI");
+		e.addTag("mobbattle:AddedAI");
 	}
     
     public static AxisAlignedBB getBoundingBoxPositions(BlockPos pos, @Nullable BlockPos pos2)
