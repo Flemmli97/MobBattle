@@ -4,10 +4,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.flemmli97.mobbattle.client.gui.MultiItemColor;
+import com.flemmli97.mobbattle.inv.ContainerArmor;
 import com.flemmli97.mobbattle.items.entitymanager.EventHandler;
 import com.flemmli97.mobbattle.network.PacketHandler;
 
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -47,7 +49,9 @@ public class MobBattle {
 	public static final EquipmentSlotType slot[] = {EquipmentSlotType.MAINHAND, EquipmentSlotType.OFFHAND, EquipmentSlotType.HEAD
 			,EquipmentSlotType.CHEST, EquipmentSlotType.LEGS, EquipmentSlotType.FEET};
 	
-    @SubscribeEvent
+	public static ContainerType<ContainerArmor> type = new ContainerType<ContainerArmor>((windowID,playerInv)->new ContainerArmor(windowID,playerInv,null));
+    
+	@SubscribeEvent
     public static void preInit(FMLCommonSetupEvent e) {
     	fate = ModList.get().isLoaded("fatemod");
     	runecraftory = ModList.get().isLoaded("runecraftory");

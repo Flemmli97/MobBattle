@@ -6,20 +6,17 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ContainerArmor extends Container{
-	
-	public static ContainerType<ContainerArmor> type = new ContainerType<ContainerArmor>((windowID,playerInv)->new ContainerArmor(windowID,playerInv,null));
-	
+		
 	private InventoryArmor inv;
 	public ContainerArmor(int windowID, PlayerInventory playerInv, MobEntity living)
 	{
-		super(type, windowID);
+		super(MobBattle.type, windowID);
 		if(living==null)
 			return;
 		inv = new InventoryArmor(living);
