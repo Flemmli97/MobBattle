@@ -5,9 +5,7 @@ package com.flemmli97.mobbattle.network;
 import java.util.function.Supplier;
 
 import com.flemmli97.mobbattle.MobBattle;
-import com.flemmli97.mobbattle.client.gui.GuiArmor;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -45,9 +43,7 @@ public class PacketOpenGuiArmor{
 	    	Entity e = player.world.getEntityByID(msg.entityID);
 	    	if(e instanceof MobEntity)
 	    	{
-	    		GuiArmor screen = new GuiArmor(msg.windowID, player.inventory, (MobEntity) e);
-	    		Minecraft.getInstance().player.openContainer = screen.getContainer();
-	    		Minecraft.getInstance().displayGuiScreen(screen);
+	    	    MobBattle.proxy.openArmorGUI(player, msg.windowID, (MobEntity) e);
 	    	}
 	    });
 		ctx.get().setPacketHandled(true);

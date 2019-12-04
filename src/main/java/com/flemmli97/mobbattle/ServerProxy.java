@@ -9,7 +9,7 @@ import net.minecraftforge.fml.network.NetworkEvent.Context;
 public class ServerProxy implements IProxy{
 
 	@Override
-	public void openArmorGUI(PlayerEntity player, MobEntity living) {}
+	public void openArmorGUI(PlayerEntity player,int windowID, MobEntity living) {}
 
 	@Override
 	public void openEffectGUI(PlayerEntity player) {}
