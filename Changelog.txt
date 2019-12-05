@@ -1,3 +1,7 @@
+Mob Battle 2.3.3
+===============
+- fixed server crashing
+
 Mob Battle 2.3.2
 ===============
 - Port to 1.14.4
