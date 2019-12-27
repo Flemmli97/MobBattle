@@ -26,51 +26,48 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MobArmor extends ItemSword{
+public class MobArmor extends ItemSword {
 
-	public MobArmor() 
-	{
-		super(ModItems.mob_mat);
-		this.setUnlocalizedName("mob_armor");
+    public MobArmor() {
+        super(ModItems.mob_mat);
+        this.setUnlocalizedName("mob_armor");
         this.setMaxStackSize(1);
         this.setCreativeTab(MobBattle.customTab);
-        this.setRegistryName(new ResourceLocation(MobBattle.MODID, "mob_armor"));	
+        this.setRegistryName(new ResourceLocation(MobBattle.MODID, "mob_armor"));
     }
 
-	@Override
-	public EnumAction getItemUseAction(ItemStack p_77661_1_) {
-		return EnumAction.NONE;
-	}
-	
-	@Override
-	public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot) {
-		return HashMultimap.create();
-	}
-	
-	@Override
-	public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn) {
+    @Override
+    public EnumAction getItemUseAction(ItemStack p_77661_1_) {
+        return EnumAction.NONE;
+    }
 
-		list.add(TextFormatting.AQUA + "Right click an entity to edit their equipment");
-	}
-	
-	 @Override
-	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
-		return true;
-	}
+    @Override
+    public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot) {
+        return HashMultimap.create();
+    }
 
-	@Override
-	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target,
-			EnumHand hand) {
-		if(target instanceof EntityLiving && !target.world.isRemote)
-		{
-			player.openGui(MobBattle.instance, 0, player.world, target.getEntityId(), 0, 0);
-			return true;
-		}
-		return false;
-	}
+    @Override
+    public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn) {
 
-	@SideOnly(Side.CLIENT)
-	    public void initModel() {
-	        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
-	    }
+        list.add(TextFormatting.AQUA + "Right click an entity to edit their equipment");
+    }
+
+    @Override
+    public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
+        return true;
+    }
+
+    @Override
+    public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand) {
+        if(target instanceof EntityLiving && !target.world.isRemote){
+            player.openGui(MobBattle.instance, 0, player.world, target.getEntityId(), 0, 0);
+            return true;
+        }
+        return false;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void initModel() {
+        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
+    }
 }

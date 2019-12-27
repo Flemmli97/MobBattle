@@ -25,47 +25,45 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MobHeal  extends ItemSword{
-	
-	public MobHeal()
-	{
-		super(ModItems.mob_mat);
-		this.setUnlocalizedName("mob_heal");
-	    this.setMaxStackSize(1);
-	    this.setCreativeTab(MobBattle.customTab);
-        this.setRegistryName(new ResourceLocation(MobBattle.MODID, "mob_heal"));	
+public class MobHeal extends ItemSword {
 
-	}
+    public MobHeal() {
+        super(ModItems.mob_mat);
+        this.setUnlocalizedName("mob_heal");
+        this.setMaxStackSize(1);
+        this.setCreativeTab(MobBattle.customTab);
+        this.setRegistryName(new ResourceLocation(MobBattle.MODID, "mob_heal"));
 
-	@Override
-	public EnumAction getItemUseAction(ItemStack p_77661_1_) {
-		return EnumAction.NONE;
-	}
+    }
 
-	@Override
-	public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot) {
-		return HashMultimap.create();
-	}
+    @Override
+    public EnumAction getItemUseAction(ItemStack p_77661_1_) {
+        return EnumAction.NONE;
+    }
 
-	@Override
-	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
-		
-		if(entity instanceof EntityLiving)
-		{
-			((EntityLiving) entity).heal(((EntityLiving) entity).getMaxHealth() - ((EntityLiving) entity).getHealth());
-			entity.world.spawnParticle(EnumParticleTypes.HEART, entity.posX, entity.posY + entity.height + 0.5, entity.posZ, 0, 0.1, 0);				
-		}
-		return true;
-		
-	}
+    @Override
+    public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot) {
+        return HashMultimap.create();
+    }
 
-	@Override
-	public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn) {
-		list.add(TextFormatting.AQUA + "Left click on entity to heal it");
-	}
-	
-	 @SideOnly(Side.CLIENT)
-	    public void initModel() {
-	        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
-	    }
+    @Override
+    public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
+
+        if(entity instanceof EntityLiving){
+            ((EntityLiving) entity).heal(((EntityLiving) entity).getMaxHealth() - ((EntityLiving) entity).getHealth());
+            entity.world.spawnParticle(EnumParticleTypes.HEART, entity.posX, entity.posY + entity.height + 0.5, entity.posZ, 0, 0.1, 0);
+        }
+        return true;
+
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn) {
+        list.add(TextFormatting.AQUA + "Left click on entity to heal it");
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void initModel() {
+        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
+    }
 }

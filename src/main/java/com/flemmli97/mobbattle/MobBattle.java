@@ -20,12 +20,11 @@ public class MobBattle {
     public static final String MODNAME = "Mob Battle Mod";
     public static final String VERSION = "${@VERSION}";
     public static final Logger logger = LogManager.getLogger(MobBattle.MODID);
-        
+
     @Instance
     public static MobBattle instance = new MobBattle();
-        
-     
-    @SidedProxy(clientSide="com.flemmli97.mobbattle.ClientProxy", serverSide="com.flemmli97.mobbattle.CommonProxy")
+
+    @SidedProxy(clientSide = "com.flemmli97.mobbattle.ClientProxy", serverSide = "com.flemmli97.mobbattle.CommonProxy")
     public static CommonProxy proxy;
 
     @EventHandler
@@ -42,16 +41,15 @@ public class MobBattle {
     public void postInit(FMLPostInitializationEvent e) {
         proxy.postInit(e);
     }
-    
+
     public static CreativeTabs customTab = new CreativeTabs("mobbattle") {
 
-		@Override
-		public ItemStack getTabIconItem() {
-			ItemStack iStack = new ItemStack(ModItems.mobStick);
-			return iStack;
-			
-		}
+        @Override
+        public ItemStack getTabIconItem() {
+            ItemStack iStack = new ItemStack(ModItems.mobStick);
+            return iStack;
+
+        }
 
     };
 }
-    

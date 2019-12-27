@@ -32,94 +32,85 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MobStick extends ItemSword{
-		
-	public MobStick()
-	{
-		super(ModItems.mob_mat);
+public class MobStick extends ItemSword {
+
+    public MobStick() {
+        super(ModItems.mob_mat);
         this.setUnlocalizedName("mob_stick");
         this.setMaxStackSize(1);
         this.setCreativeTab(MobBattle.customTab);
         this.setRegistryName(new ResourceLocation(MobBattle.MODID, "mob_stick"));
-	}
-	
-	@Override
-	public EnumAction getItemUseAction(ItemStack p_77661_1_) {
-		return EnumAction.NONE;
-	}
+    }
 
-	@Override
-	public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot) {
-		return HashMultimap.create();
-	}
-	
-	@Override
-	public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag b) {
+    @Override
+    public EnumAction getItemUseAction(ItemStack p_77661_1_) {
+        return EnumAction.NONE;
+    }
 
-		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("StoredEntityName"))
-		{
-			list.add(TextFormatting.GREEN + "Asigned entity: " + stack.getTagCompound().getString("StoredEntityName"));
-		}
-		list.add(TextFormatting.AQUA + "Left click to asign an entity");
-		list.add(TextFormatting.AQUA + "Right click to reset");
-	}
+    @Override
+    public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot) {
+        return HashMultimap.create();
+    }
 
-	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-		ItemStack stack = player.getHeldItem(hand);
-		if(!player.world.isRemote)
-		if(stack.hasTagCompound())
-		{
-			stack.getTagCompound().removeTag("StoredEntity");
-			stack.getTagCompound().removeTag("StoredEntityName");
-			player.sendMessage(new TextComponentString(TextFormatting.RED + "Reset entities"));
-		}
-		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
-	}
+    @Override
+    public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag b) {
 
-	@Override
-	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
-		if(!player.world.isRemote)
-		{
-			EntityLiving storedEntity = this.getStoredEntity(player.world, stack);
-			if (storedEntity!=null)
-			{
-				if (entity instanceof EntityLiving && entity != storedEntity)
-				{		
-					EntityLiving living = (EntityLiving) entity;
-					living.setAttackTarget(storedEntity);
-					storedEntity.setAttackTarget(living);
-					stack.getTagCompound().removeTag("StoredEntity");
-					stack.getTagCompound().removeTag("StoredEntityName");
-					return true;
-				}			
-			}
-			else if (entity instanceof EntityLiving)
-			{
-				NBTTagCompound compound = new NBTTagCompound();
-				if(stack.hasTagCompound())
-					compound = stack.getTagCompound();
-				compound.setString("StoredEntity", entity.getCachedUniqueIdString());
-				compound.setString("StoredEntityName", entity.getClass().getSimpleName());
-				stack.setTagCompound(compound);
-				player.sendMessage(new TextComponentString(TextFormatting.GOLD + "First entity set, hit another entity to set target"));
-				return true;
-			}
-		}
-	    return true;
-	}
-	
-	@Nullable
-	private EntityLiving getStoredEntity(World world, ItemStack stack)
-	{
-		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("StoredEntity"))
-			return Team.fromUUID(world, stack.getTagCompound().getString("StoredEntity"));
-		return null;
-	}
-	
-	 @SideOnly(Side.CLIENT)
-	    public void initModel() {
-	        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
-	    }
-	
+        if(stack.hasTagCompound() && stack.getTagCompound().hasKey("StoredEntityName")){
+            list.add(TextFormatting.GREEN + "Asigned entity: " + stack.getTagCompound().getString("StoredEntityName"));
+        }
+        list.add(TextFormatting.AQUA + "Left click to asign an entity");
+        list.add(TextFormatting.AQUA + "Right click to reset");
+    }
+
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+        ItemStack stack = player.getHeldItem(hand);
+        if(!player.world.isRemote)
+            if(stack.hasTagCompound()){
+                stack.getTagCompound().removeTag("StoredEntity");
+                stack.getTagCompound().removeTag("StoredEntityName");
+                player.sendMessage(new TextComponentString(TextFormatting.RED + "Reset entities"));
+            }
+        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
+    }
+
+    @Override
+    public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
+        if(!player.world.isRemote){
+            EntityLiving storedEntity = this.getStoredEntity(player.world, stack);
+            if(storedEntity != null){
+                if(entity instanceof EntityLiving && entity != storedEntity){
+                    EntityLiving living = (EntityLiving) entity;
+                    living.setAttackTarget(storedEntity);
+                    storedEntity.setAttackTarget(living);
+                    stack.getTagCompound().removeTag("StoredEntity");
+                    stack.getTagCompound().removeTag("StoredEntityName");
+                    return true;
+                }
+            }else if(entity instanceof EntityLiving){
+                NBTTagCompound compound = new NBTTagCompound();
+                if(stack.hasTagCompound())
+                    compound = stack.getTagCompound();
+                compound.setString("StoredEntity", entity.getCachedUniqueIdString());
+                compound.setString("StoredEntityName", entity.getClass().getSimpleName());
+                stack.setTagCompound(compound);
+                player.sendMessage(new TextComponentString(TextFormatting.GOLD + "First entity set, hit another entity to set target"));
+                return true;
+            }
+        }
+        return true;
+    }
+
+    @Nullable
+    private EntityLiving getStoredEntity(World world, ItemStack stack) {
+        if(stack.hasTagCompound() && stack.getTagCompound().hasKey("StoredEntity"))
+            return Team.fromUUID(world, stack.getTagCompound().getString("StoredEntity"));
+        return null;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void initModel() {
+        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
+    }
+
 }

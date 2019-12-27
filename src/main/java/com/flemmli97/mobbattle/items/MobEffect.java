@@ -25,49 +25,46 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MobEffect extends ItemSword{
-	
-	public MobEffect()
-	{
-		super(ModItems.mob_mat);
+public class MobEffect extends ItemSword {
+
+    public MobEffect() {
+        super(ModItems.mob_mat);
         this.setUnlocalizedName("mob_effect");
         this.setMaxStackSize(1);
         this.setCreativeTab(MobBattle.customTab);
-        this.setRegistryName(new ResourceLocation(MobBattle.MODID, "mob_effect"));	
+        this.setRegistryName(new ResourceLocation(MobBattle.MODID, "mob_effect"));
     }
-	
-	@Override
-	public EnumAction getItemUseAction(ItemStack p_77661_1_) {
-		return EnumAction.NONE;
-	}
-	
-	@Override
-	public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot) {
-		return HashMultimap.create();
-	}
-	
-	@Override
-	public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn) {
-		list.add(TextFormatting.AQUA + "Left click an entity to remove their potion effects");
-	}
-	
-	@Override
-	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
-		if(entity instanceof EntityLivingBase)
-		{
-			EntityLivingBase e = (EntityLivingBase) entity;
-			e.clearActivePotions();
-			if (!player.world.isRemote)
-			{
-				player.sendMessage(new TextComponentString(TextFormatting.GOLD + "Effects cleared"));
-			}
-		}
-	    return true;
-	}
-	
-	 @SideOnly(Side.CLIENT)
-	    public void initModel() {
-	        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
-	    }
+
+    @Override
+    public EnumAction getItemUseAction(ItemStack p_77661_1_) {
+        return EnumAction.NONE;
+    }
+
+    @Override
+    public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot) {
+        return HashMultimap.create();
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn) {
+        list.add(TextFormatting.AQUA + "Left click an entity to remove their potion effects");
+    }
+
+    @Override
+    public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
+        if(entity instanceof EntityLivingBase){
+            EntityLivingBase e = (EntityLivingBase) entity;
+            e.clearActivePotions();
+            if(!player.world.isRemote){
+                player.sendMessage(new TextComponentString(TextFormatting.GOLD + "Effects cleared"));
+            }
+        }
+        return true;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void initModel() {
+        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
+    }
 
 }

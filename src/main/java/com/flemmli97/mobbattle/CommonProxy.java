@@ -15,41 +15,42 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class CommonProxy {
-	
-	public static final EntityEquipmentSlot slot[] = {EntityEquipmentSlot.MAINHAND, EntityEquipmentSlot.OFFHAND, EntityEquipmentSlot.HEAD
-			,EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
-	private static final SimpleNetworkWrapper dispatcher = NetworkRegistry.INSTANCE.newSimpleChannel(MobBattle.MODID);
-	public static boolean fate;
-	public static boolean runecraftory;
-	public static boolean animania;
-	public static boolean mca;
+
+    public static final EntityEquipmentSlot slot[] = {EntityEquipmentSlot.MAINHAND, EntityEquipmentSlot.OFFHAND, EntityEquipmentSlot.HEAD,
+            EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
+    private static final SimpleNetworkWrapper dispatcher = NetworkRegistry.INSTANCE.newSimpleChannel(MobBattle.MODID);
+    public static boolean fate;
+    public static boolean runecraftory;
+    public static boolean animania;
+    public static boolean mca;
+
     public void preInit(FMLPreInitializationEvent e) {
-    	Config.load();
-    	dispatcher.registerMessage(EquipMessage.Handler.class, EquipMessage.class, 0, Side.SERVER);
-    	dispatcher.registerMessage(ItemStackUpdate.Handler.class, ItemStackUpdate.class, 1, Side.SERVER);
+        Config.load();
+        dispatcher.registerMessage(EquipMessage.Handler.class, EquipMessage.class, 0, Side.SERVER);
+        dispatcher.registerMessage(ItemStackUpdate.Handler.class, ItemStackUpdate.class, 1, Side.SERVER);
     }
-    
+
     public void init(FMLInitializationEvent e) {
-		MinecraftForge.EVENT_BUS.register(new EventHandler());
+        MinecraftForge.EVENT_BUS.register(new EventHandler());
         NetworkRegistry.INSTANCE.registerGuiHandler(MobBattle.instance, new GuiHandler());
-        if (Loader.isModLoaded("runecraftory")) {
-            runecraftory=true;
+        if(Loader.isModLoaded("runecraftory")){
+            runecraftory = true;
         }
-        if (Loader.isModLoaded("fatemod")) {
-            fate=true;
+        if(Loader.isModLoaded("fatemod")){
+            fate = true;
         }
-        if (Loader.isModLoaded("animania")) {
-        	animania=true;
+        if(Loader.isModLoaded("animania")){
+            animania = true;
         }
-        if (Loader.isModLoaded("mca")) {
-        	mca=true;
+        if(Loader.isModLoaded("mca")){
+            mca = true;
         }
     }
 
     public void postInit(FMLPostInitializationEvent e) {
     }
-	
-	public static final void sendToServer(IMessage message) {
-		dispatcher.sendToServer(message);
-	}
+
+    public static final void sendToServer(IMessage message) {
+        dispatcher.sendToServer(message);
+    }
 }
