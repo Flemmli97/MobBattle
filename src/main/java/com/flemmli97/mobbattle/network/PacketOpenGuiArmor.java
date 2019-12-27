@@ -1,7 +1,5 @@
 package com.flemmli97.mobbattle.network;
 
-
-
 import java.util.function.Supplier;
 
 import com.flemmli97.mobbattle.MobBattle;
@@ -12,40 +10,37 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-public class PacketOpenGuiArmor{
+public class PacketOpenGuiArmor {
 
-	private int entityID, windowID;
-	
-	public PacketOpenGuiArmor(MobEntity entity, int windowID)
-	{
-		this.entityID=entity.getEntityId();
-		this.windowID=windowID;
-	}
-	
-	private PacketOpenGuiArmor(int entityID, int windowID)
-	{
-		this.entityID=entityID;
-		this.windowID=windowID;
-	}
-	
-	public static PacketOpenGuiArmor fromBytes(PacketBuffer buf) {
-		return new PacketOpenGuiArmor(buf.readInt(), buf.readInt());
-	}
+    private int entityID, windowID;
 
-	public static void toBytes(PacketOpenGuiArmor msg, PacketBuffer buf) {
-		buf.writeInt(msg.entityID);
-		buf.writeInt(msg.windowID);
-	}
-	
-	public static void onMessage(PacketOpenGuiArmor msg, Supplier<NetworkEvent.Context> ctx) {
-		ctx.get().enqueueWork(()->{
-			PlayerEntity player = MobBattle.proxy.getPlayer(ctx);
-	    	Entity e = player.world.getEntityByID(msg.entityID);
-	    	if(e instanceof MobEntity)
-	    	{
-	    	    MobBattle.proxy.openArmorGUI(player, msg.windowID, (MobEntity) e);
-	    	}
-	    });
-		ctx.get().setPacketHandled(true);
+    public PacketOpenGuiArmor(MobEntity entity, int windowID) {
+        this.entityID = entity.getEntityId();
+        this.windowID = windowID;
+    }
+
+    private PacketOpenGuiArmor(int entityID, int windowID) {
+        this.entityID = entityID;
+        this.windowID = windowID;
+    }
+
+    public static PacketOpenGuiArmor fromBytes(PacketBuffer buf) {
+        return new PacketOpenGuiArmor(buf.readInt(), buf.readInt());
+    }
+
+    public static void toBytes(PacketOpenGuiArmor msg, PacketBuffer buf) {
+        buf.writeInt(msg.entityID);
+        buf.writeInt(msg.windowID);
+    }
+
+    public static void onMessage(PacketOpenGuiArmor msg, Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
+            PlayerEntity player = MobBattle.proxy.getPlayer(ctx);
+            Entity e = player.world.getEntityByID(msg.entityID);
+            if(e instanceof MobEntity){
+                MobBattle.proxy.openArmorGUI(player, msg.windowID, (MobEntity) e);
+            }
+        });
+        ctx.get().setPacketHandled(true);
     }
 }

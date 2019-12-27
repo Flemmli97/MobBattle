@@ -18,28 +18,26 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
-public class MobKill extends Item{
-	
-	public MobKill()
-	{
-		super(new Item.Properties().maxStackSize(1).group(MobBattle.customTab));
-        this.setRegistryName(new ResourceLocation(MobBattle.MODID, "mob_kill"));	
-	}
+public class MobKill extends Item {
 
-	@Override
-	public boolean canPlayerBreakBlockWhileHolding(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) 
-	{
-		return !player.isCreative();
-	}
+    public MobKill() {
+        super(new Item.Properties().maxStackSize(1).group(MobBattle.customTab));
+        this.setRegistryName(new ResourceLocation(MobBattle.MODID, "mob_kill"));
+    }
 
-	@Override
-	public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
-		entity.attackEntityFrom(DamageSource.OUT_OF_WORLD, Float.MAX_VALUE);
-		return true;
-	}
-	
-	@Override
-	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> list, ITooltipFlag flagIn) {
-		list.add(new StringTextComponent(TextFormatting.AQUA + "Left click on entity to kill it"));
-	}
+    @Override
+    public boolean canPlayerBreakBlockWhileHolding(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
+        return !player.isCreative();
+    }
+
+    @Override
+    public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
+        entity.attackEntityFrom(DamageSource.OUT_OF_WORLD, Float.MAX_VALUE);
+        return true;
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> list, ITooltipFlag flagIn) {
+        list.add(new StringTextComponent(TextFormatting.AQUA + "Left click on entity to kill it"));
+    }
 }

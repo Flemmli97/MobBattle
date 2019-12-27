@@ -8,10 +8,9 @@ import net.minecraftforge.fml.network.NetworkEvent;
 
 public interface IProxy {
 
-	
-	public void openArmorGUI(PlayerEntity player, int windowID, MobEntity living);
-	
-	public void openEffectGUI(PlayerEntity player);
+    public void openArmorGUI(PlayerEntity player, int windowID, MobEntity living);
 
-	public PlayerEntity getPlayer(Supplier<NetworkEvent.Context> ctx);
+    public void openEffectGUI(PlayerEntity player);
+
+    public PlayerEntity getPlayer(Supplier<NetworkEvent.Context> ctx);
 }

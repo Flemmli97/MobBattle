@@ -19,33 +19,30 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
-public class MobHeal  extends Item{
-	
-	public MobHeal()
-	{
-		super(new Item.Properties().maxStackSize(1).group(MobBattle.customTab));
-        this.setRegistryName(new ResourceLocation(MobBattle.MODID, "mob_heal"));	
-	}
+public class MobHeal extends Item {
 
-	@Override
-	public boolean canPlayerBreakBlockWhileHolding(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) 
-	{
-		return !player.isCreative();
-	}
+    public MobHeal() {
+        super(new Item.Properties().maxStackSize(1).group(MobBattle.customTab));
+        this.setRegistryName(new ResourceLocation(MobBattle.MODID, "mob_heal"));
+    }
 
-	@Override
-	public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
-		if(entity instanceof MobEntity)
-		{
-			((MobEntity) entity).heal(((MobEntity) entity).getMaxHealth() - ((MobEntity) entity).getHealth());
-			entity.world.addParticle(ParticleTypes.HEART, entity.posX, entity.posY + entity.getHeight() + 0.5, entity.posZ, 0, 0.1, 0);				
-		}
-		return true;
-		
-	}
+    @Override
+    public boolean canPlayerBreakBlockWhileHolding(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
+        return !player.isCreative();
+    }
 
-	@Override
-	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> list, ITooltipFlag flagIn) {
-		list.add(new StringTextComponent(TextFormatting.AQUA + "Left click on entity to heal it"));
-	}
+    @Override
+    public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
+        if(entity instanceof MobEntity){
+            ((MobEntity) entity).heal(((MobEntity) entity).getMaxHealth() - ((MobEntity) entity).getHealth());
+            entity.world.addParticle(ParticleTypes.HEART, entity.posX, entity.posY + entity.getHeight() + 0.5, entity.posZ, 0, 0.1, 0);
+        }
+        return true;
+
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> list, ITooltipFlag flagIn) {
+        list.add(new StringTextComponent(TextFormatting.AQUA + "Left click on entity to heal it"));
+    }
 }

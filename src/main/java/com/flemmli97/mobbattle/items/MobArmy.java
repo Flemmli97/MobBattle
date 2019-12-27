@@ -25,103 +25,93 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
-public class MobArmy extends Item{
-		
-	public MobArmy()
-	{
-		super(new Item.Properties().maxStackSize(1).group(MobBattle.customTab));
+public class MobArmy extends Item {
+
+    public MobArmy() {
+        super(new Item.Properties().maxStackSize(1).group(MobBattle.customTab));
         this.setRegistryName(new ResourceLocation(MobBattle.MODID, "mob_army"));
-	}
-	
-	@Override
-	public boolean canPlayerBreakBlockWhileHolding(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) 
-	{
-		return !player.isCreative();
-	}
-	
-	@Override
-	public void addInformation(ItemStack stack, World world, List<ITextComponent> list, ITooltipFlag b) 
-	{
-		list.add(new StringTextComponent(TextFormatting.AQUA + "Right click block to set first, and then second corner of the box"));
-		list.add(new StringTextComponent(TextFormatting.AQUA + "Right click into air to to add entities in the box to the team with the name of this item (if exists, else DEFAULT)"));
-		list.add(new StringTextComponent(TextFormatting.AQUA + "Shift-Right click to reset box"));
-		list.add(new StringTextComponent(TextFormatting.AQUA + "Left click to add entities to the team with the name of this item (if exists, else DEFAULT)"));
-	}
-	
-	public BlockPos[] getSelPos(ItemStack stack)
-	{
-		if(stack.hasTag())
-		{
-			CompoundNBT compound = stack.getTag();
-			BlockPos pos1=null;
-			if(compound.contains("Position1") && compound.getIntArray("Position1")!=null)
-				pos1 = new BlockPos(compound.getIntArray("Position1")[0], compound.getIntArray("Position1")[1], compound.getIntArray("Position1")[2]);
-			BlockPos pos2=null;
-			if(compound.contains("Position2") && compound.getIntArray("Position2")!=null)
-				pos2 = new BlockPos(compound.getIntArray("Position2")[0], compound.getIntArray("Position2")[1], compound.getIntArray("Position2")[2]);
-			return new BlockPos[] {pos1, pos2};
-		}
-		return new BlockPos[] {null, null};
-	}
-	
-	@Override
-	public ActionResultType onItemUse(ItemUseContext ctx) {
-		ItemStack stack = ctx.getItem();
-		if(!ctx.getWorld().isRemote)
-		{
-			CompoundNBT compound = stack.getTag();
-			if(compound==null)
-				compound = new CompoundNBT();
-			if(!compound.contains("Position1") || compound.getIntArray("Position1")==null)
-			{
-				compound.putIntArray("Position1", new int[] {ctx.getPos().getX(), ctx.getPos().getY(), ctx.getPos().getZ()});
-			}
-			else if(!ctx.getPos().equals(new BlockPos(compound.getIntArray("Position1")[0], compound.getIntArray("Position1")[1], compound.getIntArray("Position1")[2])))
-			{
-				compound.putIntArray("Position2", new int[] {ctx.getPos().getX(), ctx.getPos().getY(), ctx.getPos().getZ()});
-			}
-			stack.setTag(compound);
-		}
+    }
+
+    @Override
+    public boolean canPlayerBreakBlockWhileHolding(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
+        return !player.isCreative();
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, World world, List<ITextComponent> list, ITooltipFlag b) {
+        list.add(new StringTextComponent(TextFormatting.AQUA + "Right click block to set first, and then second corner of the box"));
+        list.add(new StringTextComponent(TextFormatting.AQUA
+                + "Right click into air to to add entities in the box to the team with the name of this item (if exists, else DEFAULT)"));
+        list.add(new StringTextComponent(TextFormatting.AQUA + "Shift-Right click to reset box"));
+        list.add(new StringTextComponent(
+                TextFormatting.AQUA + "Left click to add entities to the team with the name of this item (if exists, else DEFAULT)"));
+    }
+
+    public BlockPos[] getSelPos(ItemStack stack) {
+        if(stack.hasTag()){
+            CompoundNBT compound = stack.getTag();
+            BlockPos pos1 = null;
+            if(compound.contains("Position1") && compound.getIntArray("Position1") != null)
+                pos1 = new BlockPos(compound.getIntArray("Position1")[0], compound.getIntArray("Position1")[1], compound.getIntArray("Position1")[2]);
+            BlockPos pos2 = null;
+            if(compound.contains("Position2") && compound.getIntArray("Position2") != null)
+                pos2 = new BlockPos(compound.getIntArray("Position2")[0], compound.getIntArray("Position2")[1], compound.getIntArray("Position2")[2]);
+            return new BlockPos[] {pos1, pos2};
+        }
+        return new BlockPos[] {null, null};
+    }
+
+    @Override
+    public ActionResultType onItemUse(ItemUseContext ctx) {
+        ItemStack stack = ctx.getItem();
+        if(!ctx.getWorld().isRemote){
+            CompoundNBT compound = stack.getTag();
+            if(compound == null)
+                compound = new CompoundNBT();
+            if(!compound.contains("Position1") || compound.getIntArray("Position1") == null){
+                compound.putIntArray("Position1", new int[] {ctx.getPos().getX(), ctx.getPos().getY(), ctx.getPos().getZ()});
+            }else if(!ctx.getPos().equals(
+                    new BlockPos(compound.getIntArray("Position1")[0], compound.getIntArray("Position1")[1], compound.getIntArray("Position1")[2]))){
+                compound.putIntArray("Position2", new int[] {ctx.getPos().getX(), ctx.getPos().getY(), ctx.getPos().getZ()});
+            }
+            stack.setTag(compound);
+        }
         return ActionResultType.SUCCESS;
-	}
+    }
 
-	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-		ItemStack stack = player.getHeldItem(hand);
-		if(!world.isRemote)
-		{
-			if(player.isSneaking() && stack.hasTag())
-			{
-				stack.getTag().remove("Position1");
-				stack.getTag().remove("Position2");
-				player.sendMessage(new StringTextComponent(TextFormatting.RED + "Reset Positions"));
-			}
-			else if(stack.getTag().contains("Position1") && stack.getTag().contains("Position2"))
-			{
-				BlockPos pos1 = new BlockPos(stack.getTag().getIntArray("Position1")[0],stack.getTag().getIntArray("Position1")[1],stack.getTag().getIntArray("Position1")[2]);
-				BlockPos pos2 = new BlockPos(stack.getTag().getIntArray("Position2")[0],stack.getTag().getIntArray("Position2")[1],stack.getTag().getIntArray("Position2")[2]);
-				AxisAlignedBB bb = Team.getBoundingBoxPositions(pos1, pos2);
-				List<CreatureEntity> list = player.world.getEntitiesWithinAABB(CreatureEntity.class, bb);
-				String team = stack.hasDisplayName()?stack.getDisplayName().getUnformattedComponentText():"DEFAULT";
-	
-				for(CreatureEntity living : list)
-				{
-					Team.updateEntity(team, living);
-				}
-				player.sendMessage(new StringTextComponent(TextFormatting.GOLD + "Added entities in the box to team " + team));
-			}
-		}
-		return new ActionResult<ItemStack>(ActionResultType.SUCCESS, stack);
-	}
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
+        ItemStack stack = player.getHeldItem(hand);
+        if(!world.isRemote){
+            if(player.isSneaking() && stack.hasTag()){
+                stack.getTag().remove("Position1");
+                stack.getTag().remove("Position2");
+                player.sendMessage(new StringTextComponent(TextFormatting.RED + "Reset Positions"));
+            }else if(stack.getTag().contains("Position1") && stack.getTag().contains("Position2")){
+                BlockPos pos1 = new BlockPos(stack.getTag().getIntArray("Position1")[0], stack.getTag().getIntArray("Position1")[1],
+                        stack.getTag().getIntArray("Position1")[2]);
+                BlockPos pos2 = new BlockPos(stack.getTag().getIntArray("Position2")[0], stack.getTag().getIntArray("Position2")[1],
+                        stack.getTag().getIntArray("Position2")[2]);
+                AxisAlignedBB bb = Team.getBoundingBoxPositions(pos1, pos2);
+                List<CreatureEntity> list = player.world.getEntitiesWithinAABB(CreatureEntity.class, bb);
+                String team = stack.hasDisplayName() ? stack.getDisplayName().getUnformattedComponentText() : "DEFAULT";
 
-	@Override
-	public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
-		if (entity instanceof CreatureEntity && !player.world.isRemote)
-		{		
-			String team = stack.hasDisplayName()?stack.getDisplayName().getUnformattedComponentText():"DEFAULT";
-			Team.updateEntity(team, (CreatureEntity) entity);
-			player.sendMessage(new StringTextComponent(TextFormatting.GOLD + "Added entity to team " + team));
-		}
-	    return true;
-	}
+                for(CreatureEntity living : list){
+                    Team.updateEntity(team, living);
+                }
+                player.sendMessage(new StringTextComponent(TextFormatting.GOLD + "Added entities in the box to team " + team));
+            }
+        }
+        return new ActionResult<ItemStack>(ActionResultType.SUCCESS, stack);
+    }
+
+    @Override
+    public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
+        if(entity instanceof CreatureEntity && !player.world.isRemote){
+            String team = stack.hasDisplayName() ? stack.getDisplayName().getUnformattedComponentText() : "DEFAULT";
+            Team.updateEntity(team, (CreatureEntity) entity);
+            player.sendMessage(new StringTextComponent(TextFormatting.GOLD + "Added entity to team " + team));
+        }
+        return true;
+    }
 }

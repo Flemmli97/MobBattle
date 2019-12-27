@@ -25,53 +25,48 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
-public class MobArmor extends Item{
+public class MobArmor extends Item {
 
-	public MobArmor() 
-	{
-		super(new Item.Properties().maxStackSize(1).group(MobBattle.customTab));
-        this.setRegistryName(new ResourceLocation(MobBattle.MODID, "mob_armor"));	
+    public MobArmor() {
+        super(new Item.Properties().maxStackSize(1).group(MobBattle.customTab));
+        this.setRegistryName(new ResourceLocation(MobBattle.MODID, "mob_armor"));
     }
 
-	@Override
-	public boolean canPlayerBreakBlockWhileHolding(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) 
-	{
-		return !player.isCreative();
-	}
-	
-	@Override
-	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> list, ITooltipFlag flagIn) {
-		list.add(new StringTextComponent(TextFormatting.AQUA + "Right click an entity to edit their equipment"));
-	}
-	
-	@Override
-	public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
-		return true;
-	}
+    @Override
+    public boolean canPlayerBreakBlockWhileHolding(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
+        return !player.isCreative();
+    }
 
-	@Override
-	public boolean itemInteractionForEntity(ItemStack stack, PlayerEntity player, LivingEntity target,
-			Hand hand) {
-		if(target instanceof MobEntity)
-		{
-			openArmorGUI(player, (MobEntity) target);
-			return true;
-		}
-		return false;
-	}
-	
-	private static final void openArmorGUI(PlayerEntity player, MobEntity living)
-	{
-		if(player.world.isRemote)
-			return;
-		ServerPlayerEntity mp = (ServerPlayerEntity) player;
-		mp.closeContainer();
-		mp.getNextWindowId();
-		int windowId = mp.currentWindowId;
-		PacketHandler.sendToClient(new PacketOpenGuiArmor(living, windowId), mp);
-		Container c = new ContainerArmor(windowId, player.inventory, living);
-		mp.openContainer = c;
-		mp.openContainer.addListener(mp);
-		net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerContainerEvent.Open(mp, c));	   
-	}
+    @Override
+    public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> list, ITooltipFlag flagIn) {
+        list.add(new StringTextComponent(TextFormatting.AQUA + "Right click an entity to edit their equipment"));
+    }
+
+    @Override
+    public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
+        return true;
+    }
+
+    @Override
+    public boolean itemInteractionForEntity(ItemStack stack, PlayerEntity player, LivingEntity target, Hand hand) {
+        if(target instanceof MobEntity){
+            openArmorGUI(player, (MobEntity) target);
+            return true;
+        }
+        return false;
+    }
+
+    private static final void openArmorGUI(PlayerEntity player, MobEntity living) {
+        if(player.world.isRemote)
+            return;
+        ServerPlayerEntity mp = (ServerPlayerEntity) player;
+        mp.closeContainer();
+        mp.getNextWindowId();
+        int windowId = mp.currentWindowId;
+        PacketHandler.sendToClient(new PacketOpenGuiArmor(living, windowId), mp);
+        Container c = new ContainerArmor(windowId, player.inventory, living);
+        mp.openContainer = c;
+        mp.openContainer.addListener(mp);
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerContainerEvent.Open(mp, c));
+    }
 }

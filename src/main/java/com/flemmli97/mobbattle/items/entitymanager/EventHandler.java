@@ -25,101 +25,84 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class EventHandler {
-	
+
     @SubscribeEvent
-    @OnlyIn(value=Dist.CLIENT)
-	public void render(RenderWorldLastEvent event) 
-    {
-		Minecraft mc = Minecraft.getInstance();
-		ClientPlayerEntity player = mc.player;
-		ItemStack heldItem = player.getHeldItemMainhand();
-		if(heldItem.getItem() == ModItems.mobArmy)
-		{
-			MobArmy item = (MobArmy) heldItem.getItem();
-			BlockPos pos = item.getSelPos(heldItem)[0];
-			BlockPos pos2 = item.getSelPos(heldItem)[1];
-			if(pos!=null)
-				renderBlockOutline(player, pos, pos2, event.getPartialTicks());
-		}
-		else if(heldItem.getItem() == ModItems.mobEquip)
-		{
-			MobEquip item = (MobEquip) heldItem.getItem();
-			BlockPos pos = item.getSelPos(heldItem)[0];
-			BlockPos pos2 = item.getSelPos(heldItem)[1];
-			if(pos!=null)
-				renderBlockOutline(player, pos, pos2, event.getPartialTicks());
-		}
+    @OnlyIn(value = Dist.CLIENT)
+    public void render(RenderWorldLastEvent event) {
+        Minecraft mc = Minecraft.getInstance();
+        ClientPlayerEntity player = mc.player;
+        ItemStack heldItem = player.getHeldItemMainhand();
+        if(heldItem.getItem() == ModItems.mobArmy){
+            MobArmy item = (MobArmy) heldItem.getItem();
+            BlockPos pos = item.getSelPos(heldItem)[0];
+            BlockPos pos2 = item.getSelPos(heldItem)[1];
+            if(pos != null)
+                renderBlockOutline(player, pos, pos2, event.getPartialTicks());
+        }else if(heldItem.getItem() == ModItems.mobEquip){
+            MobEquip item = (MobEquip) heldItem.getItem();
+            BlockPos pos = item.getSelPos(heldItem)[0];
+            BlockPos pos2 = item.getSelPos(heldItem)[1];
+            if(pos != null)
+                renderBlockOutline(player, pos, pos2, event.getPartialTicks());
+        }
     }
-    
+
     @SubscribeEvent
-    public void addTeamTarget(EntityJoinWorldEvent event)
-    {
-		if(!event.getWorld().isRemote && event.getEntity() instanceof CreatureEntity)
-		{
-			if(event.getEntity().getTeam()!=null)
-				Team.updateEntity(event.getEntity().getTeam().getName(), (CreatureEntity) event.getEntity());
-			if(event.getEntity().getTags().contains("PickUp"))
-				((CreatureEntity)event.getEntity()).goalSelector.addGoal(10, new EntityAIItemPickup((CreatureEntity) event.getEntity()));
-		}
+    public void addTeamTarget(EntityJoinWorldEvent event) {
+        if(!event.getWorld().isRemote && event.getEntity() instanceof CreatureEntity){
+            if(event.getEntity().getTeam() != null)
+                Team.updateEntity(event.getEntity().getTeam().getName(), (CreatureEntity) event.getEntity());
+            if(event.getEntity().getTags().contains("PickUp"))
+                ((CreatureEntity) event.getEntity()).goalSelector.addGoal(10, new EntityAIItemPickup((CreatureEntity) event.getEntity()));
+        }
     }
-    
+
     @SubscribeEvent
-    public void teamFriendlyFire(LivingAttackEvent event)
-    {
-		if(event.getEntity() instanceof LivingEntity && event.getEntity().getTeam()!=null)
-		{
-			LivingEntity ent = (LivingEntity) event.getEntity();
-			if(event.getSource().getTrueSource() instanceof LivingEntity)
-			{
-				LivingEntity attacker = (LivingEntity) event.getSource().getTrueSource();
-				if(Team.isOnSameTeam(ent, attacker) && !ent.getTeam().getAllowFriendlyFire())
-					event.setCanceled(true);
-			}
-		}
+    public void teamFriendlyFire(LivingAttackEvent event) {
+        if(event.getEntity() instanceof LivingEntity && event.getEntity().getTeam() != null){
+            LivingEntity ent = (LivingEntity) event.getEntity();
+            if(event.getSource().getTrueSource() instanceof LivingEntity){
+                LivingEntity attacker = (LivingEntity) event.getSource().getTrueSource();
+                if(Team.isOnSameTeam(ent, attacker) && !ent.getTeam().getAllowFriendlyFire())
+                    event.setCanceled(true);
+            }
+        }
     }
-    
+
     @SubscribeEvent
-    public void livingTick(LivingUpdateEvent event)
-    {
-		if(event.getEntity() instanceof CreatureEntity)
-		{
-			CreatureEntity e =  (CreatureEntity) event.getEntity();
-			if(e.getTeam()!=null)
-			{
-				if(Config.clientConf.showTeamParticleTypes.get() && e.world.isRemote)
-				{
-					RedstoneParticleData color = Team.teamColor.get(e.getTeam().getColor());
-					if(color!=null)
-						e.world.addParticle(color, e.posX, e.posY+e.getHeight()+0.5, e.posZ, 0,0,0);
-				}
-				else if(Config.serverConf.autoAddAI.get() && !e.getTags().contains("mobbattle:AddedAI"))
-				{
-					Team.updateEntity(e.getTeam().getName(), e);
-				}
-    		}
-		}
+    public void livingTick(LivingUpdateEvent event) {
+        if(event.getEntity() instanceof CreatureEntity){
+            CreatureEntity e = (CreatureEntity) event.getEntity();
+            if(e.getTeam() != null){
+                if(Config.clientConf.showTeamParticleTypes.get() && e.world.isRemote){
+                    RedstoneParticleData color = Team.teamColor.get(e.getTeam().getColor());
+                    if(color != null)
+                        e.world.addParticle(color, e.posX, e.posY + e.getHeight() + 0.5, e.posZ, 0, 0, 0);
+                }else if(Config.serverConf.autoAddAI.get() && !e.getTags().contains("mobbattle:AddedAI")){
+                    Team.updateEntity(e.getTeam().getName(), e);
+                }
+            }
+        }
     }
-    
-    @OnlyIn(value=Dist.CLIENT)
-    private static void renderBlockOutline(ClientPlayerEntity player,  BlockPos pos, BlockPos pos2, float partialTicks)
-    {
-		AxisAlignedBB aabb = Team.getBoundingBoxPositions(pos, pos2).shrink(0.1);
-		ActiveRenderInfo activerenderinfo = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
-		double d0 = - activerenderinfo.getProjectedView().x;
-        double d1 = - activerenderinfo.getProjectedView().y;
-        double d2 = - activerenderinfo.getProjectedView().z;
-		if(aabb!=null)
-		{
-			GlStateManager.pushMatrix();
-			GlStateManager.enableBlend();
-			GlStateManager.disableTexture();
+
+    @OnlyIn(value = Dist.CLIENT)
+    private static void renderBlockOutline(ClientPlayerEntity player, BlockPos pos, BlockPos pos2, float partialTicks) {
+        AxisAlignedBB aabb = Team.getBoundingBoxPositions(pos, pos2).shrink(0.1);
+        ActiveRenderInfo activerenderinfo = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
+        double d0 = -activerenderinfo.getProjectedView().x;
+        double d1 = -activerenderinfo.getProjectedView().y;
+        double d2 = -activerenderinfo.getProjectedView().z;
+        if(aabb != null){
+            GlStateManager.pushMatrix();
+            GlStateManager.enableBlend();
+            GlStateManager.disableTexture();
             GlStateManager.lineWidth(2);
             GlStateManager.depthMask(false);
-			WorldRenderer.drawSelectionBoundingBox(aabb.grow(0.0020000000949949026D).offset(d0, d1, d2), 1, 0.5F, 0.5F, 1);
-			GlStateManager.depthMask(true);
+            WorldRenderer.drawSelectionBoundingBox(aabb.grow(0.0020000000949949026D).offset(d0, d1, d2), 1, 0.5F, 0.5F, 1);
+            GlStateManager.depthMask(true);
             GlStateManager.enableTexture();
             GlStateManager.disableBlend();
-			GlStateManager.popMatrix();
-		}	
+            GlStateManager.popMatrix();
+        }
     }
 }

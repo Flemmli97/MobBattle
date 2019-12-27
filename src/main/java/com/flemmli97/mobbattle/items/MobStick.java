@@ -24,71 +24,63 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class MobStick extends Item{
-		
-	public MobStick()
-	{
-		super(new Item.Properties().maxStackSize(1).group(MobBattle.customTab));
+public class MobStick extends Item {
+
+    public MobStick() {
+        super(new Item.Properties().maxStackSize(1).group(MobBattle.customTab));
         this.setRegistryName(new ResourceLocation(MobBattle.MODID, "mob_stick"));
-	}
-	
-	@Override
-	public boolean canPlayerBreakBlockWhileHolding(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) 
-	{
-	      return !player.isCreative();
-	}
-	
-	@Override
-	public void addInformation(ItemStack stack, World world, List<ITextComponent> list, ITooltipFlag b) {
+    }
 
-		if(stack.hasTag() && stack.getTag().contains("StoredEntityName"))
-		{
-			list.add(new StringTextComponent(TextFormatting.GREEN + "Asigned entity: " + stack.getTag().getString("StoredEntityName")));
-		}
-		list.add(new StringTextComponent(TextFormatting.AQUA + "Left click to asign an entity"));
-		list.add(new StringTextComponent(TextFormatting.AQUA + "Right click to reset"));
-	}
+    @Override
+    public boolean canPlayerBreakBlockWhileHolding(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
+        return !player.isCreative();
+    }
 
-	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-		ItemStack stack = player.getHeldItem(hand);
-		if(!player.world.isRemote)
-			if(stack.hasTag())
-			{
-				stack.getTag().remove("StoredEntity");
-				stack.getTag().remove("StoredEntityName");
-				player.sendMessage(new StringTextComponent(TextFormatting.RED + "Reset entities"));
-			}
-		return new ActionResult<ItemStack>(ActionResultType.SUCCESS, stack);
-	}
+    @Override
+    public void addInformation(ItemStack stack, World world, List<ITextComponent> list, ITooltipFlag b) {
 
-	@Override
-	public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
-		if(!player.world.isRemote)
-			if (stack.hasTag() && stack.getTag().contains("StoredEntity"))
-			{
-				MobEntity storedEntity = Team.fromUUID((ServerWorld) player.world, stack.getTag().getString("StoredEntity"));
-				if (entity instanceof MobEntity && entity != storedEntity)
-				{		
-					MobEntity living = (MobEntity) entity;
-					living.setAttackTarget(storedEntity);
-					storedEntity.setAttackTarget(living);
-					stack.getTag().remove("StoredEntity");
-					stack.getTag().remove("StoredEntityName");
-					return true;
-				}			
-			}
-			else if (entity instanceof MobEntity)
-			{
-				CompoundNBT compound = new CompoundNBT();
-				if(stack.hasTag())
-					compound = stack.getTag();
-				compound.putString("StoredEntity", entity.getCachedUniqueIdString());
-				compound.putString("StoredEntityName", entity.getClass().getSimpleName());
-				stack.setTag(compound);
-				player.sendMessage(new StringTextComponent(TextFormatting.GOLD + "First entity set, hit another entity to set target"));
-				return true;
-			}
-	    return true;
-	}
+        if(stack.hasTag() && stack.getTag().contains("StoredEntityName")){
+            list.add(new StringTextComponent(TextFormatting.GREEN + "Asigned entity: " + stack.getTag().getString("StoredEntityName")));
+        }
+        list.add(new StringTextComponent(TextFormatting.AQUA + "Left click to asign an entity"));
+        list.add(new StringTextComponent(TextFormatting.AQUA + "Right click to reset"));
+    }
+
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
+        ItemStack stack = player.getHeldItem(hand);
+        if(!player.world.isRemote)
+            if(stack.hasTag()){
+                stack.getTag().remove("StoredEntity");
+                stack.getTag().remove("StoredEntityName");
+                player.sendMessage(new StringTextComponent(TextFormatting.RED + "Reset entities"));
+            }
+        return new ActionResult<ItemStack>(ActionResultType.SUCCESS, stack);
+    }
+
+    @Override
+    public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
+        if(!player.world.isRemote)
+            if(stack.hasTag() && stack.getTag().contains("StoredEntity")){
+                MobEntity storedEntity = Team.fromUUID((ServerWorld) player.world, stack.getTag().getString("StoredEntity"));
+                if(entity instanceof MobEntity && entity != storedEntity){
+                    MobEntity living = (MobEntity) entity;
+                    living.setAttackTarget(storedEntity);
+                    storedEntity.setAttackTarget(living);
+                    stack.getTag().remove("StoredEntity");
+                    stack.getTag().remove("StoredEntityName");
+                    return true;
+                }
+            }else if(entity instanceof MobEntity){
+                CompoundNBT compound = new CompoundNBT();
+                if(stack.hasTag())
+                    compound = stack.getTag();
+                compound.putString("StoredEntity", entity.getCachedUniqueIdString());
+                compound.putString("StoredEntityName", entity.getClass().getSimpleName());
+                stack.setTag(compound);
+                player.sendMessage(new StringTextComponent(TextFormatting.GOLD + "First entity set, hit another entity to set target"));
+                return true;
+            }
+        return true;
+    }
 }
