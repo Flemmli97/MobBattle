@@ -1,3 +1,10 @@
+Mob Battle 2.3.4
+===============
+- Fix evoker team not applying to summoned vexes
+- Changed all CreatureEntity references to MobEntity so Ghast, Phantoms etc. are included too. 
+	(Slime will attack but wont do dmg due to hardcoded dmg behaviour)
+- Remove all targetGoal which also fixes phantoms not attacking properly
+
 Mob Battle 2.3.3
 ===============
 - fixed server crashing
