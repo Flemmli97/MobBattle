@@ -5,15 +5,13 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
 
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.ai.EntityAITarget;
-import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
@@ -78,13 +76,14 @@ public class Team {
 
     public static void updateEntity(String team, EntityCreature e) {
         addEntityToTeam(e, team);
-        e.targetTasks.taskEntries.removeIf(new Predicate<EntityAITaskEntry>() {
+        /*e.targetTasks.taskEntries.removeIf(new Predicate<EntityAITaskEntry>() {
 
             @Override
             public boolean apply(EntityAITaskEntry input) {
                 return input.action instanceof EntityAITarget;
             }
-        });
+        });*/
+        e.targetTasks.taskEntries.removeIf(Predicates.alwaysTrue());
         e.setAttackTarget(null);
         //Idk why this line is here anymore...
         //e.setHealth(e.getMaxHealth());
