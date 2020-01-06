@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityVex;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -51,6 +52,12 @@ public class EventHandler {
     @SubscribeEvent
     public void addTeamTarget(EntityJoinWorldEvent event) {
         if(event.getEntity() instanceof EntityCreature){
+        	if(event.getEntity() instanceof EntityVex) {
+        		EntityVex vex = (EntityVex) event.getEntity();
+        		if(vex.getOwner()!=null && vex.getOwner().getTeam()!=null) {
+        			Team.addEntityToTeam(vex, vex.getOwner().getTeam().getName());
+        		}
+        	}
             if(event.getEntity().getTeam() != null)
                 Team.updateEntity(event.getEntity().getTeam().getName(), (EntityCreature) event.getEntity());
             if(event.getEntity().getTags().contains("PickUp"))
@@ -73,7 +80,7 @@ public class EventHandler {
     @SubscribeEvent
     public void livingTick(LivingUpdateEvent event) {
         if(event.getEntityLiving() instanceof EntityCreature){
-            EntityCreature e = (EntityCreature) event.getEntityLiving();
+        	EntityCreature e = (EntityCreature) event.getEntityLiving();
             if(e.getTeam() != null){
                 if(Config.showTeamParticles && e.world.isRemote){
                     double[] color = Team.teamColor.get(e.getTeam().getColor());
