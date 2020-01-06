@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.monster.VexEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -50,6 +51,12 @@ public class EventHandler {
     @SubscribeEvent
     public void addTeamTarget(EntityJoinWorldEvent event) {
         if(!event.getWorld().isRemote && event.getEntity() instanceof CreatureEntity){
+        	if(event.getEntity() instanceof VexEntity) {
+        		VexEntity vex = (VexEntity) event.getEntity();
+        		if(vex.getOwner()!=null && vex.getOwner().getTeam()!=null) {
+        			Team.addEntityToTeam(vex, vex.getOwner().getTeam().getName());
+        		}
+        	}
             if(event.getEntity().getTeam() != null)
                 Team.updateEntity(event.getEntity().getTeam().getName(), (CreatureEntity) event.getEntity());
             if(event.getEntity().getTags().contains("PickUp"))

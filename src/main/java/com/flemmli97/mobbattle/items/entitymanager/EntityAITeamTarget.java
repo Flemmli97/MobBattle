@@ -7,9 +7,9 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Predicate;
 
-import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.TargetGoal;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,7 +20,7 @@ public class EntityAITeamTarget extends TargetGoal {
     protected LivingEntity targetEntity;
     private Predicate<LivingEntity> pred;
 
-    public EntityAITeamTarget(CreatureEntity creature, boolean checkSight, boolean onlyNearby) {
+    public EntityAITeamTarget(MobEntity creature, boolean checkSight, boolean onlyNearby) {
         super(creature, checkSight, onlyNearby);
         this.setMutexFlags(EnumSet.of(Goal.Flag.TARGET));
         this.pred = new Predicate<LivingEntity>() {

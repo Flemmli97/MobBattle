@@ -12,7 +12,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
@@ -134,8 +133,8 @@ public class ItemExtendedSpawnEgg extends Item {
         if(entity != null){
             if(!ctx.getPlayer().abilities.isCreativeMode)
                 itemstack.shrink(1);
-            if(itemstack.hasDisplayName() && entity instanceof CreatureEntity){
-                Team.updateEntity(itemstack.getDisplayName().getUnformattedComponentText(), (CreatureEntity) entity);
+            if(itemstack.hasDisplayName() && entity instanceof MobEntity){
+                Team.updateEntity(itemstack.getDisplayName().getUnformattedComponentText(), (MobEntity) entity);
             }
         }
         return ActionResultType.SUCCESS;
@@ -161,8 +160,8 @@ public class ItemExtendedSpawnEgg extends Item {
                     if(entity != null){
                         if(!player.abilities.isCreativeMode)
                             itemstack.shrink(1);
-                        if(itemstack.hasDisplayName() && entity instanceof CreatureEntity){
-                            Team.updateEntity(itemstack.getDisplayName().getUnformattedComponentText(), (CreatureEntity) entity);
+                        if(itemstack.hasDisplayName() && entity instanceof MobEntity){
+                            Team.updateEntity(itemstack.getDisplayName().getUnformattedComponentText(), (MobEntity) entity);
                         }
                         return new ActionResult<ItemStack>(ActionResultType.SUCCESS, itemstack);
                     }

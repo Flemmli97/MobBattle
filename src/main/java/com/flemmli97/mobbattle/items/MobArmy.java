@@ -8,7 +8,7 @@ import com.flemmli97.mobbattle.items.entitymanager.Team;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -93,10 +93,10 @@ public class MobArmy extends Item {
                 BlockPos pos2 = new BlockPos(stack.getTag().getIntArray("Position2")[0], stack.getTag().getIntArray("Position2")[1],
                         stack.getTag().getIntArray("Position2")[2]);
                 AxisAlignedBB bb = Team.getBoundingBoxPositions(pos1, pos2);
-                List<CreatureEntity> list = player.world.getEntitiesWithinAABB(CreatureEntity.class, bb);
+                List<MobEntity> list = player.world.getEntitiesWithinAABB(MobEntity.class, bb);
                 String team = stack.hasDisplayName() ? stack.getDisplayName().getUnformattedComponentText() : "DEFAULT";
 
-                for(CreatureEntity living : list){
+                for(MobEntity living : list){
                     Team.updateEntity(team, living);
                 }
                 player.sendMessage(new StringTextComponent(TextFormatting.GOLD + "Added entities in the box to team " + team));
@@ -107,9 +107,9 @@ public class MobArmy extends Item {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
-        if(entity instanceof CreatureEntity && !player.world.isRemote){
+        if(entity instanceof MobEntity && !player.world.isRemote){
             String team = stack.hasDisplayName() ? stack.getDisplayName().getUnformattedComponentText() : "DEFAULT";
-            Team.updateEntity(team, (CreatureEntity) entity);
+            Team.updateEntity(team, (MobEntity) entity);
             player.sendMessage(new StringTextComponent(TextFormatting.GOLD + "Added entity to team " + team));
         }
         return true;

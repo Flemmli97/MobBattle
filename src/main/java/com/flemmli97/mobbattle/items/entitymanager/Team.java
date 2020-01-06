@@ -10,13 +10,11 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Maps;
 
-import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
-import net.minecraft.entity.ai.goal.TargetGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.scoreboard.ScorePlayerTeam;
@@ -84,13 +82,13 @@ public class Team {
         return entity.world.getScoreboard().getTeam(team) != null ? entity.world.getScoreboard().getTeam(team).getMembershipCollection().size() : 0;
     }
 
-    private static final Predicate<Goal> targetGoal = (goal) -> goal instanceof TargetGoal;
+    private static final Predicate<Goal> targetGoal = (goal) -> true;
 
-    public static void updateEntity(String team, CreatureEntity e) {
+    public static void updateEntity(String team, MobEntity e) {
         addEntityToTeam(e, team);
         removeGoal(e.targetSelector, targetGoal);
         e.setAttackTarget(null);
-        e.targetSelector.addGoal(1, new EntityAITeamTarget(e, false, true));
+        e.targetSelector.addGoal(0, new EntityAITeamTarget(e, false, true));
         e.addTag("mobbattle:AddedAI");
     }
 
