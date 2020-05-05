@@ -22,7 +22,7 @@ public class InventoryArmor extends InventoryBasic {
 
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
-        CommonProxy.sendToServer(new EquipMessage(stack, theEntity.getUniqueID().toString(), index));
+        CommonProxy.sendToServer(new EquipMessage(stack, this.theEntity.getUniqueID().toString(), index));
         super.setInventorySlotContents(index, stack);
     }
 

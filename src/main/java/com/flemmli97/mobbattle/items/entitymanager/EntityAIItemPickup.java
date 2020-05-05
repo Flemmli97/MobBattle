@@ -120,7 +120,7 @@ public class EntityAIItemPickup extends EntityAIBase {
             this.entity.setItemStackToSlot(entityequipmentslot, itemstack);
             this.entity.setDropChance(entityequipmentslot, 0);
             this.entity.enablePersistence();
-            this.entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F,
+            this.entity.world.playSound(null, this.entity.posX, this.entity.posY, this.entity.posZ, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F,
                     (this.entity.getRNG().nextFloat() - this.entity.getRNG().nextFloat()) * 1.4F + 2.0F);
             itemEntity.getItem().shrink(1);
         }

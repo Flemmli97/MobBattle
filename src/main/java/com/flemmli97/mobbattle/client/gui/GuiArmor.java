@@ -17,7 +17,7 @@ public class GuiArmor extends GuiContainer {
 
     public GuiArmor(InventoryPlayer playerInv, EntityLiving living) {
         super(new ContainerArmor(playerInv, living));
-        chatComponent = living.getDisplayName();
+        this.chatComponent = living.getDisplayName();
     }
 
     @Override

@@ -39,10 +39,10 @@ public class EquipMessage implements IMessage {
     public void toBytes(ByteBuf buf) {
         NBTTagCompound compound = new NBTTagCompound();
         NBTTagCompound tag = new NBTTagCompound();
-        compound.setString("UUID", uuid);
-        if(equipment != null)
-            compound.setTag("Stack", equipment.writeToNBT(tag));
-        compound.setInteger("Slot", slot);
+        compound.setString("UUID", this.uuid);
+        if(this.equipment != null)
+            compound.setTag("Stack", this.equipment.writeToNBT(tag));
+        compound.setInteger("Slot", this.slot);
         ByteBufUtils.writeTag(buf, compound);
     }
 
