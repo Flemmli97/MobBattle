@@ -21,8 +21,7 @@ public class ItemStackUpdate implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        NBTTagCompound compound = ByteBufUtils.readTag(buf);
-        this.compound = compound;
+        this.compound = ByteBufUtils.readTag(buf);
     }
 
     @Override

@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class CommonProxy {
 
-    public static final EntityEquipmentSlot slot[] = {EntityEquipmentSlot.MAINHAND, EntityEquipmentSlot.OFFHAND, EntityEquipmentSlot.HEAD,
+    public static final EntityEquipmentSlot[] slot = {EntityEquipmentSlot.MAINHAND, EntityEquipmentSlot.OFFHAND, EntityEquipmentSlot.HEAD,
             EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
     private static final SimpleNetworkWrapper dispatcher = NetworkRegistry.INSTANCE.newSimpleChannel(MobBattle.MODID);
     public static boolean fate;

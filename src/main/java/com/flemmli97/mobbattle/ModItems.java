@@ -64,9 +64,9 @@ public class ModItems {
 
             @Override
             public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
-                EnumFacing enumfacing = (EnumFacing) source.getBlockState().getValue(BlockDispenser.FACING);
+                EnumFacing enumfacing = source.getBlockState().getValue(BlockDispenser.FACING);
                 double x = source.getX() + (double) enumfacing.getFrontOffsetX();
-                double y = (double) (source.getBlockPos().getY() + enumfacing.getFrontOffsetY() + 0.2F);
+                double y = source.getBlockPos().getY() + enumfacing.getFrontOffsetY() + 0.2F;
                 double z = source.getZ() + (double) enumfacing.getFrontOffsetZ();
                 BlockPos blockpos = new BlockPos(x, y, z);
                 Entity entity = ItemExtendedSpawnEgg.spawnEntity(source.getWorld(), stack, blockpos.getX() + 0.5D, blockpos.getY(),

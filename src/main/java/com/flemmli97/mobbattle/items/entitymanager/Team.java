@@ -1,13 +1,7 @@
 package com.flemmli97.mobbattle.items.entitymanager;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nullable;
-
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
-
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -25,6 +19,10 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
 
 public class Team {
 
@@ -112,22 +110,21 @@ public class Team {
                 z = 1;
             else
                 z2 = 1;
-            AxisAlignedBB bb = new AxisAlignedBB(0 + x, 0 + y, 0 + z, xDiff + x2, yDiff + y2, zDiff + z2).offset(pos2);
-            return bb;
+            return new AxisAlignedBB(0 + x, 0 + y, 0 + z, xDiff + x2, yDiff + y2, zDiff + z2).offset(pos2);
         }
     }
 
     public static EntityLiving fromUUID(World world, String uuid) {
         if(uuid != null)
             for(Entity entity : world.loadedEntityList)
-                if(entity.getCachedUniqueIdString() == uuid && entity instanceof EntityLiving)
+                if(entity.getCachedUniqueIdString().equals(uuid) && entity instanceof EntityLiving)
                     return (EntityLiving) entity;
         return null;
     }
 
     public static double getYOffset(World world, BlockPos pos) {
         AxisAlignedBB axisalignedbb = (new AxisAlignedBB(pos)).expand(0.0D, -1.0D, 0.0D);
-        List<AxisAlignedBB> list = world.getCollisionBoxes((Entity) null, axisalignedbb);
+        List<AxisAlignedBB> list = world.getCollisionBoxes(null, axisalignedbb);
 
         if(list.isEmpty()){
             return 0.0D;

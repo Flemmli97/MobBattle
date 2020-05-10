@@ -46,8 +46,7 @@ public class MobBattle {
 
         @Override
         public ItemStack getTabIconItem() {
-            ItemStack iStack = new ItemStack(ModItems.mobStick);
-            return iStack;
+            return new ItemStack(ModItems.mobStick);
 
         }
 

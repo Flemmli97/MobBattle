@@ -1,13 +1,8 @@
 package com.flemmli97.mobbattle.client.gui;
 
-import java.io.IOException;
-
-import org.lwjgl.input.Keyboard;
-
 import com.flemmli97.mobbattle.CommonProxy;
 import com.flemmli97.mobbattle.ItemStackUpdate;
 import com.flemmli97.mobbattle.MobBattle;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -16,6 +11,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.input.Keyboard;
+
+import java.io.IOException;
 
 public class GuiEffect extends GuiScreen {
 
@@ -26,7 +24,7 @@ public class GuiEffect extends GuiScreen {
     private GuiTextField duration;
     private GuiTextField amplifier;
     private ButtonCheck button;
-    private ItemStack stack = ItemStack.EMPTY;
+    private ItemStack stack;
 
     public GuiEffect() {
         this.stack = Minecraft.getMinecraft().player.getHeldItemMainhand();
@@ -58,19 +56,17 @@ public class GuiEffect extends GuiScreen {
         this.amplifier.setText(this.stack.hasTagCompound() ? "" + this.stack.getTagCompound().getInteger(MobBattle.MODID + ":amplifier") : "");
         this.button = new ButtonCheck(0, i + 140, j + 49);
         this.buttonList.add(this.button);
-        this.button.checkUncheck(this.stack.hasTagCompound() ? this.stack.getTagCompound().getBoolean(MobBattle.MODID + ":show") : true);
+        this.button.checkUncheck(!this.stack.hasTagCompound() || this.stack.getTagCompound().getBoolean(MobBattle.MODID + ":show"));
     }
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
         if(this.potion.textboxKeyTyped(typedChar, keyCode)){
             NBTTagCompound compound = this.stack.hasTagCompound() ? this.stack.getTagCompound() : new NBTTagCompound();
-            ;
             compound.setString(MobBattle.MODID + ":potion", this.potion.getText());
             this.stack.setTagCompound(compound);
         }else if(Character.isDigit(typedChar) || this.isHelperKey(keyCode)){
             NBTTagCompound compound = this.stack.hasTagCompound() ? this.stack.getTagCompound() : new NBTTagCompound();
-            ;
             if(this.duration.textboxKeyTyped(typedChar, keyCode) && !this.duration.getText().isEmpty()){
                 try{
                     compound.setInteger(MobBattle.MODID + ":duration", Integer.parseInt(this.duration.getText()));

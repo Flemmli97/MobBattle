@@ -1,13 +1,8 @@
 package com.flemmli97.mobbattle.items;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import com.flemmli97.mobbattle.CommonProxy;
 import com.flemmli97.mobbattle.MobBattle;
 import com.flemmli97.mobbattle.items.entitymanager.Team;
-
 import mca.entity.EntityVillagerMCA;
 import mca.enums.EnumGender;
 import net.minecraft.block.BlockLiquid;
@@ -18,7 +13,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -39,6 +33,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class ItemExtendedSpawnEgg extends Item {
 
@@ -218,7 +215,7 @@ public class ItemExtendedSpawnEgg extends Item {
                 entity.setLocationAndAngles(x, y, z, MathHelper.wrapDegrees(world.rand.nextFloat() * 360.0F), 0.0F);
                 entityliving.rotationYawHead = entityliving.rotationYaw;
                 entityliving.renderYawOffset = entityliving.rotationYaw;
-                entityliving.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(entityliving)), (IEntityLivingData) null);
+                entityliving.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(entityliving)), null);
                 world.spawnEntity(entity);
                 entityliving.playLivingSound();
             }
@@ -227,9 +224,7 @@ public class ItemExtendedSpawnEgg extends Item {
     }
 
     private static boolean hasSavedEntity(ItemStack stack) {
-        if(stack.hasTagCompound() && stack.getTagCompound().hasKey(tagString) && stack.getTagCompound().getCompoundTag(tagString).hasKey("id"))
-            return true;
-        return false;
+        return stack.hasTagCompound() && stack.getTagCompound().hasKey(tagString) && stack.getTagCompound().getCompoundTag(tagString).hasKey("id");
     }
 
     public static void applyEntityNBT(Entity e, ItemStack stack) {

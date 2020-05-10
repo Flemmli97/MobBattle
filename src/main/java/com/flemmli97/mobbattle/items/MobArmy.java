@@ -161,6 +161,6 @@ public class MobArmy extends ItemSword {
     @SideOnly(Side.CLIENT)
     public void initModel() {
         for(int i = 0; i < 4; i++)
-            ModelLoader.setCustomModelResourceLocation(this, i, new ModelResourceLocation(getRegistryName() + "_" + i, "inventory"));
+            ModelLoader.setCustomModelResourceLocation(this, i, new ModelResourceLocation(this.getRegistryName() + "_" + i, "inventory"));
     }
 }

@@ -1,7 +1,5 @@
 package com.flemmli97.mobbattle.items.entitymanager;
 
-import java.util.List;
-
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -17,6 +15,8 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundCategory;
+
+import java.util.List;
 
 public class EntityAIItemPickup extends EntityAIBase {
 
@@ -34,7 +34,7 @@ public class EntityAIItemPickup extends EntityAIBase {
     @Override
     public boolean shouldExecute() {
         if(this.entity.getAttackTarget() == null){
-            List<EntityItem> list = this.entity.world.<EntityItem>getEntitiesWithinAABB(EntityItem.class, this.entity.getEntityBoundingBox().grow(8));
+            List<EntityItem> list = this.entity.world.getEntitiesWithinAABB(EntityItem.class, this.entity.getEntityBoundingBox().grow(8));
             if(list.isEmpty()){
                 return false;
             }else{

@@ -132,7 +132,7 @@ public class ContainerArmor extends Container {
     @Override
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = (Slot) this.inventorySlots.get(index);
+        Slot slot = this.inventorySlots.get(index);
         if(slot != null && slot.getHasStack()){
             ItemStack itemstack1 = slot.getStack();
             int size = itemstack1.getCount();
@@ -141,29 +141,29 @@ public class ContainerArmor extends Container {
                 if(!this.mergeItemStack(itemstack1, 6, this.inventorySlots.size(), true)){
                     return ItemStack.EMPTY;
                 }
-            }else if(!((Slot) this.inventorySlots.get(2)).getHasStack() && itemstack1.getItem().isValidArmor(itemstack1, CommonProxy.slot[2], null)){
-                Slot slot1 = ((Slot) this.inventorySlots.get(2));
+            }else if(!this.inventorySlots.get(2).getHasStack() && itemstack1.getItem().isValidArmor(itemstack1, CommonProxy.slot[2], null)){
+                Slot slot1 = this.inventorySlots.get(2);
                 slot1.putStack(itemstack);
                 slot1.onSlotChanged();
                 size--;
                 itemstack1.setCount(size);
                 return ItemStack.EMPTY;
-            }else if(!((Slot) this.inventorySlots.get(3)).getHasStack() && itemstack1.getItem().isValidArmor(itemstack1, CommonProxy.slot[3], null)){
-                Slot slot1 = ((Slot) this.inventorySlots.get(3));
+            }else if(!this.inventorySlots.get(3).getHasStack() && itemstack1.getItem().isValidArmor(itemstack1, CommonProxy.slot[3], null)){
+                Slot slot1 = this.inventorySlots.get(3);
                 slot1.putStack(itemstack);
                 slot1.onSlotChanged();
                 size--;
                 itemstack1.setCount(size);
                 return ItemStack.EMPTY;
-            }else if(!((Slot) this.inventorySlots.get(4)).getHasStack() && itemstack1.getItem().isValidArmor(itemstack1, CommonProxy.slot[4], null)){
-                Slot slot1 = ((Slot) this.inventorySlots.get(4));
+            }else if(!this.inventorySlots.get(4).getHasStack() && itemstack1.getItem().isValidArmor(itemstack1, CommonProxy.slot[4], null)){
+                Slot slot1 = this.inventorySlots.get(4);
                 slot1.putStack(itemstack);
                 slot1.onSlotChanged();
                 size--;
                 itemstack1.setCount(size);
                 return ItemStack.EMPTY;
-            }else if(!((Slot) this.inventorySlots.get(5)).getHasStack() && itemstack1.getItem().isValidArmor(itemstack1, CommonProxy.slot[5], null)){
-                Slot slot1 = ((Slot) this.inventorySlots.get(5));
+            }else if(!this.inventorySlots.get(5).getHasStack() && itemstack1.getItem().isValidArmor(itemstack1, CommonProxy.slot[5], null)){
+                Slot slot1 = this.inventorySlots.get(5);
                 slot1.putStack(itemstack);
                 slot1.onSlotChanged();
                 size--;

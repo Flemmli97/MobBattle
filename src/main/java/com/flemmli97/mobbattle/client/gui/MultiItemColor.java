@@ -1,8 +1,5 @@
 package com.flemmli97.mobbattle.client.gui;
 
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.animania.common.entities.AnimalContainer;
 import com.animania.common.handler.EntityEggHandler;
 import com.animania.common.items.ItemEntityEgg;
@@ -11,7 +8,6 @@ import com.flemmli97.mobbattle.CommonProxy;
 import com.flemmli97.mobbattle.items.ItemExtendedSpawnEgg;
 import com.flemmli97.runecraftory.common.init.EntitySpawnEggList;
 import com.google.common.collect.Maps;
-
 import mca.entity.EntityGrimReaper;
 import mca.entity.EntityVillagerMCA;
 import mca.enums.EnumGender;
@@ -21,6 +17,9 @@ import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.EntityEntry;
+
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class MultiItemColor implements IItemColor {
 
@@ -55,7 +54,7 @@ public class MultiItemColor implements IItemColor {
             if(eggInfo == null && CommonProxy.mca){
                 ResourceLocation villager = EntityList.getKey(EntityVillagerMCA.class);
                 ResourceLocation grimReaper = EntityList.getKey(EntityGrimReaper.class);
-                if(villager != null && id.equals(villager)){
+                if(id.equals(villager)){
                     int i = stack.getTagCompound().getCompoundTag(ItemExtendedSpawnEgg.tagString).hasKey("GENDER")
                             ? stack.getTagCompound().getCompoundTag(ItemExtendedSpawnEgg.tagString).getInteger("GENDER")
                             : stack.getTagCompound().getCompoundTag(ItemExtendedSpawnEgg.tagString).hasKey("MCAGender")
@@ -64,7 +63,7 @@ public class MultiItemColor implements IItemColor {
                     EnumGender gender = EnumGender.byId(i);
                     return tintIndex == 0 ? (gender == EnumGender.MALE ? 0x336f90 : 0xff8d8d) : (gender == EnumGender.MALE ? 0x4c97f9 : 0xffb4b4);
                 }
-                if(grimReaper != null && id.equals(grimReaper)){
+                if(id.equals(grimReaper)){
                     return tintIndex == 0 ? 0x000000 : 0x1d1d1d;
                 }
             }
