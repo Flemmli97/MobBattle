@@ -6,7 +6,10 @@ import com.flemmli97.mobbattle.network.PacketHandler;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.inventory.BeaconScreen;
+import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.util.InputMappings;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
@@ -36,8 +39,8 @@ public class GuiEffect extends Screen {
 
     //init
     @Override
-    public void func_231023_e_() {
-        super.func_231023_e_();
+    protected void func_231160_c_() {
+        super.func_231160_c_();
         //mc
         this.field_230706_i_.keyboardListener.enableRepeatEvents(true);
         //width
@@ -60,7 +63,7 @@ public class GuiEffect extends Screen {
         this.potion.setMaxStringLength(35);
         this.potion.setEnabled(true);
         this.potion.setText(this.stack.hasTag() ? this.stack.getTag().getString(MobBattle.MODID + ":potion") : "");
-        this.field_230710_m_.add(this.potion);
+        this.func_230480_a_(this.potion);
 
         this.duration = new TextFieldWidget(this.field_230712_o_, i + 18, j + 49, 34, 10, StringTextComponent.field_240750_d_) {
 
@@ -84,7 +87,7 @@ public class GuiEffect extends Screen {
         this.duration.setMaxStringLength(6);
         this.duration.setEnabled(true);
         this.duration.setText(this.stack.hasTag() ? "" + this.stack.getTag().getInt(MobBattle.MODID + ":duration") : "");
-        this.field_230710_m_.add(this.duration);
+        this.func_230480_a_(this.duration);
 
         this.amplifier = new TextFieldWidget(this.field_230712_o_, i + 70, j + 49, 28, 10, StringTextComponent.field_240750_d_) {
 
@@ -111,7 +114,7 @@ public class GuiEffect extends Screen {
         this.amplifier.setMaxStringLength(3);
         this.amplifier.setEnabled(true);
         this.amplifier.setText(this.stack.hasTag() ? "" + this.stack.getTag().getInt(MobBattle.MODID + ":amplifier") : "");
-        this.field_230710_m_.add(this.amplifier);
+        this.func_230480_a_(this.amplifier);
 
         this.button = new ButtonCheck(i + 140, j + 49, (button) -> {
             ButtonCheck check = (ButtonCheck) button;
@@ -127,16 +130,18 @@ public class GuiEffect extends Screen {
 
     //keyPressed
     @Override
-    public boolean func_231046_a_(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
+    public boolean func_231046_a_(int keyCode, int scanCode, int p_keyPressed_3_) {
         //shouldCloseOnEsc
-        if (p_keyPressed_1_ == 256 && this.func_231178_ax__()) {
+        InputMappings.Input mouseKey = InputMappings.getInputByCode(keyCode, scanCode);
+        boolean texFocused = this.potion.func_230999_j_() || this.amplifier.func_230999_j_() || this.duration.func_230999_j_();
+        if ((keyCode == 256 && this.func_231178_ax__()) || (!texFocused && this.field_230706_i_.gameSettings.keyBindInventory.isActiveAndMatches(mouseKey))) {
             if (this.stack.hasTag())
                 PacketHandler.sendToServer(new ItemStackUpdate(this.stack.getTag()));
             //onclose
             this.func_231175_as__();
             return true;
         } else
-            return super.func_231046_a_(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
+            return super.func_231046_a_(keyCode, scanCode, p_keyPressed_3_);
     }
 
     private boolean isHelperKey(int keyCode) {

@@ -33,7 +33,7 @@ public class PacketOpenGuiArmor {
     }
 
     public static void onMessage(PacketOpenGuiArmor msg, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> ClientOpenGuiHelper.openArmorGUI(msg.windowID, msg.entityID)));
+        ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> ClientOpenGuiHelper.openArmorGUI(msg.windowID, msg.entityID)));
         ctx.get().setPacketHandled(true);
     }
 }
