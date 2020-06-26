@@ -1,13 +1,10 @@
 package com.flemmli97.mobbattle.items;
 
-import java.util.List;
-
 import com.flemmli97.mobbattle.MobBattle;
 import com.flemmli97.mobbattle.ModItems;
 import com.flemmli97.mobbattle.items.entitymanager.Team;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -34,6 +31,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 public class MobArmy extends ItemSword {
 
@@ -118,8 +117,8 @@ public class MobArmy extends ItemSword {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         ItemStack stack = player.getHeldItem(hand);
-        if(stack.getMetadata() == 0){
-            if(player.isSneaking() && stack.hasTagCompound()){
+        if(stack.getMetadata() == 0 && stack.hasTagCompound()){
+            if(player.isSneaking()){
                 stack.getTagCompound().removeTag("Position1");
                 stack.getTagCompound().removeTag("Position2");
                 if(!player.world.isRemote)
