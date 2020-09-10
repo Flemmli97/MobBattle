@@ -31,27 +31,21 @@ public class GuiEffect extends Screen {
         this.stack = Minecraft.getInstance().player.getHeldItemMainhand();
     }
 
-    //isPauseScreen
     @Override
-    public boolean func_231177_au__() {
+    public boolean isPauseScreen() {
         return false;
     }
 
-    //init
     @Override
-    protected void func_231160_c_() {
-        super.func_231160_c_();
-        //mc
-        this.field_230706_i_.keyboardListener.enableRepeatEvents(true);
-        //width
-        int i = (this.field_230708_k_ - this.xSize) / 2;
-        //height
-        int j = (this.field_230709_l_ - this.ySize) / 2;
-        this.potion = new TextFieldWidget(this.field_230712_o_, i + 30, j + 21, 108, 14, StringTextComponent.field_240750_d_) {
-            //charTyped
+    protected void init() {
+        super.init();
+        this.minecraft.keyboardListener.enableRepeatEvents(true);
+        int i = (this.width - this.xSize) / 2;
+        int j = (this.height - this.ySize) / 2;
+        this.potion = new TextFieldWidget(this.font, i + 30, j + 21, 108, 14, StringTextComponent.EMPTY) {
             @Override
-            public boolean func_231042_a_(char typedChar, int keyCode) {
-                if (super.func_231042_a_(typedChar, keyCode)) {
+            public boolean charTyped(char typedChar, int keyCode) {
+                if (super.charTyped(typedChar, keyCode)) {
                     CompoundNBT compound = GuiEffect.this.stack.hasTag() ? GuiEffect.this.stack.getTag() : new CompoundNBT();
                     compound.putString(MobBattle.MODID + ":potion", this.getText());
                     GuiEffect.this.stack.setTag(compound);
@@ -63,15 +57,15 @@ public class GuiEffect extends Screen {
         this.potion.setMaxStringLength(35);
         this.potion.setEnabled(true);
         this.potion.setText(this.stack.hasTag() ? this.stack.getTag().getString(MobBattle.MODID + ":potion") : "");
-        this.func_230480_a_(this.potion);
+        this.addButton(this.potion);
 
-        this.duration = new TextFieldWidget(this.field_230712_o_, i + 18, j + 49, 34, 10, StringTextComponent.field_240750_d_) {
+        this.duration = new TextFieldWidget(this.font, i + 18, j + 49, 34, 10, StringTextComponent.EMPTY) {
 
             @Override
-            public boolean func_231042_a_(char typedChar, int keyCode) {
+            public boolean charTyped(char typedChar, int keyCode) {
                 if (Character.isDigit(typedChar) || GuiEffect.this.isHelperKey(keyCode)) {
                     CompoundNBT compound = GuiEffect.this.stack.hasTag() ? GuiEffect.this.stack.getTag() : new CompoundNBT();
-                    if (super.func_231042_a_(typedChar, keyCode) && !this.getText().isEmpty()) {
+                    if (super.charTyped(typedChar, keyCode) && !this.getText().isEmpty()) {
                         try {
                             compound.putInt(MobBattle.MODID + ":duration", Integer.parseInt(this.getText()));
                             GuiEffect.this.stack.setTag(compound);
@@ -87,15 +81,15 @@ public class GuiEffect extends Screen {
         this.duration.setMaxStringLength(6);
         this.duration.setEnabled(true);
         this.duration.setText(this.stack.hasTag() ? "" + this.stack.getTag().getInt(MobBattle.MODID + ":duration") : "");
-        this.func_230480_a_(this.duration);
+        this.addButton(this.duration);
 
-        this.amplifier = new TextFieldWidget(this.field_230712_o_, i + 70, j + 49, 28, 10, StringTextComponent.field_240750_d_) {
+        this.amplifier = new TextFieldWidget(this.font, i + 70, j + 49, 28, 10, StringTextComponent.EMPTY) {
 
             @Override
-            public boolean func_231042_a_(char typedChar, int keyCode) {
+            public boolean charTyped(char typedChar, int keyCode) {
                 if (Character.isDigit(typedChar) || GuiEffect.this.isHelperKey(keyCode)) {
                     CompoundNBT compound = GuiEffect.this.stack.hasTag() ? GuiEffect.this.stack.getTag() : new CompoundNBT();
-                    if (super.func_231042_a_(typedChar, keyCode) && !this.getText().isEmpty()) {
+                    if (super.charTyped(typedChar, keyCode) && !this.getText().isEmpty()) {
                         try {
                             int i = Integer.parseInt(this.getText());
                             if (i > 255)
@@ -114,7 +108,7 @@ public class GuiEffect extends Screen {
         this.amplifier.setMaxStringLength(3);
         this.amplifier.setEnabled(true);
         this.amplifier.setText(this.stack.hasTag() ? "" + this.stack.getTag().getInt(MobBattle.MODID + ":amplifier") : "");
-        this.func_230480_a_(this.amplifier);
+        this.addButton(this.amplifier);
 
         this.button = new ButtonCheck(i + 140, j + 49, (button) -> {
             ButtonCheck check = (ButtonCheck) button;
@@ -124,24 +118,21 @@ public class GuiEffect extends Screen {
             GuiEffect.this.stack.setTag(compound);
         });
         //AddWidget
-        this.func_230480_a_(this.button);
+        this.addButton(this.button);
         this.button.checkUncheck(this.stack.hasTag() && this.stack.getTag().getBoolean(MobBattle.MODID + ":show"));
     }
 
-    //keyPressed
     @Override
-    public boolean func_231046_a_(int keyCode, int scanCode, int p_keyPressed_3_) {
-        //shouldCloseOnEsc
+    public boolean keyPressed(int keyCode, int scanCode, int p_keyPressed_3_) {
         InputMappings.Input mouseKey = InputMappings.getInputByCode(keyCode, scanCode);
-        boolean texFocused = this.potion.func_230999_j_() || this.amplifier.func_230999_j_() || this.duration.func_230999_j_();
-        if ((keyCode == 256 && this.func_231178_ax__()) || (!texFocused && this.field_230706_i_.gameSettings.keyBindInventory.isActiveAndMatches(mouseKey))) {
+        boolean texFocused = this.potion.isFocused() || this.amplifier.isFocused() || this.duration.isFocused();
+        if ((keyCode == 256 && this.shouldCloseOnEsc()) || (!texFocused && this.minecraft.gameSettings.keyBindInventory.isActiveAndMatches(mouseKey))) {
             if (this.stack.hasTag())
                 PacketHandler.sendToServer(new ItemStackUpdate(this.stack.getTag()));
-            //onclose
-            this.func_231175_as__();
+            this.closeScreen();
             return true;
         } else
-            return super.func_231046_a_(keyCode, scanCode, p_keyPressed_3_);
+            return super.keyPressed(keyCode, scanCode, p_keyPressed_3_);
     }
 
     private boolean isHelperKey(int keyCode) {
@@ -150,28 +141,27 @@ public class GuiEffect extends Screen {
 
     //mouseClicked
     @Override
-    public boolean func_231044_a_(double mouseX, double mouseY, int mouseButton) {
-        this.potion.func_231044_a_(mouseX, mouseY, mouseButton);
-        this.duration.func_231044_a_(mouseX, mouseY, mouseButton);
-        this.amplifier.func_231044_a_(mouseX, mouseY, mouseButton);
-        return super.func_231044_a_(mouseX, mouseY, mouseButton);
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        this.potion.mouseClicked(mouseX, mouseY, mouseButton);
+        this.duration.mouseClicked(mouseX, mouseY, mouseButton);
+        this.amplifier.mouseClicked(mouseX, mouseY, mouseButton);
+        return super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     //render
     @Override
-    public void func_230430_a_(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
-        this.field_230706_i_.getTextureManager().bindTexture(tex);
-        int i = (this.field_230708_k_ - this.xSize) / 2;
-        int j = (this.field_230709_l_ - this.ySize) / 2;
-        this.func_238474_b_(matrix, i, j, 0, 0, this.xSize, this.ySize);
-        this.potion.func_230430_a_(matrix, mouseX, mouseY, partialTicks);
-        this.duration.func_230430_a_(matrix, mouseX, mouseY, partialTicks);
-        this.amplifier.func_230430_a_(matrix, mouseX, mouseY, partialTicks);
-        this.field_230712_o_.func_238405_a_(matrix, "Potion:", i + 30, j + 10, 1);
-        this.field_230712_o_.func_238405_a_(matrix, "Duration:", i + 18, j + 39, 1);
-        this.field_230712_o_.func_238405_a_(matrix, "Amplifier:", i + 70, j + 39, 1);
-        this.field_230712_o_.func_238405_a_(matrix, "Particle:", i + 130, j + 39, 1);
-
-        super.func_230430_a_(matrix, mouseX, mouseY, partialTicks);
+    public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+        this.minecraft.getTextureManager().bindTexture(tex);
+        int i = (this.width - this.xSize) / 2;
+        int j = (this.height - this.ySize) / 2;
+        this.blit(matrix, i, j, 0, 0, this.xSize, this.ySize);
+        this.potion.render(matrix, mouseX, mouseY, partialTicks);
+        this.duration.render(matrix, mouseX, mouseY, partialTicks);
+        this.amplifier.render(matrix, mouseX, mouseY, partialTicks);
+        this.font.drawStringWithShadow(matrix, "Potion:", i + 30, j + 10, 1);
+        this.font.drawStringWithShadow(matrix, "Duration:", i + 18, j + 39, 1);
+        this.font.drawStringWithShadow(matrix, "Amplifier:", i + 70, j + 39, 1);
+        this.font.drawStringWithShadow(matrix, "Particle:", i + 130, j + 39, 1);
+        super.render(matrix, mouseX, mouseY, partialTicks);
     }
 }

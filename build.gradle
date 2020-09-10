@@ -90,6 +90,9 @@ repositories {
         name = "CurseForge"
         url = "https://minecraft.curseforge.com/api/maven/"
     }
+    maven {
+        url 'https://www.dogforce-games.com/maven/'
+    }
 }
 
 dependencies {

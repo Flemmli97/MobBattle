@@ -19,31 +19,23 @@ public class GuiArmor extends ContainerScreen<ContainerArmor> {
         chatComponent = living.getDisplayName();
     }
 
-    //drawGuiContainerForegroundLayer
     @Override
-    protected void func_230451_b_(MatrixStack matrix, int mouseX, int mouseY) {
+    protected void drawGuiContainerForegroundLayer(MatrixStack matrix, int mouseX, int mouseY) {
         String s = this.chatComponent.getUnformattedComponentText();
-        //drawString
-        this.field_230712_o_.func_238405_a_(matrix, s, this.xSize / 2 - this.field_230712_o_.getStringWidth(s) / 2, 6, 4210752);
+        this.font.drawString(matrix, s, this.xSize / 2 - this.font.getStringWidth(s) / 2, 6, 4210752);
     }
 
-    //render
     @Override
-    public void func_230430_a_(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
-        super.func_230430_a_(matrix, mouseX, mouseY, partialTicks);
-        //renderHoveredTooltip
-        this.func_230459_a_(matrix, mouseX, mouseY);
+    public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+        super.render(matrix, mouseX, mouseY, partialTicks);
+        this.renderHoveredTooltip(matrix, mouseX, mouseY);
     }
 
-    //drawGuiContainerBackgroundLayer
     @Override
-    protected void func_230450_a_(MatrixStack matrix, float partialTicks, int mouseX, int mouseY) {
-        this.field_230706_i_.getTextureManager().bindTexture(armorGui);
-        //width
-        int i = (this.field_230708_k_ - this.xSize) / 2;
-        //height
-        int j = (this.field_230709_l_ - this.ySize) / 2;
-        //blit
-        this.func_238474_b_(matrix, i, j, 0, 0, this.xSize, this.ySize);
+    protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY) {
+        this.minecraft.getTextureManager().bindTexture(armorGui);
+        int i = (this.width - this.xSize) / 2;
+        int j = (this.height - this.ySize) / 2;
+        this.blit(matrix, i, j, 0, 0, this.xSize, this.ySize);
     }
 }

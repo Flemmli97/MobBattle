@@ -88,19 +88,19 @@ public class EntityAIItemPickup extends Goal {
         } else {
             if (currentEquipped.isEmpty())
                 return true;
-            ModifiableAttributeInstance m = new ModifiableAttributeInstance(Attributes.field_233823_f_, (inst) -> {
+            ModifiableAttributeInstance m = new ModifiableAttributeInstance(Attributes.ATTACK_DAMAGE, (inst) -> {
             });
-            for (AttributeModifier a : stack.getAttributeModifiers(EquipmentSlotType.MAINHAND).get(Attributes.field_233823_f_))
-                m.func_233769_c_(a);
+            for (AttributeModifier a : stack.getAttributeModifiers(EquipmentSlotType.MAINHAND).get(Attributes.ATTACK_DAMAGE))
+                m.applyPersistentModifier(a);
             double dmg = m.getValue();
             int sharp = EnchantmentHelper.getEnchantmentLevel(Enchantments.SHARPNESS, stack);
             if (sharp > 0)
                 dmg += sharp * 0.5 + 0.5;
 
-            ModifiableAttributeInstance mEquip = new ModifiableAttributeInstance(Attributes.field_233823_f_, (inst) -> {
+            ModifiableAttributeInstance mEquip = new ModifiableAttributeInstance(Attributes.ATTACK_DAMAGE, (inst) -> {
             });
-            for (AttributeModifier a : currentEquipped.getAttributeModifiers(EquipmentSlotType.MAINHAND).get(Attributes.field_233823_f_))
-                mEquip.func_233769_c_(a);
+            for (AttributeModifier a : currentEquipped.getAttributeModifiers(EquipmentSlotType.MAINHAND).get(Attributes.ATTACK_DAMAGE))
+                mEquip.applyPersistentModifier(a);
             double dmgEquip = mEquip.getValue();
             int sharpEquip = EnchantmentHelper.getEnchantmentLevel(Enchantments.SHARPNESS, currentEquipped);
             if (sharpEquip > 0)

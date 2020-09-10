@@ -15,18 +15,17 @@ public class ButtonCheck extends Button {
     private boolean check;
 
     public ButtonCheck(int x, int y, Button.IPressable press) {
-        super(x, y, 10, 10, StringTextComponent.field_240750_d_, press);
+        super(x, y, 10, 10, StringTextComponent.EMPTY, press);
     }
 
     @Override
-    public void func_230431_b_(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
         Minecraft.getInstance().getTextureManager().bindTexture(tex);
         RenderSystem.enableBlend();
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
                 GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        //In Order: this.blit(); xPos, yPos, width, height
-        this.func_238474_b_(matrix, this.field_230690_l_, this.field_230691_m_, 178, this.check ? 14 : 1, this.field_230688_j_, this.field_230689_k_);
+        this.blit(matrix, this.x, this.y, 178, this.check ? 14 : 1, this.width, this.height);
     }
 
     public void checkUncheck(boolean check) {

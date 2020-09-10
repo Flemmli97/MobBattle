@@ -32,6 +32,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -126,7 +127,7 @@ public class ItemExtendedSpawnEgg extends Item {
             blockpos = ctx.getPos().offset(ctx.getFace());
         }
 
-        Entity entity = ItemExtendedSpawnEgg.spawnEntity(ctx.getWorld(), itemstack, blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D);
+        Entity entity = ItemExtendedSpawnEgg.spawnEntity((ServerWorld) ctx.getWorld(), itemstack, blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D);
 
         if (entity != null) {
             if (!ctx.getPlayer().abilities.isCreativeMode)
@@ -152,7 +153,7 @@ public class ItemExtendedSpawnEgg extends Item {
                 if (!(world.getBlockState(blockpos).getBlock() instanceof FlowingFluidBlock)) {
                     return new ActionResult<ItemStack>(ActionResultType.PASS, itemstack);
                 } else if (world.isBlockModifiable(player, blockpos) && player.canPlayerEdit(blockpos, raytraceresult.getFace(), itemstack)) {
-                    Entity entity = ItemExtendedSpawnEgg.spawnEntity(world, itemstack, blockpos.getX() + 0.5D, blockpos.getY() + 0.5D,
+                    Entity entity = ItemExtendedSpawnEgg.spawnEntity((ServerWorld) world, itemstack, blockpos.getX() + 0.5D, blockpos.getY() + 0.5D,
                             blockpos.getZ() + 0.5D);
                     if (entity != null) {
                         if (!player.abilities.isCreativeMode)
@@ -170,10 +171,10 @@ public class ItemExtendedSpawnEgg extends Item {
         return new ActionResult<ItemStack>(ActionResultType.PASS, itemstack);
     }
 
-    public static Entity spawnEntity(World world, ItemStack stack, double x, double y, double z) {
+    public static Entity spawnEntity(ServerWorld world, ItemStack stack, double x, double y, double z) {
         Entity entity = null;
         if (ItemExtendedSpawnEgg.hasSavedEntity(stack)) {
-            entity = EntityType.func_220335_a(stack.getTag().getCompound(tagString), world, Functions.identity());
+            entity = EntityType.loadEntityAndExecute(stack.getTag().getCompound(tagString), world, Functions.identity());
             if (entity instanceof MobEntity) {
                 MobEntity entityliving = (MobEntity) entity;
                 /*
