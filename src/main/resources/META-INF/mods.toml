@@ -13,7 +13,7 @@ authors="Flemmli97"
   # updateJSONURL=""
   authors="Flemmli97"
   description='''Creative utensils in creating spectacular mob battles'''
-[[dependency.mobbattle]]
+[[dependencies.mobbattle]]
   modId="minecraft"
   mandatory=true
   versionRange="[1.16.1,1.16.3]"
