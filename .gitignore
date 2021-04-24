@@ -4,6 +4,9 @@ bin
 .project
 .settings
 
+#idea
+logs
+
 # forge
 run
 libs
