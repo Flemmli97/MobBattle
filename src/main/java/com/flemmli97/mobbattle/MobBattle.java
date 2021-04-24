@@ -35,8 +35,7 @@ public class MobBattle {
     public static final String MODID = "mobbattle";
     public static final Logger logger = LogManager.getLogger(MobBattle.MODID);
 
-    public static boolean fate;
-    public static boolean runecraftory;
+    public static boolean tenshiLib;
     public static boolean animania;
     public static boolean mca;
 
@@ -48,8 +47,7 @@ public class MobBattle {
 
     @SubscribeEvent
     public static void preInit(FMLCommonSetupEvent e) {
-        fate = ModList.get().isLoaded("fatemod");
-        runecraftory = ModList.get().isLoaded("runecraftory");
+        tenshiLib = ModList.get().isLoaded("tenshilib");
         animania = ModList.get().isLoaded("animania");
         mca = ModList.get().isLoaded("mca");
         PacketHandler.register();

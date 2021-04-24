@@ -1,6 +1,8 @@
 package com.flemmli97.mobbattle.client.gui;
 
+import com.flemmli97.mobbattle.MobBattle;
 import com.flemmli97.mobbattle.items.ItemExtendedSpawnEgg;
+import com.flemmli97.tenshilib.common.item.SpawnEgg;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
@@ -8,6 +10,8 @@ import net.minecraft.item.SpawnEggItem;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.Optional;
 
 @OnlyIn(Dist.CLIENT)
 public class MultiItemColor implements IItemColor {
@@ -17,11 +21,18 @@ public class MultiItemColor implements IItemColor {
     @Override
     public int getColor(ItemStack stack, int tintIndex) {
         ResourceLocation id = ItemExtendedSpawnEgg.getNamedIdFrom(stack);
-        SpawnEggItem eggInfo = null;
         if (id != null) {
-            eggInfo = SpawnEggItem.getEgg(EntityType.byKey(id.toString()).get());
             if (id.equals(EntityType.WITHER.getRegistryName())) {
                 return tintIndex == 0 ? 0x161616 : 0x424242;
+            }
+            SpawnEggItem vanillaEgg = SpawnEggItem.getEgg(EntityType.byKey(id.toString()).get());
+            if(vanillaEgg != null)
+                return vanillaEgg.getColor(tintIndex);
+
+            if(MobBattle.tenshiLib){
+                Optional<SpawnEgg> egg = SpawnEgg.fromID(id);
+                if(egg.isPresent())
+                    return egg.get().getColor(tintIndex);
             }
             /*
              * if(eggInfo==null && CommonProxy.fate) eggInfo = SpawnEntityCustomList.entityEggs.get(id); if(eggInfo == null &&
@@ -41,6 +52,6 @@ public class MultiItemColor implements IItemColor {
              * if(grimReaper!=null && id.equals(grimReaper)) { return tintIndex==0?0x000000:0x1d1d1d; } }
              */
         }
-        return eggInfo == null ? -1 : eggInfo.getColor(tintIndex);
+        return -1;
     }
 }
