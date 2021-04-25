@@ -15,7 +15,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 version = "${mcversion}-${modversion}"
-group = "flemmli97.${modid}"
+group = "io.github.flemmli97"
 archivesBaseName = modid
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
@@ -105,7 +105,7 @@ dependencies {
     //compile animania_dep
     //compile mca_dep
 
-    compile fg.deobf(tenshilib_dep)
+    compileOnly tenshilib_dep
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
@@ -113,11 +113,11 @@ jar {
     manifest {
         attributes([
             "Specification-Title": modid,
-            "Specification-Vendor": modid,
+            "Specification-Vendor": "flemmli97",
             "Specification-Version": "1", // We are version 1 of ourselves
             "Implementation-Title": project.name,
             "Implementation-Version": version,
-            "Implementation-Vendor" : modid,
+            "Implementation-Vendor" : "flemmli97",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }

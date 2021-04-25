@@ -21,6 +21,7 @@ import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
 @Mod(value = MobBattle.MODID)
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -47,7 +48,8 @@ public class MobBattle {
 
     @SubscribeEvent
     public static void preInit(FMLCommonSetupEvent e) {
-        tenshiLib = ModList.get().isLoaded("tenshilib");
+        tenshiLib = ModList.get().getModContainerById("tenshilib")
+                .map(container-> new DefaultArtifactVersion("1.16.4-1.4.0").compareTo(container.getModInfo().getVersion()) >= 0).orElse(false);
         animania = ModList.get().isLoaded("animania");
         mca = ModList.get().isLoaded("mca");
         PacketHandler.register();
