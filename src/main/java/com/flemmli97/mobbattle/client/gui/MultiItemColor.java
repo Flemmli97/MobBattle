@@ -25,6 +25,18 @@ public class MultiItemColor implements IItemColor {
             if (id.equals(EntityType.WITHER.getRegistryName())) {
                 return tintIndex == 0 ? 0x161616 : 0x424242;
             }
+            if(id.equals(EntityType.IRON_GOLEM.getRegistryName())) {
+                return tintIndex == 0 ? 0xd0b096 : 0x658932;
+            }
+            if(id.equals(EntityType.SNOW_GOLEM.getRegistryName())) {
+                return tintIndex == 0 ? 0xffffff : 0xe3901d;
+            }
+            if(id.equals(EntityType.GIANT.getRegistryName())) {
+                id = EntityType.ZOMBIE.getRegistryName();
+            }
+            if(id.equals(EntityType.ILLUSIONER.getRegistryName())) {
+                return tintIndex == 0 ? 0x135893 : 0x848989;
+            }
             SpawnEggItem vanillaEgg = SpawnEggItem.getEgg(EntityType.byKey(id.toString()).get());
             if(vanillaEgg != null)
                 return vanillaEgg.getColor(tintIndex);

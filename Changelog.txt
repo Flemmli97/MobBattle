@@ -2,6 +2,7 @@ Mob Battle 2.3.5
 ================
 - Fix mods.toml version
 - Add support for spawneggs from TenshiLib
+- Add spawnegg color for missing mobs (iron/snow golem etc.)
 
 Mob Battle 2.3.4
 ================
