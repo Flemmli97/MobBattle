@@ -49,7 +49,7 @@ public class MobBattle {
     @SubscribeEvent
     public static void preInit(FMLCommonSetupEvent e) {
         tenshiLib = ModList.get().getModContainerById("tenshilib")
-                .map(container-> new DefaultArtifactVersion("1.16.4-1.4.0").compareTo(container.getModInfo().getVersion()) >= 0).orElse(false);
+                .map(container -> new DefaultArtifactVersion("1.16.4-1.4.0").compareTo(container.getModInfo().getVersion()) >= 0).orElse(false);
         animania = ModList.get().isLoaded("animania");
         mca = ModList.get().isLoaded("mca");
         PacketHandler.register();

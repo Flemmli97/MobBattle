@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 public class ClientOpenGuiHelper {
 
     public static DistExecutor.SafeRunnable openArmorGUI(int windowID, int entityID) {
-        return ()-> {
+        return () -> {
             PlayerEntity player = Minecraft.getInstance().player;
             Entity e = player.world.getEntityByID(entityID);
             if (!(e instanceof MobEntity))

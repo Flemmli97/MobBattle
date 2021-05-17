@@ -25,31 +25,31 @@ public class MultiItemColor implements IItemColor {
             if (id.equals(EntityType.WITHER.getRegistryName())) {
                 return tintIndex == 0 ? 0x161616 : 0x424242;
             }
-            if(id.equals(EntityType.IRON_GOLEM.getRegistryName())) {
+            if (id.equals(EntityType.IRON_GOLEM.getRegistryName())) {
                 return tintIndex == 0 ? 0xd0b096 : 0x658932;
             }
-            if(id.equals(EntityType.SNOW_GOLEM.getRegistryName())) {
+            if (id.equals(EntityType.SNOW_GOLEM.getRegistryName())) {
                 return tintIndex == 0 ? 0xffffff : 0xe3901d;
             }
-            if(id.equals(EntityType.GIANT.getRegistryName())) {
+            if (id.equals(EntityType.GIANT.getRegistryName())) {
                 id = EntityType.ZOMBIE.getRegistryName();
             }
-            if(id.equals(EntityType.ILLUSIONER.getRegistryName())) {
+            if (id.equals(EntityType.ILLUSIONER.getRegistryName())) {
                 return tintIndex == 0 ? 0x135893 : 0x848989;
             }
             SpawnEggItem vanillaEgg = SpawnEggItem.getEgg(EntityType.byKey(id.toString()).get());
-            if(vanillaEgg != null)
+            if (vanillaEgg != null)
                 return vanillaEgg.getColor(tintIndex);
 
-            if(MobBattle.tenshiLib){
+            if (MobBattle.tenshiLib) {
                 Optional<SpawnEgg> egg = SpawnEgg.fromID(id);
-                if(egg.isPresent())
+                if (egg.isPresent())
                     return egg.get().getColor(tintIndex);
             }
             /*
              * if(eggInfo==null && CommonProxy.fate) eggInfo = SpawnEntityCustomList.entityEggs.get(id); if(eggInfo == null &&
              * CommonProxy.runecraftory) eggInfo = EntitySpawnEggList.entityEggs.get(id); if(eggInfo==null && CommonProxy.animania)
-             * { if(animaniaMap==null) { animaniaMap = Maps.newHashMap(); for(Entry<AnimalContainer, EntityEntry> e :
+             * { if(animaniaMap==null) { animaniaMap = new HashMap<>(); for(Entry<AnimalContainer, EntityEntry> e :
              * EntityEggHandler.ENTITY_MAP.entrySet()) { animaniaMap.put(e.getValue().getRegistryName(), e.getKey()); } }
              * if(animaniaMap.containsKey(id)) { AnimalContainer animal = animaniaMap.get(id); if
              * (ItemEntityEgg.ANIMAL_USES_COLOR.containsKey(animal) && ItemEntityEgg.ANIMAL_USES_COLOR.get(animal)) { return
