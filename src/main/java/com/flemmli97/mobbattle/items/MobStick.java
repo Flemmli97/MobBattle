@@ -1,7 +1,7 @@
 package com.flemmli97.mobbattle.items;
 
 import com.flemmli97.mobbattle.MobBattleTab;
-import com.flemmli97.mobbattle.items.entitymanager.Team;
+import com.flemmli97.mobbattle.items.entitymanager.Utils;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -58,11 +58,10 @@ public class MobStick extends Item {
     public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
         if (!player.world.isRemote)
             if (stack.hasTag() && stack.getTag().contains("StoredEntity")) {
-                MobEntity storedEntity = Team.fromUUID((ServerWorld) player.world, stack.getTag().getString("StoredEntity"));
+                MobEntity storedEntity = Utils.fromUUID((ServerWorld) player.world, stack.getTag().getString("StoredEntity"));
                 if (entity instanceof MobEntity && entity != storedEntity) {
                     MobEntity living = (MobEntity) entity;
-                    living.setAttackTarget(storedEntity);
-                    storedEntity.setAttackTarget(living);
+                    Utils.setAttackTarget(living, storedEntity, true);
                     stack.getTag().remove("StoredEntity");
                     stack.getTag().remove("StoredEntityName");
                     return true;

@@ -11,10 +11,10 @@ import com.flemmli97.mobbattle.items.MobHeal;
 import com.flemmli97.mobbattle.items.MobKill;
 import com.flemmli97.mobbattle.items.MobMount;
 import com.flemmli97.mobbattle.items.MobStick;
-import com.flemmli97.mobbattle.items.entitymanager.Team;
+import com.flemmli97.mobbattle.items.entitymanager.Utils;
 import net.minecraft.block.DispenserBlock;
-import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.item.IItemTier;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.Ingredient;
@@ -98,8 +98,8 @@ public class ModItems {
                     blockpos.getZ() + 0.5D);
             if (entity != null) {
                 stack.shrink(1);
-                if (stack.hasDisplayName() && entity instanceof CreatureEntity) {
-                    Team.updateEntity(stack.getDisplayName().getUnformattedComponentText(), (CreatureEntity) entity);
+                if (stack.hasDisplayName() && entity instanceof MobEntity) {
+                    Utils.updateEntity(stack.getDisplayName().getUnformattedComponentText(), (MobEntity) entity);
                 }
             }
             return stack;

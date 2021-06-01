@@ -1,7 +1,7 @@
 package com.flemmli97.mobbattle.items;
 
 import com.flemmli97.mobbattle.MobBattleTab;
-import com.flemmli97.mobbattle.items.entitymanager.Team;
+import com.flemmli97.mobbattle.items.entitymanager.Utils;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -59,7 +59,7 @@ public class MobMount extends Item {
     public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
         if (entity instanceof MobEntity && !player.world.isRemote) {
             if (stack.hasTag() && stack.getTag().contains("StoredEntity")) {
-                MobEntity storedEntity = Team.fromUUID((ServerWorld) player.world, stack.getTag().getString("StoredEntity"));
+                MobEntity storedEntity = Utils.fromUUID((ServerWorld) player.world, stack.getTag().getString("StoredEntity"));
                 if (storedEntity != null && storedEntity != entity && !this.passengerContainsEntity(storedEntity, entity)) {
                     storedEntity.startRiding(entity);
                     stack.getTag().remove("StoredEntity");

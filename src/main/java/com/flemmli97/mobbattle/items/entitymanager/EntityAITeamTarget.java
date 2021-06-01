@@ -24,7 +24,7 @@ public class EntityAITeamTarget extends TargetGoal {
                 return false;
             if (living instanceof PlayerEntity && ((PlayerEntity) living).abilities.disableDamage)
                 return false;
-            return !Team.isOnSameTeam(living, goalOwner);
+            return !Utils.isOnSameTeam(living, goalOwner);
         };
     }
 
@@ -56,7 +56,7 @@ public class EntityAITeamTarget extends TargetGoal {
 
     @Override
     public void startExecuting() {
-        this.goalOwner.setAttackTarget(this.targetEntity);
+        Utils.setAttackTarget(this.goalOwner, this.targetEntity, false);
         super.startExecuting();
     }
 }

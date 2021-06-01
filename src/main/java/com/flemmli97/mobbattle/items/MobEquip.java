@@ -2,7 +2,7 @@ package com.flemmli97.mobbattle.items;
 
 import com.flemmli97.mobbattle.MobBattleTab;
 import com.flemmli97.mobbattle.items.entitymanager.EntityAIItemPickup;
-import com.flemmli97.mobbattle.items.entitymanager.Team;
+import com.flemmli97.mobbattle.items.entitymanager.Utils;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -87,7 +87,7 @@ public class MobEquip extends Item {
                         stack.getTag().getIntArray("Position1")[2]);
                 BlockPos pos2 = new BlockPos(stack.getTag().getIntArray("Position2")[0], stack.getTag().getIntArray("Position2")[1],
                         stack.getTag().getIntArray("Position2")[2]);
-                AxisAlignedBB bb = Team.getBoundingBoxPositions(pos1, pos2);
+                AxisAlignedBB bb = Utils.getBoundingBoxPositions(pos1, pos2);
                 List<MobEntity> list = player.world.getEntitiesWithinAABB(MobEntity.class, bb);
                 for (MobEntity living : list) {
                     living.addTag("PickUp");

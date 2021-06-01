@@ -9,11 +9,11 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -54,18 +54,16 @@ public class MobBattle {
         mca = ModList.get().isLoaded("mca");
         PacketHandler.register();
         MinecraftForge.EVENT_BUS.register(new EventHandler());
-        MinecraftForge.EVENT_BUS.register(new ClientEvents());
+        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientEvents::register);
     }
 
     @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
     public static void registerTextureSprite(TextureStitchEvent.Pre event) {
         ResourceLocation res = new ResourceLocation(MobBattle.MODID, "gui/armor_slot_sword");
         event.addSprite(res);
     }
 
     @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
     public static void spawnEggColor(ColorHandlerEvent.Item e) {
         e.getItemColors().register(new MultiItemColor(), ModItems.spawner);
     }

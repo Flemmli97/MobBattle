@@ -2,7 +2,7 @@ package com.flemmli97.mobbattle.items;
 
 import com.flemmli97.mobbattle.MobBattle;
 import com.flemmli97.mobbattle.MobBattleTab;
-import com.flemmli97.mobbattle.items.entitymanager.Team;
+import com.flemmli97.mobbattle.items.entitymanager.Utils;
 import com.google.common.base.Functions;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FlowingFluidBlock;
@@ -133,7 +133,7 @@ public class ItemExtendedSpawnEgg extends Item {
             if (!ctx.getPlayer().abilities.isCreativeMode)
                 itemstack.shrink(1);
             if (itemstack.hasDisplayName() && entity instanceof MobEntity) {
-                Team.updateEntity(itemstack.getDisplayName().getUnformattedComponentText(), (MobEntity) entity);
+                Utils.updateEntity(itemstack.getDisplayName().getUnformattedComponentText(), (MobEntity) entity);
             }
         }
         return ActionResultType.SUCCESS;
@@ -159,7 +159,7 @@ public class ItemExtendedSpawnEgg extends Item {
                         if (!player.abilities.isCreativeMode)
                             itemstack.shrink(1);
                         if (itemstack.hasDisplayName() && entity instanceof MobEntity) {
-                            Team.updateEntity(itemstack.getDisplayName().getUnformattedComponentText(), (MobEntity) entity);
+                            Utils.updateEntity(itemstack.getDisplayName().getUnformattedComponentText(), (MobEntity) entity);
                         }
                         return new ActionResult<ItemStack>(ActionResultType.SUCCESS, itemstack);
                     }

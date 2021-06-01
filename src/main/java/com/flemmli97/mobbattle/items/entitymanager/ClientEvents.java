@@ -13,15 +13,17 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ClientEvents {
 
+    public static void register() {
+        MinecraftForge.EVENT_BUS.register(new ClientEvents());
+    }
+
     @SubscribeEvent
-    @OnlyIn(value = Dist.CLIENT)
     public void render(RenderWorldLastEvent event) {
         Minecraft mc = Minecraft.getInstance();
         ClientPlayerEntity player = mc.player;
@@ -41,9 +43,8 @@ public class ClientEvents {
         }
     }
 
-    @OnlyIn(value = Dist.CLIENT)
     private static void renderBlockOutline(MatrixStack stack, ClientPlayerEntity player, BlockPos pos, BlockPos pos2, float partialTicks) {
-        AxisAlignedBB aabb = Team.getBoundingBoxPositions(pos, pos2).shrink(0.1);
+        AxisAlignedBB aabb = Utils.getBoundingBoxPositions(pos, pos2).shrink(0.1);
         ActiveRenderInfo activerenderinfo = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
         double d0 = -activerenderinfo.getProjectedView().x;
         double d1 = -activerenderinfo.getProjectedView().y;

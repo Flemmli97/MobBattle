@@ -1,7 +1,7 @@
 package com.flemmli97.mobbattle.items;
 
 import com.flemmli97.mobbattle.MobBattleTab;
-import com.flemmli97.mobbattle.items.entitymanager.Team;
+import com.flemmli97.mobbattle.items.entitymanager.Utils;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -49,11 +49,10 @@ public class MobGroup extends Item {
         if (!player.isSneaking() && !player.world.isRemote && stack.hasTag() && stack.getTag().contains("EntityList")) {
             ListNBT list = stack.getTag().getList("EntityList", 8);
             for (int i = 0; i < list.size(); i++) {
-                MobEntity e = Team.fromUUID((ServerWorld) player.world, list.getString(i));
-                if (entity != e && e != null) {
+                MobEntity e = Utils.fromUUID((ServerWorld) player.world, list.getString(i));
+                if (entity instanceof MobEntity && entity != e) {
                     MobEntity living = (MobEntity) entity;
-                    living.setAttackTarget(e);
-                    e.setAttackTarget(living);
+                    Utils.setAttackTarget(living, e, true);
                 }
             }
             stack.getTag().remove("EntityList");

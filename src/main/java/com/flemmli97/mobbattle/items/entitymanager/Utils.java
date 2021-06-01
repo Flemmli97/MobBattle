@@ -1,7 +1,9 @@
 package com.flemmli97.mobbattle.items.entitymanager;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
@@ -32,7 +34,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-public class Team {
+public class Utils {
 
     public static Map<TextFormatting, RedstoneParticleData> teamColor = new HashMap<>();
 
@@ -159,5 +161,18 @@ public class Team {
         Vector3d vec3d1 = vec3d.add((double) f6 * d3, (double) f5 * d3, (double) f7 * d3);
         RayTraceContext ctx = new RayTraceContext(vec3d1, vec3d1, BlockMode.OUTLINE, fluidmode, playerIn);
         return worldIn.rayTraceBlocks(ctx);
+    }
+
+    public static void setAttackTarget(MobEntity entity, LivingEntity target, boolean both) {
+        if (target == null)
+            return;
+        entity.setAttackTarget(target);
+        entity.getBrain().replaceMemory(MemoryModuleType.ANGRY_AT, target.getUniqueID(), 600);
+        entity.getBrain().replaceMemory(MemoryModuleType.ATTACK_TARGET, target, 600);
+        if (target instanceof MobEntity && both) {
+            ((MobEntity) target).setAttackTarget(entity);
+            target.getBrain().replaceMemory(MemoryModuleType.ANGRY_AT, entity.getUniqueID(), 600);
+            target.getBrain().replaceMemory(MemoryModuleType.ATTACK_TARGET, entity, 600);
+        }
     }
 }

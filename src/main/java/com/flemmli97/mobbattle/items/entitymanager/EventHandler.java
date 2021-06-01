@@ -1,8 +1,8 @@
 package com.flemmli97.mobbattle.items.entitymanager;
 
 import com.flemmli97.mobbattle.Config;
-import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.monster.VexEntity;
 import net.minecraft.particles.RedstoneParticleData;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -14,17 +14,17 @@ public class EventHandler {
 
     @SubscribeEvent
     public void addTeamTarget(EntityJoinWorldEvent event) {
-        if (!event.getWorld().isRemote && event.getEntity() instanceof CreatureEntity) {
+        if (!event.getWorld().isRemote && event.getEntity() instanceof MobEntity) {
             if (event.getEntity() instanceof VexEntity) {
                 VexEntity vex = (VexEntity) event.getEntity();
                 if (vex.getOwner() != null && vex.getOwner().getTeam() != null) {
-                    Team.addEntityToTeam(vex, vex.getOwner().getTeam().getName());
+                    Utils.addEntityToTeam(vex, vex.getOwner().getTeam().getName());
                 }
             }
             if (event.getEntity().getTeam() != null)
-                Team.updateEntity(event.getEntity().getTeam().getName(), (CreatureEntity) event.getEntity());
+                Utils.updateEntity(event.getEntity().getTeam().getName(), (MobEntity) event.getEntity());
             if (event.getEntity().getTags().contains("PickUp"))
-                ((CreatureEntity) event.getEntity()).goalSelector.addGoal(10, new EntityAIItemPickup((CreatureEntity) event.getEntity()));
+                ((MobEntity) event.getEntity()).goalSelector.addGoal(10, new EntityAIItemPickup((MobEntity) event.getEntity()));
         }
     }
 
@@ -34,7 +34,7 @@ public class EventHandler {
             LivingEntity ent = (LivingEntity) event.getEntity();
             if (event.getSource().getTrueSource() instanceof LivingEntity) {
                 LivingEntity attacker = (LivingEntity) event.getSource().getTrueSource();
-                if (Team.isOnSameTeam(ent, attacker) && !ent.getTeam().getAllowFriendlyFire())
+                if (Utils.isOnSameTeam(ent, attacker) && !ent.getTeam().getAllowFriendlyFire())
                     event.setCanceled(true);
             }
         }
@@ -42,15 +42,15 @@ public class EventHandler {
 
     @SubscribeEvent
     public void livingTick(LivingUpdateEvent event) {
-        if (event.getEntity() instanceof CreatureEntity) {
-            CreatureEntity e = (CreatureEntity) event.getEntity();
+        if (event.getEntity() instanceof MobEntity) {
+            MobEntity e = (MobEntity) event.getEntity();
             if (e.getTeam() != null) {
                 if (Config.clientConf.showTeamParticleTypes.get() && e.world.isRemote) {
-                    RedstoneParticleData color = Team.teamColor.get(e.getTeam().getColor());
+                    RedstoneParticleData color = Utils.teamColor.get(e.getTeam().getColor());
                     if (color != null)
                         e.world.addParticle(color, e.getPosX(), e.getPosY() + e.getHeight() + 0.5, e.getPosZ(), 0, 0, 0);
                 } else if (Config.commonConf.autoAddAI.get() && !e.getTags().contains("mobbattle:AddedAI")) {
-                    Team.updateEntity(e.getTeam().getName(), e);
+                    Utils.updateEntity(e.getTeam().getName(), e);
                 }
             }
         }

@@ -1,7 +1,7 @@
 package com.flemmli97.mobbattle.items;
 
 import com.flemmli97.mobbattle.MobBattleTab;
-import com.flemmli97.mobbattle.items.entitymanager.Team;
+import com.flemmli97.mobbattle.items.entitymanager.Utils;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -89,12 +89,12 @@ public class MobArmy extends Item {
                         stack.getTag().getIntArray("Position1")[2]);
                 BlockPos pos2 = new BlockPos(stack.getTag().getIntArray("Position2")[0], stack.getTag().getIntArray("Position2")[1],
                         stack.getTag().getIntArray("Position2")[2]);
-                AxisAlignedBB bb = Team.getBoundingBoxPositions(pos1, pos2);
+                AxisAlignedBB bb = Utils.getBoundingBoxPositions(pos1, pos2);
                 List<MobEntity> list = player.world.getEntitiesWithinAABB(MobEntity.class, bb);
                 String team = stack.hasDisplayName() ? stack.getDisplayName().getUnformattedComponentText() : "DEFAULT";
 
                 for (MobEntity living : list) {
-                    Team.updateEntity(team, living);
+                    Utils.updateEntity(team, living);
                 }
                 player.sendMessage(new StringTextComponent(TextFormatting.GOLD + "Added entities in the box to team " + team), player.getUniqueID());
             }
@@ -106,7 +106,7 @@ public class MobArmy extends Item {
     public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
         if (entity instanceof MobEntity && !player.world.isRemote) {
             String team = stack.hasDisplayName() ? stack.getDisplayName().getUnformattedComponentText() : "DEFAULT";
-            Team.updateEntity(team, (MobEntity) entity);
+            Utils.updateEntity(team, (MobEntity) entity);
             player.sendMessage(new StringTextComponent(TextFormatting.GOLD + "Added entity to team " + team), player.getUniqueID());
         }
         return true;
