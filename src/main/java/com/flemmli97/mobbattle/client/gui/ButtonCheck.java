@@ -19,7 +19,7 @@ public class ButtonCheck extends Button {
     }
 
     @Override
-    public void renderButton(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
         Minecraft.getInstance().getTextureManager().bindTexture(tex);
         RenderSystem.enableBlend();
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,

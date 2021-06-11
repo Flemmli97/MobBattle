@@ -94,7 +94,7 @@ public class Utils {
         e.addTag("mobbattle:AddedAI");
     }
 
-    private static final Field goalSelector_goal = ObfuscationReflectionHelper.findField(GoalSelector.class, "field_220892_d");
+    private static final Field goalSelector_goal = ObfuscationReflectionHelper.findField(GoalSelector.class, "goals");
 
     /**
      * like {@link GoalSelector#removeGoal(Goal)} but with a predicate

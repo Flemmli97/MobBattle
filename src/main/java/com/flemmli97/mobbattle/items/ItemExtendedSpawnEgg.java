@@ -121,7 +121,7 @@ public class ItemExtendedSpawnEgg extends Item {
             }
         }
         BlockPos blockpos;
-        if (iblockstate.getCollisionShape(ctx.getWorld(), ctx.getPos()).isEmpty()) {
+        if (iblockstate.getCollisionShapeUncached(ctx.getWorld(), ctx.getPos()).isEmpty()) {
             blockpos = ctx.getPos();
         } else {
             blockpos = ctx.getPos().offset(ctx.getFace());
