@@ -4,6 +4,8 @@ Mob Battle 2.3.5
 - Add support for spawneggs from TenshiLib
 - Add spawnegg color for missing mobs (iron/snow golem etc.)
 - Add support for mobs using the brain ai (piglins, hoglins etc.)
+- Fix box renderer
+- Change tooltips to use lang files
 
 Mob Battle 2.3.4
 ================
