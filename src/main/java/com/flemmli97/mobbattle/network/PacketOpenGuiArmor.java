@@ -11,7 +11,8 @@ import java.util.function.Supplier;
 
 public class PacketOpenGuiArmor {
 
-    private int entityID, windowID;
+    private final int entityID;
+    private final int windowID;
 
     public PacketOpenGuiArmor(MobEntity entity, int windowID) {
         this.entityID = entity.getEntityId();

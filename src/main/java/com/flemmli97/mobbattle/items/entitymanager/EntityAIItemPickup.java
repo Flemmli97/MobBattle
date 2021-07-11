@@ -20,7 +20,7 @@ import java.util.List;
 
 public class EntityAIItemPickup extends Goal {
 
-    private MobEntity entity;
+    private final MobEntity entity;
     private List<ItemEntity> nearby;
 
     public EntityAIItemPickup(MobEntity creature) {
@@ -34,7 +34,7 @@ public class EntityAIItemPickup extends Goal {
     @Override
     public boolean shouldExecute() {
         if (this.entity.getAttackTarget() == null) {
-            List<ItemEntity> list = this.entity.world.<ItemEntity>getEntitiesWithinAABB(ItemEntity.class, this.entity.getBoundingBox().grow(8));
+            List<ItemEntity> list = this.entity.world.getEntitiesWithinAABB(ItemEntity.class, this.entity.getBoundingBox().grow(8));
             if (list.isEmpty()) {
                 return false;
             } else {
@@ -120,7 +120,7 @@ public class EntityAIItemPickup extends Goal {
             this.entity.setItemStackToSlot(EquipmentSlotType, itemstack);
             this.entity.setDropChance(EquipmentSlotType, 0);
             this.entity.enablePersistence();
-            this.entity.world.playSound(null, entity.getPosX(), entity.getPosY(), entity.getPosZ(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F,
+            this.entity.world.playSound(null, this.entity.getPosX(), this.entity.getPosY(), this.entity.getPosZ(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F,
                     (this.entity.getRNG().nextFloat() - this.entity.getRNG().nextFloat()) * 1.4F + 2.0F);
             itemEntity.getItem().shrink(1);
         }

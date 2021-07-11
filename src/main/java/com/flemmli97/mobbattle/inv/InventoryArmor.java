@@ -22,7 +22,7 @@ public class InventoryArmor extends Inventory {
 
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
-        PacketHandler.sendToServer(new EquipMessage(stack, theEntity.getEntityId(), index));
+        PacketHandler.sendToServer(new EquipMessage(stack, this.theEntity.getEntityId(), index));
         super.setInventorySlotContents(index, stack);
     }
 

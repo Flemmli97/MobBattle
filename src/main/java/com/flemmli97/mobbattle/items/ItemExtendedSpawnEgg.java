@@ -143,7 +143,7 @@ public class ItemExtendedSpawnEgg extends Item {
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
         if (world.isRemote || !itemstack.hasTag() || !itemstack.getTag().contains(MobBattle.MODID + ":Entity"))
-            return new ActionResult<ItemStack>(ActionResultType.SUCCESS, itemstack);
+            return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
         else {
             BlockRayTraceResult raytraceresult = rayTrace(world, player, RayTraceContext.FluidMode.ANY);
 
@@ -151,7 +151,7 @@ public class ItemExtendedSpawnEgg extends Item {
                 BlockPos blockpos = raytraceresult.getPos();
 
                 if (!(world.getBlockState(blockpos).getBlock() instanceof FlowingFluidBlock)) {
-                    return new ActionResult<ItemStack>(ActionResultType.PASS, itemstack);
+                    return new ActionResult<>(ActionResultType.PASS, itemstack);
                 } else if (world.isBlockModifiable(player, blockpos) && player.canPlayerEdit(blockpos, raytraceresult.getFace(), itemstack)) {
                     Entity entity = ItemExtendedSpawnEgg.spawnEntity((ServerWorld) world, itemstack, blockpos.getX() + 0.5D, blockpos.getY() + 0.5D,
                             blockpos.getZ() + 0.5D);
@@ -161,14 +161,14 @@ public class ItemExtendedSpawnEgg extends Item {
                         if (itemstack.hasDisplayName() && entity instanceof MobEntity) {
                             Utils.updateEntity(itemstack.getDisplayName().getUnformattedComponentText(), (MobEntity) entity);
                         }
-                        return new ActionResult<ItemStack>(ActionResultType.SUCCESS, itemstack);
+                        return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
                     }
                 } else {
-                    return new ActionResult<ItemStack>(ActionResultType.FAIL, itemstack);
+                    return new ActionResult<>(ActionResultType.FAIL, itemstack);
                 }
             }
         }
-        return new ActionResult<ItemStack>(ActionResultType.PASS, itemstack);
+        return new ActionResult<>(ActionResultType.PASS, itemstack);
     }
 
     public static Entity spawnEntity(ServerWorld world, ItemStack stack, double x, double y, double z) {

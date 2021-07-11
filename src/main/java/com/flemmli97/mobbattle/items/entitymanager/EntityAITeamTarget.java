@@ -1,30 +1,29 @@
 package com.flemmli97.mobbattle.items.entitymanager;
 
-import com.google.common.base.Predicate;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.TargetGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class EntityAITeamTarget extends TargetGoal {
 
     protected LivingEntity targetEntity;
-    private Predicate<LivingEntity> pred;
+    private final Predicate<LivingEntity> pred;
 
     public EntityAITeamTarget(MobEntity creature, boolean checkSight, boolean onlyNearby) {
         super(creature, checkSight, onlyNearby);
-        this.setMutexFlags(EnumSet.of(Goal.Flag.TARGET));
+        this.setMutexFlags(EnumSet.of(Flag.TARGET));
         this.pred = (living) -> {
             if (living == null)
                 return false;
             if (living instanceof PlayerEntity && ((PlayerEntity) living).abilities.disableDamage)
                 return false;
-            return !Utils.isOnSameTeam(living, goalOwner);
+            return !Utils.isOnSameTeam(living, this.goalOwner);
         };
     }
 

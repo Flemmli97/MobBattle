@@ -52,7 +52,7 @@ public class MobMount extends Item {
                 stack.getTag().remove("StoredEntity");
                 player.sendMessage(new TranslationTextComponent("tooltip.mount.reset").mergeStyle(TextFormatting.RED), player.getUniqueID());
             }
-        return new ActionResult<ItemStack>(ActionResultType.SUCCESS, stack);
+        return new ActionResult<>(ActionResultType.SUCCESS, stack);
     }
 
     @Override

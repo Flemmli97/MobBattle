@@ -16,7 +16,7 @@ public class GuiArmor extends ContainerScreen<ContainerArmor> {
 
     public GuiArmor(int windowID, PlayerInventory playerInv, MobEntity living) {
         super(new ContainerArmor(windowID, playerInv, living), playerInv, living.getName());
-        chatComponent = living.getDisplayName();
+        this.chatComponent = living.getDisplayName();
     }
 
     @Override

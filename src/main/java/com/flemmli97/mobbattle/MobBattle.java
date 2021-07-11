@@ -43,7 +43,7 @@ public class MobBattle {
     public static final EquipmentSlotType[] slot = {EquipmentSlotType.MAINHAND, EquipmentSlotType.OFFHAND, EquipmentSlotType.HEAD,
             EquipmentSlotType.CHEST, EquipmentSlotType.LEGS, EquipmentSlotType.FEET};
 
-    public static ContainerType<ContainerArmor> type = new ContainerType<ContainerArmor>(
+    public static ContainerType<ContainerArmor> type = new ContainerType<>(
             (windowID, playerInv) -> new ContainerArmor(windowID, playerInv, null));
 
     @SubscribeEvent

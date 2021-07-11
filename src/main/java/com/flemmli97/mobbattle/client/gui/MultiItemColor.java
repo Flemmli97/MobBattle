@@ -34,7 +34,7 @@ public class MultiItemColor implements IItemColor {
             if (id.equals(EntityType.ILLUSIONER.getRegistryName())) {
                 return tintIndex == 0 ? 0x135893 : 0x848989;
             }
-            SpawnEggItem vanillaEgg = SpawnEggItem.getEgg(EntityType.byKey(id.toString()).get());
+            SpawnEggItem vanillaEgg = EntityType.byKey(id.toString()).map(SpawnEggItem::getEgg).orElse(null);
             if (vanillaEgg != null)
                 return vanillaEgg.getColor(tintIndex);
 

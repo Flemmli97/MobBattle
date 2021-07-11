@@ -96,7 +96,7 @@ public class MobEquip extends Item {
                 }
                 player.sendMessage(new TranslationTextComponent("tooltip.equip.add").mergeStyle(TextFormatting.GOLD), player.getUniqueID());
             }
-        return new ActionResult<ItemStack>(ActionResultType.SUCCESS, stack);
+        return new ActionResult<>(ActionResultType.SUCCESS, stack);
     }
 
     @Override

@@ -16,13 +16,13 @@ import net.minecraft.util.text.StringTextComponent;
 public class GuiEffect extends Screen {
 
     private static final ResourceLocation tex = new ResourceLocation(MobBattle.MODID + ":textures/gui/effect.png");
-    private int xSize = 176;
-    private int ySize = 80;
+    private final int xSize = 176;
+    private final int ySize = 80;
     private TextFieldWidget potion;
     private TextFieldWidget duration;
     private TextFieldWidget amplifier;
     private ButtonCheck button;
-    private ItemStack stack;
+    private final ItemStack stack;
 
     public GuiEffect() {
         super(new StringTextComponent("Potions"));

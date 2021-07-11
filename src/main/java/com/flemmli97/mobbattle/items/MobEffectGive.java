@@ -49,7 +49,7 @@ public class MobEffectGive extends Item {
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
         if (hand == Hand.MAIN_HAND)
             DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientOpenGuiHelper::openEffectGUI);
-        return new ActionResult<ItemStack>(ActionResultType.SUCCESS, player.getHeldItem(hand));
+        return new ActionResult<>(ActionResultType.SUCCESS, player.getHeldItem(hand));
     }
 
     @Override
@@ -65,7 +65,7 @@ public class MobEffectGive extends Item {
                 Effect potion = ForgeRegistries.POTIONS.getValue(new ResourceLocation(potionString));
                 if (potion != null) {
                     e.addPotionEffect(new EffectInstance(potion, duration, amplifier, false, showEffect));
-                    player.sendMessage(new TranslationTextComponent("tooltip.effect.give.add", potionString,  amplifier,  duration).mergeStyle(TextFormatting.GOLD), player.getUniqueID());
+                    player.sendMessage(new TranslationTextComponent("tooltip.effect.give.add", potionString, amplifier, duration).mergeStyle(TextFormatting.GOLD), player.getUniqueID());
                 }
             }
         }

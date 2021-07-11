@@ -76,7 +76,7 @@ public class MobGroup extends Item {
                 player.sendMessage(new TranslationTextComponent("tooltip.group.reset").mergeStyle(TextFormatting.RED), player.getUniqueID());
             }
         }
-        return new ActionResult<ItemStack>(ActionResultType.SUCCESS, stack);
+        return new ActionResult<>(ActionResultType.SUCCESS, stack);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class MobGroup extends Item {
             CompoundNBT compound = new CompoundNBT();
             if (stack.hasTag())
                 compound = stack.getTag();
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
 
             if (compound.contains("EntityList")) {
                 for (int i = 0; i < compound.getList("EntityList", 8).size(); i++) {

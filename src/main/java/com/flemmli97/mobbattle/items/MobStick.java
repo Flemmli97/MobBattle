@@ -51,7 +51,7 @@ public class MobStick extends Item {
                 stack.getTag().remove("StoredEntityName");
                 player.sendMessage(new TranslationTextComponent("tooltip.stick.reset").mergeStyle(TextFormatting.RED), player.getUniqueID());
             }
-        return new ActionResult<ItemStack>(ActionResultType.SUCCESS, stack);
+        return new ActionResult<>(ActionResultType.SUCCESS, stack);
     }
 
     @Override

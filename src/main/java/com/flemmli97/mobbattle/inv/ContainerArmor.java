@@ -18,13 +18,13 @@ public class ContainerArmor extends Container {
         super(MobBattle.type, windowID);
         if (living == null)
             return;
-        inv = new InventoryArmor(living);
-        inv.openInventory(playerInv.player);
-        this.addSlot(new Slot(inv, 0, 80, 17)
+        this.inv = new InventoryArmor(living);
+        this.inv.openInventory(playerInv.player);
+        this.addSlot(new Slot(this.inv, 0, 80, 17)
                 .setBackground(PlayerContainer.LOCATION_BLOCKS_TEXTURE, new ResourceLocation(MobBattle.MODID, "gui/armor_slot_sword")));
-        this.addSlot(new Slot(inv, 1, 80, 35)
+        this.addSlot(new Slot(this.inv, 1, 80, 35)
                 .setBackground(PlayerContainer.LOCATION_BLOCKS_TEXTURE, PlayerContainer.EMPTY_ARMOR_SLOT_SHIELD));
-        this.addSlot(new Slot(inv, 2, 44, 17) {
+        this.addSlot(new Slot(this.inv, 2, 44, 17) {
 
             @Override
             public int getSlotStackLimit() {
@@ -32,7 +32,7 @@ public class ContainerArmor extends Container {
             }
 
         }.setBackground(PlayerContainer.LOCATION_BLOCKS_TEXTURE, PlayerContainer.EMPTY_ARMOR_SLOT_HELMET));
-        this.addSlot(new Slot(inv, 3, 44, 35) {
+        this.addSlot(new Slot(this.inv, 3, 44, 35) {
 
             @Override
             public int getSlotStackLimit() {
@@ -44,7 +44,7 @@ public class ContainerArmor extends Container {
                 return stack.getItem().canEquip(stack, MobBattle.slot[3], living);
             }
         }.setBackground(PlayerContainer.LOCATION_BLOCKS_TEXTURE, PlayerContainer.EMPTY_ARMOR_SLOT_CHESTPLATE));
-        this.addSlot(new Slot(inv, 4, 116, 17) {
+        this.addSlot(new Slot(this.inv, 4, 116, 17) {
 
             @Override
             public int getSlotStackLimit() {
@@ -56,7 +56,7 @@ public class ContainerArmor extends Container {
                 return stack.getItem().canEquip(stack, MobBattle.slot[4], living);
             }
         }.setBackground(PlayerContainer.LOCATION_BLOCKS_TEXTURE, PlayerContainer.EMPTY_ARMOR_SLOT_LEGGINGS));
-        this.addSlot(new Slot(inv, 5, 116, 35) {
+        this.addSlot(new Slot(this.inv, 5, 116, 35) {
 
             @Override
             public int getSlotStackLimit() {

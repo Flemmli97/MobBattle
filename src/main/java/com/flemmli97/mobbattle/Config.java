@@ -17,7 +17,7 @@ public class Config {
         public final BooleanValue showTeamParticleTypes;
 
         public ClientConfig(ForgeConfigSpec.Builder builder) {
-            showTeamParticleTypes = builder.translation("conf.mobbattle.particle").define("showTeamParticle", true);
+            this.showTeamParticleTypes = builder.translation("conf.mobbattle.particle").define("showTeamParticle", true);
         }
     }
 
@@ -26,7 +26,7 @@ public class Config {
         public final BooleanValue autoAddAI;
 
         public ServerConfig(ForgeConfigSpec.Builder builder) {
-            autoAddAI = builder.comment("Auto target mobs from other teams (if e.g. done per command)").translation("conf.mobbattle.addai")
+            this.autoAddAI = builder.comment("Auto target mobs from other teams (if e.g. done per command)").translation("conf.mobbattle.addai")
                     .define("autoAddAI", true);
             //builder.pop();
         }
