@@ -7,9 +7,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
-
-import java.util.function.Supplier;
 
 public class ClientOpenGuiHelper {
 
@@ -27,9 +24,5 @@ public class ClientOpenGuiHelper {
 
     public static void openEffectGUI() {
         Minecraft.getInstance().displayGuiScreen(new GuiEffect());
-    }
-
-    public PlayerEntity getPlayer(Supplier<Context> ctx) {
-        return Minecraft.getInstance().player;
     }
 }
