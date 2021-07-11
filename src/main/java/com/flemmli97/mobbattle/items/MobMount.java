@@ -15,8 +15,8 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
@@ -35,8 +35,8 @@ public class MobMount extends Item {
 
     @Override
     public void addInformation(ItemStack stack, World world, List<ITextComponent> list, ITooltipFlag b) {
-        list.add(new StringTextComponent(TextFormatting.AQUA + "Left click an entity to select"));
-        list.add(new StringTextComponent(TextFormatting.AQUA + "Left click another entity to add selected entity as rider"));
+        list.add(new TranslationTextComponent("tooltip.mount.first").mergeStyle(TextFormatting.AQUA));
+        list.add(new TranslationTextComponent("tooltip.mount.second").mergeStyle(TextFormatting.AQUA));
     }
 
     @Override
@@ -50,7 +50,7 @@ public class MobMount extends Item {
         if (!player.world.isRemote)
             if (stack.hasTag()) {
                 stack.getTag().remove("StoredEntity");
-                player.sendMessage(new StringTextComponent(TextFormatting.RED + "Reset entities"), player.getUniqueID());
+                player.sendMessage(new TranslationTextComponent("tooltip.mount.reset").mergeStyle(TextFormatting.RED), player.getUniqueID());
             }
         return new ActionResult<ItemStack>(ActionResultType.SUCCESS, stack);
     }

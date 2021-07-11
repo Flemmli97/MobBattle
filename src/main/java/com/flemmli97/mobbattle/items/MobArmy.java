@@ -17,8 +17,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -36,12 +36,10 @@ public class MobArmy extends Item {
 
     @Override
     public void addInformation(ItemStack stack, World world, List<ITextComponent> list, ITooltipFlag b) {
-        list.add(new StringTextComponent(TextFormatting.AQUA + "Right click block to set first, and then second corner of the box"));
-        list.add(new StringTextComponent(TextFormatting.AQUA
-                + "Right click into air to to add entities in the box to the team with the name of this item (if exists, else DEFAULT)"));
-        list.add(new StringTextComponent(TextFormatting.AQUA + "Shift-Right click to reset box"));
-        list.add(new StringTextComponent(
-                TextFormatting.AQUA + "Left click to add entities to the team with the name of this item (if exists, else DEFAULT)"));
+        list.add(new TranslationTextComponent("tooltip.army.first").mergeStyle(TextFormatting.AQUA));
+        list.add(new TranslationTextComponent("tooltip.army.second").mergeStyle(TextFormatting.AQUA));
+        list.add(new TranslationTextComponent("tooltip.army.third").mergeStyle(TextFormatting.AQUA));
+        list.add(new TranslationTextComponent("tooltip.army.forth").mergeStyle(TextFormatting.AQUA));
     }
 
     public BlockPos[] getSelPos(ItemStack stack) {
@@ -83,7 +81,7 @@ public class MobArmy extends Item {
             if (player.isSneaking()) {
                 stack.getTag().remove("Position1");
                 stack.getTag().remove("Position2");
-                player.sendMessage(new StringTextComponent(TextFormatting.RED + "Reset Positions"), player.getUniqueID());
+                player.sendMessage(new TranslationTextComponent("tooltip.army.reset").mergeStyle(TextFormatting.RED), player.getUniqueID());
             } else if (stack.getTag().contains("Position1") && stack.getTag().contains("Position2")) {
                 BlockPos pos1 = new BlockPos(stack.getTag().getIntArray("Position1")[0], stack.getTag().getIntArray("Position1")[1],
                         stack.getTag().getIntArray("Position1")[2]);
@@ -96,10 +94,10 @@ public class MobArmy extends Item {
                 for (MobEntity living : list) {
                     Utils.updateEntity(team, living);
                 }
-                player.sendMessage(new StringTextComponent(TextFormatting.GOLD + "Added entities in the box to team " + team), player.getUniqueID());
+                player.sendMessage(new TranslationTextComponent("tooltip.armor.add.box", team).mergeStyle(TextFormatting.GOLD), player.getUniqueID());
             }
         }
-        return new ActionResult<ItemStack>(ActionResultType.SUCCESS, stack);
+        return new ActionResult<>(ActionResultType.SUCCESS, stack);
     }
 
     @Override
@@ -107,7 +105,7 @@ public class MobArmy extends Item {
         if (entity instanceof MobEntity && !player.world.isRemote) {
             String team = stack.hasDisplayName() ? stack.getDisplayName().getUnformattedComponentText() : "DEFAULT";
             Utils.updateEntity(team, (MobEntity) entity);
-            player.sendMessage(new StringTextComponent(TextFormatting.GOLD + "Added entity to team " + team), player.getUniqueID());
+            player.sendMessage(new TranslationTextComponent("tooltip.armor.add", team).mergeStyle(TextFormatting.GOLD), player.getUniqueID());
         }
         return true;
     }

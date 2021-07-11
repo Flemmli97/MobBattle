@@ -18,8 +18,8 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class MobArmor extends Item {
 
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> list, ITooltipFlag flagIn) {
-        list.add(new StringTextComponent(TextFormatting.AQUA + "Right click an entity to edit their equipment"));
+        list.add(new TranslationTextComponent("tooltip.armor").mergeStyle(TextFormatting.AQUA));
     }
 
     @Override

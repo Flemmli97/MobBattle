@@ -10,8 +10,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class MobEffect extends Item {
 
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> list, ITooltipFlag flagIn) {
-        list.add(new StringTextComponent(TextFormatting.AQUA + "Left click an entity to remove their potion effects"));
+        list.add(new TranslationTextComponent("tooltip.effect.remove").mergeStyle(TextFormatting.AQUA));
     }
 
     @Override
@@ -38,7 +38,7 @@ public class MobEffect extends Item {
             LivingEntity e = (LivingEntity) entity;
             //Clear Potion effects
             e.clearActivePotions();
-            player.sendMessage(new StringTextComponent(TextFormatting.GOLD + "Effects cleared"), player.getUniqueID());
+            player.sendMessage(new TranslationTextComponent("tooltip.effect.remove.clear").mergeStyle(TextFormatting.GOLD), player.getUniqueID());
         }
         return true;
     }

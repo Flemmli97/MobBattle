@@ -19,8 +19,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -41,8 +41,8 @@ public class MobEffectGive extends Item {
 
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> list, ITooltipFlag flagIn) {
-        list.add(new StringTextComponent(TextFormatting.AQUA + "Right click to edit potion effect"));
-        list.add(new StringTextComponent(TextFormatting.AQUA + "Left click an entity to add the potion effects"));
+        list.add(new TranslationTextComponent("tooltip.effect.give.first").mergeStyle(TextFormatting.AQUA));
+        list.add(new TranslationTextComponent("tooltip.effect.give.second").mergeStyle(TextFormatting.AQUA));
     }
 
     @Override
@@ -65,8 +65,7 @@ public class MobEffectGive extends Item {
                 Effect potion = ForgeRegistries.POTIONS.getValue(new ResourceLocation(potionString));
                 if (potion != null) {
                     e.addPotionEffect(new EffectInstance(potion, duration, amplifier, false, showEffect));
-                    player.sendMessage(new StringTextComponent(
-                            TextFormatting.GOLD + "Added effect " + potionString + " " + amplifier + " for " + duration + " ticks "), player.getUniqueID());
+                    player.sendMessage(new TranslationTextComponent("tooltip.effect.give.add", potionString,  amplifier,  duration).mergeStyle(TextFormatting.GOLD), player.getUniqueID());
                 }
             }
         }

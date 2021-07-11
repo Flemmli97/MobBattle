@@ -29,8 +29,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
@@ -47,7 +47,7 @@ public class ItemExtendedSpawnEgg extends Item {
 
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> list, ITooltipFlag flagIn) {
-        list.add(new StringTextComponent(TextFormatting.AQUA + "Left click an entity to save it. Shift while doing saves nbt too."));
+        list.add(new TranslationTextComponent("tooltip.spawnegg").mergeStyle(TextFormatting.AQUA));
         if (ItemExtendedSpawnEgg.hasSavedEntity(stack)) {
             CompoundNBT compound = stack.getTag().getCompound(tagString);
             String entity = EntityType.byKey(compound.getString("id")).isPresent()
@@ -55,7 +55,7 @@ public class ItemExtendedSpawnEgg extends Item {
                     : "";
             if (!entity.isEmpty()) {
                 String entityName = compound.contains("CustomName") ? compound.getString("CustomName") : I18n.format(entity);
-                list.add(new StringTextComponent(TextFormatting.GOLD + "Spawns " + entityName + (compound.size() > 1 ? " (+NBT)" : "")));
+                list.add(new TranslationTextComponent("tooltip.spawnegg.spawn", entityName + (compound.size() > 1 ? " (+NBT)" : "")).mergeStyle(TextFormatting.GOLD));
             }
         }
     }
@@ -88,10 +88,10 @@ public class ItemExtendedSpawnEgg extends Item {
                 stack.setTag(compound);
 
                 if (!player.world.isRemote) {
-                    player.sendMessage(new StringTextComponent(TextFormatting.GOLD + "Saved Entity" + (nbt ? " + nbt" : "")), player.getUniqueID());
+                    player.sendMessage(new TranslationTextComponent("tooltip.spawnegg.save", (nbt ? " + nbt" : "")).mergeStyle(TextFormatting.GOLD), player.getUniqueID());
                 }
             } else {
-                player.sendMessage(new StringTextComponent(TextFormatting.DARK_RED + "Needs to be in creative mode to copy entity"), player.getUniqueID());
+                player.sendMessage(new TranslationTextComponent("tooltip.spawnegg.creative").mergeStyle(TextFormatting.DARK_RED), player.getUniqueID());
             }
         }
         return true;

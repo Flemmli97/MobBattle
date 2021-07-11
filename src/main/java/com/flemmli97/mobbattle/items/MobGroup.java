@@ -20,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
@@ -39,9 +40,9 @@ public class MobGroup extends Item {
 
     @Override
     public void addInformation(ItemStack stack, World player, List<ITextComponent> list, ITooltipFlag b) {
-        list.add(new StringTextComponent(TextFormatting.AQUA + "Left click to select entities"));
-        list.add(new StringTextComponent(TextFormatting.AQUA + "Right click on entity to set the target"));
-        list.add(new StringTextComponent(TextFormatting.AQUA + "Shift right click to reset"));
+        list.add(new StringTextComponent(TextFormatting.AQUA + "tooltip.group.first"));
+        list.add(new StringTextComponent(TextFormatting.AQUA + "tooltip.group.second"));
+        list.add(new StringTextComponent(TextFormatting.AQUA + "tooltip.group.third"));
     }
 
     @Override
@@ -69,10 +70,10 @@ public class MobGroup extends Item {
                 ListNBT list = stack.getTag().getList("EntityList", 8);
                 list.remove(list.size() - 1);
                 stack.getTag().put("EntityList", list);
-                player.sendMessage(new StringTextComponent(TextFormatting.RED + "Removed an entity"), player.getUniqueID());
+                player.sendMessage(new TranslationTextComponent("tooltip.group.remove").mergeStyle(TextFormatting.RED), player.getUniqueID());
             } else {
                 stack.getTag().remove("EntityList");
-                player.sendMessage(new StringTextComponent(TextFormatting.RED + "Reset all entities"), player.getUniqueID());
+                player.sendMessage(new TranslationTextComponent("tooltip.group.reset").mergeStyle(TextFormatting.RED), player.getUniqueID());
             }
         }
         return new ActionResult<ItemStack>(ActionResultType.SUCCESS, stack);
@@ -98,7 +99,7 @@ public class MobGroup extends Item {
                 nbttaglist.add(StringNBT.valueOf(entity.getCachedUniqueIdString()));
                 compound.put("EntityList", nbttaglist);
                 stack.setTag(compound);
-                player.sendMessage(new StringTextComponent(TextFormatting.GOLD + "Added an entity"), player.getUniqueID());
+                player.sendMessage(new TranslationTextComponent("tooltip.group.add").mergeStyle(TextFormatting.GOLD), player.getUniqueID());
             }
         }
         return true;

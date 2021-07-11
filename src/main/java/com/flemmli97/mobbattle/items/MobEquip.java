@@ -20,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -37,9 +38,9 @@ public class MobEquip extends Item {
 
     @Override
     public void addInformation(ItemStack stack, World world, List<ITextComponent> list, ITooltipFlag b) {
-        list.add(new StringTextComponent(TextFormatting.AQUA + "Right click block to set first, and then second corner of the box"));
-        list.add(new StringTextComponent(TextFormatting.AQUA + "Right click into air to to make entities able to pickup items"));
-        list.add(new StringTextComponent(TextFormatting.AQUA + "Shift-Right click to reset box"));
+        list.add(new TranslationTextComponent("tooltip.equip.first").mergeStyle(TextFormatting.AQUA));
+        list.add(new TranslationTextComponent("tooltip.equip.second").mergeStyle(TextFormatting.AQUA));
+        list.add(new TranslationTextComponent("tooltip.equip.third").mergeStyle(TextFormatting.AQUA));
     }
 
     public BlockPos[] getSelPos(ItemStack stack) {
@@ -93,7 +94,7 @@ public class MobEquip extends Item {
                     living.addTag("PickUp");
                     living.goalSelector.addGoal(10, new EntityAIItemPickup(living));
                 }
-                player.sendMessage(new StringTextComponent(TextFormatting.GOLD + "Entities in box can now pickup items"), player.getUniqueID());
+                player.sendMessage(new TranslationTextComponent("tooltip.equip.add").mergeStyle(TextFormatting.GOLD), player.getUniqueID());
             }
         return new ActionResult<ItemStack>(ActionResultType.SUCCESS, stack);
     }

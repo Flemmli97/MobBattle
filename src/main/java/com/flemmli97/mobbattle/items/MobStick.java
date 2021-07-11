@@ -15,8 +15,8 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
@@ -36,10 +36,10 @@ public class MobStick extends Item {
     @Override
     public void addInformation(ItemStack stack, World world, List<ITextComponent> list, ITooltipFlag b) {
         if (stack.hasTag() && stack.getTag().contains("StoredEntityName")) {
-            list.add(new StringTextComponent(TextFormatting.GREEN + "Asigned entity: " + stack.getTag().getString("StoredEntityName")));
+            list.add(new TranslationTextComponent("tooltip.stick.contains", stack.getTag().getString("StoredEntityName")).mergeStyle(TextFormatting.GREEN));
         }
-        list.add(new StringTextComponent(TextFormatting.AQUA + "Left click to asign an entity"));
-        list.add(new StringTextComponent(TextFormatting.AQUA + "Right click to reset"));
+        list.add(new TranslationTextComponent("tooltip.stick.first").mergeStyle(TextFormatting.AQUA));
+        list.add(new TranslationTextComponent("tooltip.stick.second").mergeStyle(TextFormatting.AQUA));
     }
 
     @Override
@@ -49,7 +49,7 @@ public class MobStick extends Item {
             if (stack.hasTag()) {
                 stack.getTag().remove("StoredEntity");
                 stack.getTag().remove("StoredEntityName");
-                player.sendMessage(new StringTextComponent(TextFormatting.RED + "Reset entities"), player.getUniqueID());
+                player.sendMessage(new TranslationTextComponent("tooltip.stick.reset").mergeStyle(TextFormatting.RED), player.getUniqueID());
             }
         return new ActionResult<ItemStack>(ActionResultType.SUCCESS, stack);
     }
@@ -73,7 +73,7 @@ public class MobStick extends Item {
                 compound.putString("StoredEntity", entity.getCachedUniqueIdString());
                 compound.putString("StoredEntityName", entity.getClass().getSimpleName());
                 stack.setTag(compound);
-                player.sendMessage(new StringTextComponent(TextFormatting.GOLD + "First entity set, hit another entity to set target"), player.getUniqueID());
+                player.sendMessage(new TranslationTextComponent("tooltip.stick.add").mergeStyle(TextFormatting.GOLD), player.getUniqueID());
                 return true;
             }
         return true;
