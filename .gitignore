@@ -21,3 +21,6 @@ build
 
 # things
 .DS_Store
+
+# datagen
+.cache
