@@ -42,5 +42,13 @@
   "tooltip.group.reset": "Reset all entities",
   "tooltip.group.add": "Added an entity",
   "tooltip.heal": "Left click on entity to heal it",
-  "tooltip.kill": "Left click on entity to kill it"
+  "tooltip.kill": "Left click on entity to kill it",
+  "tooltip.mount.first": "Left click an entity to select",
+  "tooltip.mount.second": "Left click another entity to add selected entity as rider",
+  "tooltip.mount.reset": "Reset entities",
+  "tooltip.stick.contains": "Asigned entity: %s",
+  "tooltip.stick.first": "Left click to asign an entity",
+  "tooltip.stick.second": "Right click to reset",
+  "tooltip.stick.reset": "Reset entities",
+  "tooltip.stick.add": "First entity set, hit another entity to set target"
 }
