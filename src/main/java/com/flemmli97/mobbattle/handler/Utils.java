@@ -33,10 +33,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class Utils {
 
     public static Map<TextFormatting, RedstoneParticleData> teamColor = new HashMap<>();
+    private static final Field goalSelector_goal = ObfuscationReflectionHelper.findField(GoalSelector.class, "field_220892_d");
 
     static {
         teamColor.put(TextFormatting.AQUA, new RedstoneParticleData(0.01f, 0.9f, 1f, 1.0f));
@@ -91,10 +93,8 @@ public class Utils {
         removeGoal(e.targetSelector, targetGoal);
         e.setAttackTarget(null);
         e.targetSelector.addGoal(0, new EntityAITeamTarget(e, false, true));
-        e.addTag("mobbattle:AddedAI");
+        e.addTag(LibTags.entityAIAdded);
     }
-
-    private static final Field goalSelector_goal = ObfuscationReflectionHelper.findField(GoalSelector.class, "goals");
 
     /**
      * like {@link GoalSelector#removeGoal(Goal)} but with a predicate
@@ -102,9 +102,9 @@ public class Utils {
     @SuppressWarnings("unchecked")
     private static void removeGoal(GoalSelector goalSel, Predicate<Goal> pred) {
         try {
-            Set<PrioritizedGoal> goals = (Set<PrioritizedGoal>) goalSelector_goal.get(goalSel);
-            goals.stream().filter((prioGoal) -> pred.test(prioGoal.getGoal())).filter(PrioritizedGoal::isRunning).forEach(PrioritizedGoal::resetTask);
-            goals.removeIf((prioGoal) -> pred.test(prioGoal.getGoal()));
+            Set<PrioritizedGoal> goals = ((Set<PrioritizedGoal>) goalSelector_goal.get(goalSel))
+                    .stream().filter(prio->pred.test(prio.getGoal())).collect(Collectors.toSet());
+            goals.forEach(goalSel::removeGoal);
         } catch (IllegalArgumentException | IllegalAccessException e) {
             e.printStackTrace();
         }
