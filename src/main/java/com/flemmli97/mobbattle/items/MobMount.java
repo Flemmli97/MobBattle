@@ -1,7 +1,8 @@
 package com.flemmli97.mobbattle.items;
 
 import com.flemmli97.mobbattle.MobBattleTab;
-import com.flemmli97.mobbattle.items.entitymanager.Utils;
+import com.flemmli97.mobbattle.handler.LibTags;
+import com.flemmli97.mobbattle.handler.Utils;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -41,7 +42,7 @@ public class MobMount extends Item {
 
     @Override
     public boolean hasEffect(ItemStack stack) {
-        return stack.hasTag() && stack.getTag().contains("StoredEntity");
+        return stack.hasTag() && stack.getTag().contains(LibTags.savedEntity);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class MobMount extends Item {
         ItemStack stack = player.getHeldItem(hand);
         if (!player.world.isRemote)
             if (stack.hasTag()) {
-                stack.getTag().remove("StoredEntity");
+                stack.getTag().remove(LibTags.savedEntity);
                 player.sendMessage(new TranslationTextComponent("tooltip.mount.reset").mergeStyle(TextFormatting.RED), player.getUniqueID());
             }
         return new ActionResult<>(ActionResultType.SUCCESS, stack);
@@ -58,17 +59,17 @@ public class MobMount extends Item {
     @Override
     public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
         if (entity instanceof MobEntity && !player.world.isRemote) {
-            if (stack.hasTag() && stack.getTag().contains("StoredEntity")) {
-                MobEntity storedEntity = Utils.fromUUID((ServerWorld) player.world, stack.getTag().getString("StoredEntity"));
+            if (stack.hasTag() && stack.getTag().contains(LibTags.savedEntity)) {
+                MobEntity storedEntity = Utils.fromUUID((ServerWorld) player.world, stack.getTag().getString(LibTags.savedEntity));
                 if (storedEntity != null && storedEntity != entity && !this.passengerContainsEntity(storedEntity, entity)) {
                     storedEntity.startRiding(entity);
-                    stack.getTag().remove("StoredEntity");
+                    stack.getTag().remove(LibTags.savedEntity);
                 }
             } else {
                 CompoundNBT compound = new CompoundNBT();
                 if (stack.hasTag())
                     compound = stack.getTag();
-                compound.putString("StoredEntity", entity.getCachedUniqueIdString());
+                compound.putString(LibTags.savedEntity, entity.getCachedUniqueIdString());
                 stack.setTag(compound);
             }
         }

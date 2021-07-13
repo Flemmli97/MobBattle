@@ -1,7 +1,8 @@
 package com.flemmli97.mobbattle.items;
 
 import com.flemmli97.mobbattle.MobBattleTab;
-import com.flemmli97.mobbattle.items.entitymanager.Utils;
+import com.flemmli97.mobbattle.handler.LibTags;
+import com.flemmli97.mobbattle.handler.Utils;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -46,11 +47,11 @@ public class MobArmy extends Item {
         if (stack.hasTag()) {
             CompoundNBT compound = stack.getTag();
             BlockPos pos1 = null;
-            if (compound.contains("Position1") && compound.getIntArray("Position1").length == 3)
-                pos1 = new BlockPos(compound.getIntArray("Position1")[0], compound.getIntArray("Position1")[1], compound.getIntArray("Position1")[2]);
+            if (compound.contains(LibTags.savedPos1) && compound.getIntArray(LibTags.savedPos1).length == 3)
+                pos1 = new BlockPos(compound.getIntArray(LibTags.savedPos1)[0], compound.getIntArray(LibTags.savedPos1)[1], compound.getIntArray(LibTags.savedPos1)[2]);
             BlockPos pos2 = null;
-            if (compound.contains("Position2") && compound.getIntArray("Position2").length == 3)
-                pos2 = new BlockPos(compound.getIntArray("Position2")[0], compound.getIntArray("Position2")[1], compound.getIntArray("Position2")[2]);
+            if (compound.contains(LibTags.savedPos2) && compound.getIntArray(LibTags.savedPos2).length == 3)
+                pos2 = new BlockPos(compound.getIntArray(LibTags.savedPos2)[0], compound.getIntArray(LibTags.savedPos2)[1], compound.getIntArray(LibTags.savedPos2)[2]);
             return new BlockPos[]{pos1, pos2};
         }
         return new BlockPos[]{null, null};
@@ -63,11 +64,11 @@ public class MobArmy extends Item {
             CompoundNBT compound = stack.getTag();
             if (compound == null)
                 compound = new CompoundNBT();
-            if (!compound.contains("Position1") || compound.getIntArray("Position1").length != 3) {
-                compound.putIntArray("Position1", new int[]{ctx.getPos().getX(), ctx.getPos().getY(), ctx.getPos().getZ()});
+            if (!compound.contains(LibTags.savedPos1) || compound.getIntArray(LibTags.savedPos1).length != 3) {
+                compound.putIntArray(LibTags.savedPos1, new int[]{ctx.getPos().getX(), ctx.getPos().getY(), ctx.getPos().getZ()});
             } else if (!ctx.getPos().equals(
-                    new BlockPos(compound.getIntArray("Position1")[0], compound.getIntArray("Position1")[1], compound.getIntArray("Position1")[2]))) {
-                compound.putIntArray("Position2", new int[]{ctx.getPos().getX(), ctx.getPos().getY(), ctx.getPos().getZ()});
+                    new BlockPos(compound.getIntArray(LibTags.savedPos1)[0], compound.getIntArray(LibTags.savedPos1)[1], compound.getIntArray(LibTags.savedPos1)[2]))) {
+                compound.putIntArray(LibTags.savedPos2, new int[]{ctx.getPos().getX(), ctx.getPos().getY(), ctx.getPos().getZ()});
             }
             stack.setTag(compound);
         }
@@ -79,14 +80,14 @@ public class MobArmy extends Item {
         ItemStack stack = player.getHeldItem(hand);
         if (!world.isRemote && stack.hasTag()) {
             if (player.isSneaking()) {
-                stack.getTag().remove("Position1");
-                stack.getTag().remove("Position2");
+                stack.getTag().remove(LibTags.savedPos1);
+                stack.getTag().remove(LibTags.savedPos2);
                 player.sendMessage(new TranslationTextComponent("tooltip.army.reset").mergeStyle(TextFormatting.RED), player.getUniqueID());
-            } else if (stack.getTag().contains("Position1") && stack.getTag().contains("Position2")) {
-                BlockPos pos1 = new BlockPos(stack.getTag().getIntArray("Position1")[0], stack.getTag().getIntArray("Position1")[1],
-                        stack.getTag().getIntArray("Position1")[2]);
-                BlockPos pos2 = new BlockPos(stack.getTag().getIntArray("Position2")[0], stack.getTag().getIntArray("Position2")[1],
-                        stack.getTag().getIntArray("Position2")[2]);
+            } else if (stack.getTag().contains(LibTags.savedPos1) && stack.getTag().contains(LibTags.savedPos2)) {
+                BlockPos pos1 = new BlockPos(stack.getTag().getIntArray(LibTags.savedPos1)[0], stack.getTag().getIntArray(LibTags.savedPos1)[1],
+                        stack.getTag().getIntArray(LibTags.savedPos1)[2]);
+                BlockPos pos2 = new BlockPos(stack.getTag().getIntArray(LibTags.savedPos2)[0], stack.getTag().getIntArray(LibTags.savedPos2)[1],
+                        stack.getTag().getIntArray(LibTags.savedPos2)[2]);
                 AxisAlignedBB bb = Utils.getBoundingBoxPositions(pos1, pos2);
                 List<MobEntity> list = player.world.getEntitiesWithinAABB(MobEntity.class, bb);
                 String team = stack.hasDisplayName() ? stack.getDisplayName().getUnformattedComponentText() : "DEFAULT";

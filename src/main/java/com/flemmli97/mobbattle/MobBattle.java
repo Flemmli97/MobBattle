@@ -1,9 +1,9 @@
 package com.flemmli97.mobbattle;
 
 import com.flemmli97.mobbattle.client.gui.MultiItemColor;
+import com.flemmli97.mobbattle.handler.ClientEvents;
+import com.flemmli97.mobbattle.handler.EventHandler;
 import com.flemmli97.mobbattle.inv.ContainerArmor;
-import com.flemmli97.mobbattle.items.entitymanager.ClientEvents;
-import com.flemmli97.mobbattle.items.entitymanager.EventHandler;
 import com.flemmli97.mobbattle.network.PacketHandler;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ContainerType;

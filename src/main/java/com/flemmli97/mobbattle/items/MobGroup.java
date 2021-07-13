@@ -1,7 +1,8 @@
 package com.flemmli97.mobbattle.items;
 
 import com.flemmli97.mobbattle.MobBattleTab;
-import com.flemmli97.mobbattle.items.entitymanager.Utils;
+import com.flemmli97.mobbattle.handler.LibTags;
+import com.flemmli97.mobbattle.handler.Utils;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -47,8 +48,8 @@ public class MobGroup extends Item {
 
     @Override
     public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity player, LivingEntity entity, Hand hand) {
-        if (!player.isSneaking() && !player.world.isRemote && stack.hasTag() && stack.getTag().contains("EntityList")) {
-            ListNBT list = stack.getTag().getList("EntityList", 8);
+        if (!player.isSneaking() && !player.world.isRemote && stack.hasTag() && stack.getTag().contains(LibTags.savedEntityList)) {
+            ListNBT list = stack.getTag().getList(LibTags.savedEntityList, 8);
             for (int i = 0; i < list.size(); i++) {
                 MobEntity e = Utils.fromUUID((ServerWorld) player.world, list.getString(i));
                 if (entity instanceof MobEntity && entity != e) {
@@ -56,7 +57,7 @@ public class MobGroup extends Item {
                     Utils.setAttackTarget(living, e, true);
                 }
             }
-            stack.getTag().remove("EntityList");
+            stack.getTag().remove(LibTags.savedEntityList);
             player.setHeldItem(hand, stack);
         }
         return ActionResultType.SUCCESS;
@@ -65,14 +66,14 @@ public class MobGroup extends Item {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getHeldItem(hand);
-        if (!player.world.isRemote && stack.hasTag() && stack.getTag().contains("EntityList")) {
-            if (!player.isSneaking() && stack.getTag().getList("EntityList", 8).size() > 0) {
-                ListNBT list = stack.getTag().getList("EntityList", 8);
+        if (!player.world.isRemote && stack.hasTag() && stack.getTag().contains(LibTags.savedEntityList)) {
+            if (!player.isSneaking() && stack.getTag().getList(LibTags.savedEntityList, 8).size() > 0) {
+                ListNBT list = stack.getTag().getList(LibTags.savedEntityList, 8);
                 list.remove(list.size() - 1);
-                stack.getTag().put("EntityList", list);
+                stack.getTag().put(LibTags.savedEntityList, list);
                 player.sendMessage(new TranslationTextComponent("tooltip.group.remove").mergeStyle(TextFormatting.RED), player.getUniqueID());
             } else {
-                stack.getTag().remove("EntityList");
+                stack.getTag().remove(LibTags.savedEntityList);
                 player.sendMessage(new TranslationTextComponent("tooltip.group.reset").mergeStyle(TextFormatting.RED), player.getUniqueID());
             }
         }
@@ -87,17 +88,17 @@ public class MobGroup extends Item {
                 compound = stack.getTag();
             ArrayList<String> list = new ArrayList<>();
 
-            if (compound.contains("EntityList")) {
-                for (int i = 0; i < compound.getList("EntityList", 8).size(); i++) {
-                    list.add(compound.getList("EntityList", 8).getString(i));
+            if (compound.contains(LibTags.savedEntityList)) {
+                for (int i = 0; i < compound.getList(LibTags.savedEntityList, 8).size(); i++) {
+                    list.add(compound.getList(LibTags.savedEntityList, 8).getString(i));
                 }
             }
             if (!list.contains(entity.getCachedUniqueIdString())) {
                 ListNBT nbttaglist = new ListNBT();
-                if (compound.contains("EntityList"))
-                    nbttaglist = compound.getList("EntityList", 8);
+                if (compound.contains(LibTags.savedEntityList))
+                    nbttaglist = compound.getList(LibTags.savedEntityList, 8);
                 nbttaglist.add(StringNBT.valueOf(entity.getCachedUniqueIdString()));
-                compound.put("EntityList", nbttaglist);
+                compound.put(LibTags.savedEntityList, nbttaglist);
                 stack.setTag(compound);
                 player.sendMessage(new TranslationTextComponent("tooltip.group.add").mergeStyle(TextFormatting.GOLD), player.getUniqueID());
             }

@@ -1,4 +1,4 @@
-package com.flemmli97.mobbattle.items.entitymanager;
+package com.flemmli97.mobbattle.handler;
 
 import com.flemmli97.mobbattle.ModItems;
 import com.flemmli97.mobbattle.items.MobArmy;

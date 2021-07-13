@@ -1,5 +1,6 @@
 package com.flemmli97.mobbattle;
 
+import com.flemmli97.mobbattle.handler.Utils;
 import com.flemmli97.mobbattle.items.ItemExtendedSpawnEgg;
 import com.flemmli97.mobbattle.items.MobArmor;
 import com.flemmli97.mobbattle.items.MobArmy;
@@ -11,7 +12,6 @@ import com.flemmli97.mobbattle.items.MobHeal;
 import com.flemmli97.mobbattle.items.MobKill;
 import com.flemmli97.mobbattle.items.MobMount;
 import com.flemmli97.mobbattle.items.MobStick;
-import com.flemmli97.mobbattle.items.entitymanager.Utils;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;

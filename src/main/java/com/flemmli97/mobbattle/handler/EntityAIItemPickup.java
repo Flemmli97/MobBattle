@@ -1,4 +1,4 @@
-package com.flemmli97.mobbattle.items.entitymanager;
+package com.flemmli97.mobbattle.handler;
 
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;

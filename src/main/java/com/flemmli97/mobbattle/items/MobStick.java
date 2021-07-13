@@ -1,7 +1,8 @@
 package com.flemmli97.mobbattle.items;
 
 import com.flemmli97.mobbattle.MobBattleTab;
-import com.flemmli97.mobbattle.items.entitymanager.Utils;
+import com.flemmli97.mobbattle.handler.LibTags;
+import com.flemmli97.mobbattle.handler.Utils;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -35,8 +36,8 @@ public class MobStick extends Item {
 
     @Override
     public void addInformation(ItemStack stack, World world, List<ITextComponent> list, ITooltipFlag b) {
-        if (stack.hasTag() && stack.getTag().contains("StoredEntityName")) {
-            list.add(new TranslationTextComponent("tooltip.stick.contains", stack.getTag().getString("StoredEntityName")).mergeStyle(TextFormatting.GREEN));
+        if (stack.hasTag() && stack.getTag().contains(LibTags.savedEntityName)) {
+            list.add(new TranslationTextComponent("tooltip.stick.contains", stack.getTag().getString(LibTags.savedEntityName)).mergeStyle(TextFormatting.GREEN));
         }
         list.add(new TranslationTextComponent("tooltip.stick.first").mergeStyle(TextFormatting.AQUA));
         list.add(new TranslationTextComponent("tooltip.stick.second").mergeStyle(TextFormatting.AQUA));
@@ -47,8 +48,8 @@ public class MobStick extends Item {
         ItemStack stack = player.getHeldItem(hand);
         if (!player.world.isRemote)
             if (stack.hasTag()) {
-                stack.getTag().remove("StoredEntity");
-                stack.getTag().remove("StoredEntityName");
+                stack.getTag().remove(LibTags.savedEntity);
+                stack.getTag().remove(LibTags.savedEntityName);
                 player.sendMessage(new TranslationTextComponent("tooltip.stick.reset").mergeStyle(TextFormatting.RED), player.getUniqueID());
             }
         return new ActionResult<>(ActionResultType.SUCCESS, stack);
@@ -56,22 +57,22 @@ public class MobStick extends Item {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
-        if (!player.world.isRemote)
-            if (stack.hasTag() && stack.getTag().contains("StoredEntity")) {
-                MobEntity storedEntity = Utils.fromUUID((ServerWorld) player.world, stack.getTag().getString("StoredEntity"));
+        if (player.world instanceof ServerWorld)
+            if (stack.hasTag() && stack.getTag().contains(LibTags.savedEntity)) {
+                MobEntity storedEntity = Utils.fromUUID((ServerWorld) player.world, stack.getTag().getString(LibTags.savedEntity));
                 if (entity instanceof MobEntity && entity != storedEntity) {
                     MobEntity living = (MobEntity) entity;
                     Utils.setAttackTarget(living, storedEntity, true);
-                    stack.getTag().remove("StoredEntity");
-                    stack.getTag().remove("StoredEntityName");
+                    stack.getTag().remove(LibTags.savedEntity);
+                    stack.getTag().remove(LibTags.savedEntityName);
                     return true;
                 }
             } else if (entity instanceof MobEntity) {
                 CompoundNBT compound = new CompoundNBT();
                 if (stack.hasTag())
                     compound = stack.getTag();
-                compound.putString("StoredEntity", entity.getCachedUniqueIdString());
-                compound.putString("StoredEntityName", entity.getClass().getSimpleName());
+                compound.putString(LibTags.savedEntity, entity.getCachedUniqueIdString());
+                compound.putString(LibTags.savedEntityName, entity.getClass().getSimpleName());
                 stack.setTag(compound);
                 player.sendMessage(new TranslationTextComponent("tooltip.stick.add").mergeStyle(TextFormatting.GOLD), player.getUniqueID());
                 return true;

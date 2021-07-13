@@ -2,7 +2,8 @@ package com.flemmli97.mobbattle.items;
 
 import com.flemmli97.mobbattle.MobBattle;
 import com.flemmli97.mobbattle.MobBattleTab;
-import com.flemmli97.mobbattle.items.entitymanager.Utils;
+import com.flemmli97.mobbattle.handler.LibTags;
+import com.flemmli97.mobbattle.handler.Utils;
 import com.google.common.base.Functions;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FlowingFluidBlock;
@@ -39,8 +40,6 @@ import java.util.List;
 
 public class ItemExtendedSpawnEgg extends Item {
 
-    public static final String tagString = MobBattle.MODID + ":Entity";
-
     public ItemExtendedSpawnEgg() {
         super(new Item.Properties().group(MobBattleTab.customTab));
     }
@@ -49,7 +48,7 @@ public class ItemExtendedSpawnEgg extends Item {
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> list, ITooltipFlag flagIn) {
         list.add(new TranslationTextComponent("tooltip.spawnegg").mergeStyle(TextFormatting.AQUA));
         if (ItemExtendedSpawnEgg.hasSavedEntity(stack)) {
-            CompoundNBT compound = stack.getTag().getCompound(tagString);
+            CompoundNBT compound = stack.getTag().getCompound(LibTags.spawnEggTag);
             String entity = EntityType.byKey(compound.getString("id")).isPresent()
                     ? EntityType.byKey(compound.getString("id")).get().getTranslationKey()
                     : "";
@@ -84,7 +83,7 @@ public class ItemExtendedSpawnEgg extends Item {
                      * ((EntityVillagerMCA)e).attributes.getGender().getId()); }
                      */
                 }
-                compound.put(tagString, tag);
+                compound.put(LibTags.spawnEggTag, tag);
                 stack.setTag(compound);
 
                 if (!player.world.isRemote) {
@@ -113,7 +112,7 @@ public class ItemExtendedSpawnEgg extends Item {
                 spawner.getSpawnerBaseLogic().write(nbt);
                 nbt.remove("SpawnPotentials");
                 nbt.remove("SpawnData");
-                nbt.put("SpawnData", itemstack.getTag().get(tagString).copy());
+                nbt.put("SpawnData", itemstack.getTag().get(LibTags.spawnEggTag).copy());
                 spawner.getSpawnerBaseLogic().read(nbt);
                 spawner.markDirty();
                 ctx.getWorld().notifyBlockUpdate(ctx.getPos(), iblockstate, iblockstate, 3);
@@ -174,14 +173,14 @@ public class ItemExtendedSpawnEgg extends Item {
     public static Entity spawnEntity(ServerWorld world, ItemStack stack, double x, double y, double z) {
         Entity entity = null;
         if (ItemExtendedSpawnEgg.hasSavedEntity(stack)) {
-            entity = EntityType.loadEntityAndExecute(stack.getTag().getCompound(tagString), world, Functions.identity());
+            entity = EntityType.loadEntityAndExecute(stack.getTag().getCompound(LibTags.spawnEggTag), world, Functions.identity());
             if (entity instanceof MobEntity) {
                 MobEntity entityliving = (MobEntity) entity;
                 /*
                  * if(CommonProxy.mca && entityliving instanceof EntityVillagerMCA &&
-                 * stack.getTag().getCompound(tagString).contains("MCAGender")) { EntityVillagerMCA villager = (EntityVillagerMCA)
+                 * stack.getTag().getCompound(LibTags.spawnEggTag).contains("MCAGender")) { EntityVillagerMCA villager = (EntityVillagerMCA)
                  * entityliving;
-                 * villager.attributes.setGender(EnumGender.byId(stack.getTag().getCompound(tagString).getInt("MCAGender")));
+                 * villager.attributes.setGender(EnumGender.byId(stack.getTag().getCompound(LibTags.spawnEggTag).getInt("MCAGender")));
                  * villager.attributes.assignRandomName(); villager.attributes.assignRandomProfession();
                  * villager.attributes.assignRandomPersonality(); villager.attributes.assignRandomSkin(); }
                  */
@@ -197,7 +196,7 @@ public class ItemExtendedSpawnEgg extends Item {
     }
 
     private static boolean hasSavedEntity(ItemStack stack) {
-        return stack.hasTag() && stack.getTag().contains(tagString) && stack.getTag().getCompound(tagString).contains("id");
+        return stack.hasTag() && stack.getTag().contains(LibTags.spawnEggTag) && stack.getTag().getCompound(LibTags.spawnEggTag).contains("id");
     }
 
     private void removeMobSpecifigTags(CompoundNBT compound) {
@@ -212,12 +211,12 @@ public class ItemExtendedSpawnEgg extends Item {
     @Nullable
     public static ResourceLocation getNamedIdFrom(ItemStack stack) {
         if (ItemExtendedSpawnEgg.hasSavedEntity(stack)) {
-            String s = stack.getTag().getCompound(tagString).getString("id");
+            String s = stack.getTag().getCompound(LibTags.spawnEggTag).getString("id");
 
             ResourceLocation resourcelocation = new ResourceLocation(s);
             //fixing missing prefix case
             if (!s.contains(":")) {
-                stack.getTag().getCompound(tagString).putString("id", resourcelocation.toString());
+                stack.getTag().getCompound(LibTags.spawnEggTag).putString("id", resourcelocation.toString());
             }
             return resourcelocation;
         }
