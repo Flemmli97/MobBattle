@@ -19,7 +19,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -83,7 +82,7 @@ public class MobEquip extends Item {
             if (player.isSneaking()) {
                 stack.getTag().remove(LibTags.savedPos1);
                 stack.getTag().remove(LibTags.savedPos2);
-                player.sendMessage(new StringTextComponent(TextFormatting.RED + "Reset Positions"), player.getUniqueID());
+                player.sendMessage(new TranslationTextComponent("tooltip.equip.reset").mergeStyle(TextFormatting.RED), player.getUniqueID());
             } else if (stack.getTag().contains(LibTags.savedPos1) && stack.getTag().contains(LibTags.savedPos2)) {
                 BlockPos pos1 = new BlockPos(stack.getTag().getIntArray(LibTags.savedPos1)[0], stack.getTag().getIntArray(LibTags.savedPos1)[1],
                         stack.getTag().getIntArray(LibTags.savedPos1)[2]);
@@ -92,7 +91,7 @@ public class MobEquip extends Item {
                 AxisAlignedBB bb = Utils.getBoundingBoxPositions(pos1, pos2);
                 List<MobEntity> list = player.world.getEntitiesWithinAABB(MobEntity.class, bb);
                 for (MobEntity living : list) {
-                    living.addTag("PickUp");
+                    living.addTag(LibTags.entityPickup);
                     living.goalSelector.addGoal(10, new EntityAIItemPickup(living));
                 }
                 player.sendMessage(new TranslationTextComponent("tooltip.equip.add").mergeStyle(TextFormatting.GOLD), player.getUniqueID());
@@ -103,9 +102,9 @@ public class MobEquip extends Item {
     @Override
     public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
         if (entity instanceof MobEntity && !player.world.isRemote) {
-            entity.addTag("PickUp");
+            entity.addTag(LibTags.entityPickup);
             ((MobEntity) entity).goalSelector.addGoal(10, new EntityAIItemPickup((MobEntity) entity));
-            player.sendMessage(new StringTextComponent(TextFormatting.GOLD + "Entity can pickup items now"), player.getUniqueID());
+            player.sendMessage(new TranslationTextComponent("tooltip.equip.add").mergeStyle(TextFormatting.GOLD), player.getUniqueID());
         }
         return true;
     }

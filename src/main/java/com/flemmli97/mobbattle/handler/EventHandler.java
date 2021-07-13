@@ -23,7 +23,7 @@ public class EventHandler {
             }
             if (event.getEntity().getTeam() != null)
                 Utils.updateEntity(event.getEntity().getTeam().getName(), (MobEntity) event.getEntity());
-            if (event.getEntity().getTags().contains("PickUp"))
+            if (event.getEntity().getTags().contains(LibTags.entityPickup))
                 ((MobEntity) event.getEntity()).goalSelector.addGoal(10, new EntityAIItemPickup((MobEntity) event.getEntity()));
         }
     }
@@ -49,7 +49,7 @@ public class EventHandler {
                     RedstoneParticleData color = Utils.teamColor.get(e.getTeam().getColor());
                     if (color != null)
                         e.world.addParticle(color, e.getPosX(), e.getPosY() + e.getHeight() + 0.5, e.getPosZ(), 0, 0, 0);
-                } else if (Config.commonConf.autoAddAI.get() && !e.getTags().contains("mobbattle:AddedAI")) {
+                } else if (Config.commonConf.autoAddAI.get() && !e.getTags().contains(LibTags.entityAIAdded)) {
                     Utils.updateEntity(e.getTeam().getName(), e);
                 }
             }

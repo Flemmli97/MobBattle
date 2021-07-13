@@ -13,4 +13,7 @@ public class LibTags {
     public static final String savedPos1 = MobBattle.MODID + ":Position1";
     public static final String savedPos2 = MobBattle.MODID + ":Position2";
 
+    public static final String entityPickup = MobBattle.MODID + ":PickUp";
+    public static final String entityAIAdded = MobBattle.MODID + ":AddedAI";
+
 }

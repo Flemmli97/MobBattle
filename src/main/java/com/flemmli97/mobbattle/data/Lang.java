@@ -75,7 +75,9 @@ public class Lang implements IDataProvider {
         this.add("tooltip.equip.first", "Right click block to set first, and then second corner of the box");
         this.add("tooltip.equip.second", "Right click into air to to make entities able to pickup items");
         this.add("tooltip.equip.third", "Shift-Right click to reset box");
-        this.add("tooltip.equip.add", "Entities in box can now pickup items");
+        this.add("tooltip.equip.box.add", "Entities in box can now pickup items");
+        this.add("tooltip.equip.add", "Entity can pickup items now");
+        this.add("tooltip.equip.reset", "Reset Positions");
 
         this.add("tooltip.group.first", "Left click to select entities");
         this.add("tooltip.group.second", "Right click on entity to set the target");
