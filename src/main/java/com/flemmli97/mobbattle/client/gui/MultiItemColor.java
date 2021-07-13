@@ -8,6 +8,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Optional;
 
@@ -34,7 +35,7 @@ public class MultiItemColor implements IItemColor {
             if (id.equals(EntityType.ILLUSIONER.getRegistryName())) {
                 return tintIndex == 0 ? 0x135893 : 0x848989;
             }
-            SpawnEggItem vanillaEgg = EntityType.byKey(id.toString()).map(SpawnEggItem::getEgg).orElse(null);
+            SpawnEggItem vanillaEgg = SpawnEggItem.getEgg(ForgeRegistries.ENTITIES.getValue(id));
             if (vanillaEgg != null)
                 return vanillaEgg.getColor(tintIndex);
 
