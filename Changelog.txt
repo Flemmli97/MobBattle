@@ -1,3 +1,8 @@
+Mob Battle 2.3.6
+================
+- Fix crash with some items
+- Add missing langs for some stuff
+
 Mob Battle 2.3.5
 ================
 - Fix mods.toml version
