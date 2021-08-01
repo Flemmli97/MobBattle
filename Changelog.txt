@@ -1,3 +1,7 @@
+Mob Battle 2.3.7
+================
+- Fix server crash
+
 Mob Battle 2.3.6
 ================
 - Fix crash with some items
