@@ -19,7 +19,6 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -41,9 +40,9 @@ public class MobGroup extends Item {
 
     @Override
     public void addInformation(ItemStack stack, World player, List<ITextComponent> list, ITooltipFlag b) {
-        list.add(new StringTextComponent(TextFormatting.AQUA + "tooltip.group.first"));
-        list.add(new StringTextComponent(TextFormatting.AQUA + "tooltip.group.second"));
-        list.add(new StringTextComponent(TextFormatting.AQUA + "tooltip.group.third"));
+        list.add(new TranslationTextComponent("tooltip.group.first").mergeStyle(TextFormatting.AQUA));
+        list.add(new TranslationTextComponent("tooltip.group.second").mergeStyle(TextFormatting.AQUA));
+        list.add(new TranslationTextComponent("tooltip.group.third").mergeStyle(TextFormatting.AQUA));
     }
 
     @Override
