@@ -1,26 +1,19 @@
-# eclipse
-bin
+build/
+*.ipr
+run/
+*.iws
+out/
+*.iml
+.gradle/
+output/
+bin/
+libs/
+
 .classpath
 .project
+.idea/
+classes/
+.metadata
+.vscode
 .settings
-
-#idea
-logs
-
-# forge
-run
-libs
-lib
-
-# github
-.git
-
-# gradle
-.gradle
-build
-
-# things
-.DS_Store
-
-# datagen
-.cache
+*.launch

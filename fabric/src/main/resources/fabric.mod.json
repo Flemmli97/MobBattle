@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "mobbattle",
+  "version": "${version}",
+  "name": "Mob Battle Mod",
+  "description": "Creative utensils in creating spectacular mob battles",
+  "authors": [
+    "Flemmli97"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/mob-battle-mod-fabric",
+    "sources": "https://github.com/Flemmli97/MobBattle"
+  },
+  "license": "ARR",
+  "icon": "",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.flemmli97.mobbattle.fabric.MobBattleFabric"
+    ]
+  },
+  "mixins": [
+    "mobbattle.fabric.mixins.json"
+  ],
+  "depends": {
+    "fabric": "*",
+    "minecraft": ">=1.18"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}

@@ -1,165 +1,77 @@
 buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        mavenCentral()
-    }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
         classpath group: 'com.diluv.schoomp', name: 'Schoomp', version: '1.1.0'
     }
 }
 
 plugins {
-    id 'eclipse'
-    id 'maven-publish'
+    id "architectury-plugin" version "3.4-SNAPSHOT"
+    id "dev.architectury.loom" version "0.10.0-SNAPSHOT" apply false
     id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
-apply plugin: 'net.minecraftforge.gradle'
 
 import com.diluv.schoomp.Webhook
 import com.diluv.schoomp.message.Message
 import com.diluv.schoomp.message.embed.Embed
 
-version = "${mcversion}-${modversion}"
-group = "io.github.flemmli97"
-archivesBaseName = modid
+architectury {
+    minecraft = rootProject.minecraft_version
+}
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+subprojects {
+    apply plugin: "dev.architectury.loom"
 
-minecraft {
-    mappings channel: 'snapshot', version: mcp_mapping
+    loom {
+        silentMojangMappingsLicense()
+    }
 
-    runs {
-        client {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-            //For linux intellij
-            environment 'PULSE_RUNTIME_PATH', '/run/user/1000/pulse'
-            mods {
-                modid {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                modid {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-
-            args '--mod', modid, '--all', '--output', file('src/generated/resources/'), '--existing', sourceSets.main.resources.srcDirs[0]
-
-            mods {
-                modid {
-                    source sourceSets.main
-                }
-            }
-        }
+    dependencies {
+        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+        mappings loom.officialMojangMappings()
     }
 }
 
-sourceSets.main.resources {
-    srcDir 'src/generated/resources'
-}
+allprojects {
+    apply plugin: "java"
+    apply plugin: "architectury-plugin"
+    apply plugin: "maven-publish"
 
-repositories {
-    mavenLocal()
-    maven {
-        url 'https://www.dogforce-games.com/maven/'
+    archivesBaseName = rootProject.archives_base_name
+    version = project.minecraft_version + "-" + rootProject.mod_version
+    group = rootProject.maven_group
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+        options.release = 17
     }
-    maven {
-        name = "CurseMaven"
-        url "https://www.cursemaven.com"
-    }
-    maven {
-        name = "TenshiLib"
-        url "https://gitlab.com/api/v4/projects/21830712/packages/maven"
-    }
-    maven {
-        name = "TenshiLib"
-        url "https://maven.pkg.github.com/flemmli97/TenshiLib"
+
+    java {
+        withSourcesJar()
     }
 }
 
-dependencies {
-    minecraft 'net.minecraftforge:forge:' + "${mcversion}-${forge_version}"
-
-    //compile animania_dep
-    //compile mca_dep
-
-    compileOnly tenshilib_dep
+task buildAll {
+    dependsOn(":fabric:build")
+    dependsOn(":forge:build")
 }
 
-jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : modid,
-                "Specification-Vendor"    : "flemmli97",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
-                "Implementation-Title"    : mod_name,
-                "Implementation-Version"  : version,
-                "Implementation-Vendor"   : "flemmli97",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
+task cleanAll {
+    dependsOn(":common:clean")
+    dependsOn(":fabric:clean")
+    dependsOn(":forge:clean")
 }
 
-jar.finalizedBy('reobfJar')
-
-publishing {
-    tasks.publish.dependsOn build
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-            groupId group
-            artifactId modid
-            version project.version
-        }
-    }
-    repositories {
-        maven {
-            url "https://gitlab.com/api/v4/projects/21830712/packages/maven"
-            //url "https://maven.pkg.github.com/flemmli97/MobBattle"
-            credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("GPR_USER")
-                password = project.findProperty("gpr.gitlab.token") ?: System.getenv("GPR_GITLAB_TOKEN")
-                //password = project.findProperty("gpr.github.token") ?: System.getenv("GPR_TOKEN")
-            }
-        }
-    }
+task publishAll {
+    dependsOn(":fabric:publish")
+    dependsOn(":forge:publish")
 }
 
 def changelog(int versions) {
     try {
         def changelog = ""
         def match = 0
-        file("Changelog.txt").eachLine {
-            if (it.matches("${project.mod_name} ([0-9].[0-9].[0-9])"))
+        file("Changelog.md").eachLine {
+            if (it.matches("${project.project_name} ([0-9].[0-9].[0-9])"))
                 match++
             if (match <= versions) {
                 changelog += it + "\n"
@@ -168,7 +80,7 @@ def changelog(int versions) {
         }
         return changelog + "\n\n"
     } catch (exception) {
-        return "${project.mod_name} ${project.modversion}\n==========\n"
+        return "${project.project_name} ${project.mod_version}\n==========\n"
     }
 }
 
@@ -197,16 +109,39 @@ curseforge {
     apiKey = findProperty('curseApiToken') ?: 0
 
     project {
-        id = "${curse_id}"
-        addGameVersion "Forge"
+        id = "${curse_id_fabric}"
         "${project.curse_versions}".split(', ').each {
             addGameVersion "${it}"
         }
-        changelog = changelog(3).replace("\n-", "\n\n- ")
-        changelogType = "markdown"
-        releaseType = 'release'
+        addGameVersion "Fabric"
+        mainArtifact(project(":fabric").tasks.getByName('remapJar')) {
+            def txt = changelog(1).replace("\n-", "\n\n- ")
+            txt = txt + "\n\n" + "For past versions see: ${project.full_changelog}"
+            changelog = txt
+            changelogType = "markdown"
+            releaseType = 'release'
+        }
         /*relations {
-            "${project.curse_dep}".split(', ').each {
+            "${project.curse_dep_fabric}".split(', ').each {
+                requiredDependency "${it}"
+            }
+        }*/
+    }
+    project {
+        id = "${curse_id_forge}"
+        "${project.curse_versions}".split(', ').each {
+            addGameVersion "${it}"
+        }
+        addGameVersion "Forge"
+        mainArtifact(project(":forge").tasks.getByName('remapJar')) {
+            def txt = changelog(1).replace("\n-", "\n\n- ")
+            txt = txt + "\n\n" + "For past versions see: ${project.full_changelog}"
+            changelog = txt
+            changelogType = "markdown"
+            releaseType = 'release'
+        }
+        /*relations {
+            "${project.curse_dep_forge}".split(', ').each {
                 requiredDependency "${it}"
             }
         }*/
@@ -214,21 +149,21 @@ curseforge {
 }
 
 tasks.getByName("curseforge").doLast {
-    if (project.ping_id == 0)
-        return
     try {
-        def newFileId = tasks.getByName("curseforge${project.curse_id}").property('mainArtifact').fileID
+        def fileIDFabric = tasks.getByName("curseforge${project.curse_id_fabric}").property('mainArtifact').fileID
+        def fileIDForge = tasks.getByName("curseforge${project.curse_id_forge}").property('mainArtifact').fileID
 
-        def webhook = new Webhook(findProperty('discordHook'), "${project.mod_name} Upload")
+        def webhook = new Webhook(findProperty('discordHook'), "${project.project_name} Upload")
 
         def message = new Message()
         def version = project.curse_versions.split(', ')[0]
-        message.setUsername("Release")
-        message.setContent("<@&${project.ping_id}> ${project.mod_name} ${project.modversion} for Minecraft ${mcversion} has been released!")
+        message.setUsername("Curseforge Release")
+        message.setContent("${project.discord_role} ${project.project_name} ${project.mod_version} for Minecraft ${version} has been released!")
         message.setAvatarUrl("https://cdn.discordapp.com/avatars/680540027255652407/e4b7a058b24843ae13389a9a3cc3ae8c.png?size=128")
-        
+
         def embed = new Embed()
-        embed.addField('Get it here (When it is accepted)', "${project.findProperty('curse_page')}/files/${newFileId}", false)
+        embed.addField('Get the fabric version here (When it is accepted)', "${project.findProperty('curse_page_fabric')}/files/${fileIDFabric}", false)
+        embed.addField('Get the forge version here (When it is accepted)', "${project.findProperty('curse_page_forge')}/files/${fileIDForge}", false)
         def changelog = discordChangelog()
         if (changelog.size() == 1)
             embed.addField('Change Log', "```md\n${changelog.get(0) ?: 'Unavailable :('}```", false)
@@ -248,10 +183,10 @@ tasks.getByName("curseforge").doLast {
 }
 
 task buildUploadAll(group: "publishing") {
-    dependsOn clean, build, publish, tasks.getByName("curseforge")
-    build.mustRunAfter clean
-    tasks.findByName("curseforge").mustRunAfter publish
+    dependsOn cleanAll, buildAll, publishAll, tasks.getByName("curseforge")
+    buildAll.mustRunAfter cleanAll
+    tasks.findByName("curseforge").mustRunAfter publishAll
 }
 
-tasks.getByName("curseforge").dependsOn build
-publish.dependsOn build
+tasks.getByName("curseforge").dependsOn buildAll
+publishAll.dependsOn buildAll

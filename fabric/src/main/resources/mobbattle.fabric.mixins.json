@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.flemmli97.mobbattle.fabric.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "MobAccessor",
+    "ServerJoinWorldEventMixin",
+    "LivingEntityMixin"
+  ],
+  "server": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
