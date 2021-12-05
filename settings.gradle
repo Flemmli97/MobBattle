@@ -16,4 +16,4 @@ include("common")
 include("fabric")
 include("forge")
 
-rootProject.name = "MobBattle"
+rootProject.name = "Mob Battle"
