@@ -1,12 +1,16 @@
 package io.github.flemmli97.mobbattle.client.gui;
 
 import io.github.flemmli97.mobbattle.CrossPlatformStuff;
+import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.items.ItemExtendedSpawnEgg;
+import io.github.flemmli97.tenshilib.common.item.SpawnEgg;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
+
+import java.util.Optional;
 
 public class MultiItemColor implements ItemColor {
 
@@ -33,11 +37,11 @@ public class MultiItemColor implements ItemColor {
             if (vanillaEgg != null)
                 return vanillaEgg.getColor(tintIndex);
 
-            /*if (MobBattle.tenshiLib) {
+            if (MobBattle.tenshiLib) {
                 Optional<SpawnEgg> egg = SpawnEgg.fromID(id);
                 if (egg.isPresent())
                     return egg.get().getColor(tintIndex);
-            }*/
+            }
         }
         return -1;
     }

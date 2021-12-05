@@ -15,6 +15,14 @@ configurations {
     developmentFabric.extendsFrom common
 }
 
+repositories {
+    mavenLocal()
+    maven {
+        name = "TenshiLib"
+        url "https://gitlab.com/api/v4/projects/21830712/packages/maven"
+    }
+}
+
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_version}"
@@ -23,14 +31,12 @@ dependencies {
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
+
+    //modCompileOnly "io.github.flemmli97:tenshilib:1.18-1.4.0:fabric"
 }
 
 sourceSets.main.resources {
     srcDir "$rootDir/forge/src/generated/resources"
-}
-
-processResources {
-    exclude '.cache'
 }
 
 processResources {
@@ -39,6 +45,7 @@ processResources {
     filesMatching("fabric.mod.json") {
         expand "version": project.version
     }
+    exclude '.cache'
 }
 
 shadowJar {
@@ -49,7 +56,7 @@ shadowJar {
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier null
+    classifier "fabric"
 }
 
 jar {
@@ -60,6 +67,7 @@ sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
+    classifier "fabric-source"
 }
 
 components.java {

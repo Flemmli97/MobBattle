@@ -10,6 +10,18 @@ architectury {
     common()
 }
 
+repositories {
+    mavenLocal()
+    maven {
+        name = "TenshiLib"
+        url "https://gitlab.com/api/v4/projects/21830712/packages/maven"
+    }
+}
+
+dependencies {
+    modCompileOnly "io.github.flemmli97:tenshilib:1.18-1.4.0:fabric"
+}
+
 publishing {
     publications {
         mavenCommon(MavenPublication) {
