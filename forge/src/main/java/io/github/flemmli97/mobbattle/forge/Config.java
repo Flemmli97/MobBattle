@@ -17,7 +17,8 @@ public class Config {
         public final BooleanValue showTeamParticleTypes;
 
         public ClientConfig(ForgeConfigSpec.Builder builder) {
-            this.showTeamParticleTypes = builder.translation("conf.mobbattle.particle").define("showTeamParticle", true);
+            this.showTeamParticleTypes = builder.comment("If the team has a color will play particles of that color above the mob").translation("conf.mobbattle.particle")
+                    .define("showTeamParticle", true);
         }
     }
 
@@ -28,7 +29,6 @@ public class Config {
         public ServerConfig(ForgeConfigSpec.Builder builder) {
             this.autoAddAI = builder.comment("Auto target mobs from other teams (if e.g. done per command)").translation("conf.mobbattle.addai")
                     .define("autoAddAI", true);
-            //builder.pop();
         }
     }
 

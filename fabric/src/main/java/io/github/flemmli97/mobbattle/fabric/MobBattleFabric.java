@@ -1,5 +1,6 @@
 package io.github.flemmli97.mobbattle.fabric;
 
+import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.MobBattleTab;
 import io.github.flemmli97.mobbattle.fabric.client.ClientEvents;
 import io.github.flemmli97.mobbattle.fabric.handler.EventHandler;
@@ -26,5 +27,6 @@ public class MobBattleFabric implements ModInitializer {
             ClientEvents.register();
         ServerPacketHandler.register();
         Config.initConfig();
+        MobBattle.tenshiLib = FabricLoader.getInstance().isModLoaded("tenshilib");
     }
 }

@@ -2,7 +2,7 @@ package io.github.flemmli97.mobbattle.items;
 
 import io.github.flemmli97.mobbattle.CrossPlatformStuff;
 import io.github.flemmli97.mobbattle.MobBattle;
-import io.github.flemmli97.mobbattle.client.CrossClientHandler;
+import io.github.flemmli97.mobbattle.client.ClientHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -45,7 +45,7 @@ public class MobEffectGive extends Item implements LeftClickInteractItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         if (hand == InteractionHand.MAIN_HAND && world.isClientSide)
-            CrossClientHandler.openEffectGui();
+            ClientHandler.openEffectGui();
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, player.getItemInHand(hand));
     }
 

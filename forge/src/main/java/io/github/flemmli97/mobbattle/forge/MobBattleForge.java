@@ -24,7 +24,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 @Mod(value = MobBattle.MODID)
 public class MobBattleForge {
@@ -37,7 +37,8 @@ public class MobBattleForge {
         modbus.addListener(MobBattleForge::preInit);
         ModItems.ITEMS.register(modbus);
         ModMenuType.MENU_TYPE.register(modbus);
-        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientEvents::register);
+        if (FMLEnvironment.dist == Dist.CLIENT)
+            ClientEvents.register();
         MobBattleTab.customTab = new CreativeModeTab("mobbattle.tab") {
 
             @Override
@@ -52,12 +53,11 @@ public class MobBattleForge {
     public static boolean mca;
 
     public static void preInit(FMLCommonSetupEvent e) {
-        tenshiLib = ModList.get().getModContainerById("tenshilib")
-                .map(container -> new DefaultArtifactVersion("1.16.5-1.4.0").compareTo(container.getModInfo().getVersion()) <= 0).orElse(false);
+        tenshiLib = ModList.get().isLoaded("tenshilib");
         animania = ModList.get().isLoaded("animania");
         mca = ModList.get().isLoaded("mca");
         PacketHandler.register();
-        e.enqueueWork(()->{
+        e.enqueueWork(() -> {
             DispenserBlock.registerBehavior(ModItems.spawner.get(), (source, stack) -> {
                 Direction enumfacing = source.getBlockState().getValue(DispenserBlock.FACING);
                 double x = source.x() + enumfacing.getStepX();

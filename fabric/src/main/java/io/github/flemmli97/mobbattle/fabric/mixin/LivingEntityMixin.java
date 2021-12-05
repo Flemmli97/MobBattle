@@ -14,7 +14,7 @@ public class LivingEntityMixin {
 
     @Inject(method = "hurt", at = @At(value = "HEAD"), cancellable = true)
     private void livingHurt(DamageSource arg, float amount, CallbackInfoReturnable<Boolean> info) {
-        if(!EventHandler.teamFriendlyFire((LivingEntity) (Object) this, arg, amount)) {
+        if (!EventHandler.teamFriendlyFire((LivingEntity) (Object) this, arg, amount)) {
             info.setReturnValue(false);
             info.cancel();
         }

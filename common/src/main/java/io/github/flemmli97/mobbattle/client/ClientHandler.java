@@ -1,14 +1,14 @@
 package io.github.flemmli97.mobbattle.client;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import io.github.flemmli97.mobbattle.client.gui.GuiEffect;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 
-public class CrossClientHandler {
+public class ClientHandler {
 
-    @ExpectPlatform
     public static void openEffectGui() {
-        throw new AssertionError();
+        Minecraft.getInstance().setScreen(new GuiEffect());
     }
 
     @ExpectPlatform

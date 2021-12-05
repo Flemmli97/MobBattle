@@ -3,7 +3,6 @@ package io.github.flemmli97.mobbattle.data;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.github.flemmli97.mobbattle.MobBattle;
-import io.github.flemmli97.mobbattle.handler.LibTags;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
@@ -17,9 +16,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
-/**
- * Same as LanguageProvider but with a linked hashmap and reading from old lang file
- */
 public class Lang implements DataProvider {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();

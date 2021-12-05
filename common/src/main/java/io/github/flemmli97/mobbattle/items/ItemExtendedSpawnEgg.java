@@ -19,7 +19,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
@@ -39,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem{
+public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem {
 
     public ItemExtendedSpawnEgg(Item.Properties props) {
         super(props);
@@ -63,35 +62,26 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem{
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (entity instanceof Mob) {
-            if (player.getAbilities().instabuild)//|| player.canUseCommand(2, ""))
-            {
-                Mob e = (Mob) entity;
-                boolean nbt = false;
-                CompoundTag compound = stack.getTag();
-                if (compound == null)
-                    compound = new CompoundTag();
-                CompoundTag tag = new CompoundTag();
-                if (player.isShiftKeyDown()) {
-                    e.save(tag);
-                    this.removeMobSpecifigTags(tag);
-                    nbt = true;
-                } else {
-                    String name = CrossPlatformStuff.registryEntities().getIDFrom(e.getType()).toString();
-                    if (name != null)
-                        tag.putString("id", name);
-                    /*
-                     * if(CommonProxy.mca && e instanceof EntityVillagerMCA) { tag.putInteger("MCAGender",
-                     * ((EntityVillagerMCA)e).attributes.getGender().getId()); }
-                     */
-                }
-                compound.put(LibTags.spawnEggTag, tag);
-                stack.setTag(compound);
-
-                if (!player.level.isClientSide) {
-                    player.sendMessage(new TranslatableComponent("tooltip.spawnegg.save", (nbt ? " + nbt" : "")).withStyle(ChatFormatting.GOLD), player.getUUID());
-                }
+            Mob e = (Mob) entity;
+            boolean nbt = false;
+            CompoundTag compound = stack.getTag();
+            if (compound == null)
+                compound = new CompoundTag();
+            CompoundTag tag = new CompoundTag();
+            if (player.isShiftKeyDown()) {
+                e.save(tag);
+                this.removeMobSpecifigTags(tag);
+                nbt = true;
             } else {
-                player.sendMessage(new TranslatableComponent("tooltip.spawnegg.creative").withStyle(ChatFormatting.DARK_RED), player.getUUID());
+                String name = CrossPlatformStuff.registryEntities().getIDFrom(e.getType()).toString();
+                if (name != null)
+                    tag.putString("id", name);
+            }
+            compound.put(LibTags.spawnEggTag, tag);
+            stack.setTag(compound);
+
+            if (!player.level.isClientSide) {
+                player.sendMessage(new TranslatableComponent("tooltip.spawnegg.save", (nbt ? " + nbt" : "")).withStyle(ChatFormatting.GOLD), player.getUUID());
             }
             return true;
         }
@@ -175,21 +165,15 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem{
     public static Entity spawnEntity(ServerLevel world, ItemStack stack, double x, double y, double z) {
         Entity entity = null;
         if (ItemExtendedSpawnEgg.hasSavedEntity(stack)) {
-            entity = EntityType.loadEntityRecursive(stack.getTag().getCompound(LibTags.spawnEggTag), world, Functions.identity());
+            CompoundTag tag = stack.getTag().getCompound(LibTags.spawnEggTag);
+            entity = EntityType.loadEntityRecursive(tag, world, Functions.identity());
             if (entity instanceof Mob) {
                 Mob entityliving = (Mob) entity;
-                /*
-                 * if(CommonProxy.mca && entityliving instanceof EntityVillagerMCA &&
-                 * stack.getTag().getCompound(LibTags.spawnEggTag).contains("MCAGender")) { EntityVillagerMCA villager = (EntityVillagerMCA)
-                 * entityliving;
-                 * villager.attributes.setGender(EnumGender.byId(stack.getTag().getCompound(LibTags.spawnEggTag).getInt("MCAGender")));
-                 * villager.attributes.assignRandomName(); villager.attributes.assignRandomProfession();
-                 * villager.attributes.assignRandomPersonality(); villager.attributes.assignRandomSkin(); }
-                 */
                 entity.moveTo(x, y, z, Mth.wrapDegrees(world.random.nextFloat() * 360.0F), 0.0F);
                 entityliving.yHeadRot = entityliving.getYRot();
                 entityliving.yBodyRot = entityliving.getYRot();
-                entityliving.finalizeSpawn(world, world.getCurrentDifficultyAt(new BlockPos(entityliving.position())), MobSpawnType.SPAWN_EGG, null, null);
+                if(tag.size() ==1)
+                    entityliving.finalizeSpawn(world, world.getCurrentDifficultyAt(new BlockPos(entityliving.position())), MobSpawnType.SPAWN_EGG, null, null);
                 world.addFreshEntity(entity);
                 entityliving.playAmbientSound();
             }

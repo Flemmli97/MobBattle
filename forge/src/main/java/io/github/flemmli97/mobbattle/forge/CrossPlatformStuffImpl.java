@@ -17,9 +17,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
@@ -32,10 +30,6 @@ public class CrossPlatformStuffImpl {
 
     public static SimpleRegistryWrapper<MobEffect> registryStatusEffects() {
         return new ForgeRegistryWrapper<>(ForgeRegistries.MOB_EFFECTS);
-    }
-
-    public static SimpleRegistryWrapper<Item> registryItems() {
-        return new ForgeRegistryWrapper<>(ForgeRegistries.ITEMS);
     }
 
     public static SimpleRegistryWrapper<EntityType<?>> registryEntities() {
@@ -58,7 +52,7 @@ public class CrossPlatformStuffImpl {
             public AbstractContainerMenu createMenu(int i, Inventory arg, Player arg2) {
                 return new ContainerArmor(i, arg, living);
             }
-        }, buf->buf.writeInt(living.getId()));
+        }, buf -> buf.writeInt(living.getId()));
     }
 
     public static void itemStackUpdatePacket(CompoundTag tag) {

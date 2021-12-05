@@ -11,7 +11,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class CrossPlatformStuff {
@@ -23,11 +22,6 @@ public class CrossPlatformStuff {
 
     @ExpectPlatform
     public static SimpleRegistryWrapper<MobEffect> registryStatusEffects() {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    public static SimpleRegistryWrapper<Item> registryItems() {
         throw new AssertionError();
     }
 

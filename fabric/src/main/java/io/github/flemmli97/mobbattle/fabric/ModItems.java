@@ -38,17 +38,17 @@ public class ModItems {
     public static Item spawner;
 
     public static void registerItems() {
-        registerItem("mob_stick", mobStick = new MobStick(new Item.Properties().stacksTo(1).tab(MobBattleTab.customTab)));
-        registerItem("mob_kill", mobKill = new MobKill(new Item.Properties().stacksTo(1).tab(MobBattleTab.customTab)));
-        registerItem("mob_heal", mobHeal = new MobHeal(new Item.Properties().stacksTo(1).tab(MobBattleTab.customTab)));
-        registerItem("mob_effect", mobEffect = new MobEffect(new Item.Properties().stacksTo(1).tab(MobBattleTab.customTab)));
-        registerItem("mob_group", mobGroup = new MobGroup(new Item.Properties().stacksTo(1).tab(MobBattleTab.customTab)));
-        registerItem("mob_armor", mobArmor = new MobArmor(new Item.Properties().stacksTo(1).tab(MobBattleTab.customTab)));
-        registerItem("mob_mount", mobMount = new MobMount(new Item.Properties().stacksTo(1).tab(MobBattleTab.customTab)));
-        registerItem("mob_army", mobArmy = new MobArmy(new Item.Properties().stacksTo(1).tab(MobBattleTab.customTab)));
-        registerItem("mob_equip", mobEquip = new MobEquip(new Item.Properties().stacksTo(1).tab(MobBattleTab.customTab)));
-        registerItem("mob_effect_give", mobEffectGiver = new MobEffectGive(new Item.Properties().stacksTo(1).tab(MobBattleTab.customTab)));
-        registerItem("egg_ex", spawner = new ItemExtendedSpawnEgg(new Item.Properties().tab(MobBattleTab.customTab)));
+        mobStick = registerItem("mob_stick", new MobStick(new Item.Properties().stacksTo(1).tab(MobBattleTab.customTab)));
+        mobKill = registerItem("mob_kill", new MobKill(new Item.Properties().stacksTo(1).tab(MobBattleTab.customTab)));
+        mobHeal = registerItem("mob_heal", new MobHeal(new Item.Properties().stacksTo(1).tab(MobBattleTab.customTab)));
+        mobEffect = registerItem("mob_effect", new MobEffect(new Item.Properties().stacksTo(1).tab(MobBattleTab.customTab)));
+        mobGroup = registerItem("mob_group", new MobGroup(new Item.Properties().stacksTo(1).tab(MobBattleTab.customTab)));
+        mobArmor = registerItem("mob_armor", new MobArmor(new Item.Properties().stacksTo(1).tab(MobBattleTab.customTab)));
+        mobMount = registerItem("mob_mount", new MobMount(new Item.Properties().stacksTo(1).tab(MobBattleTab.customTab)));
+        mobArmy = registerItem("mob_army", new MobArmy(new Item.Properties().stacksTo(1).tab(MobBattleTab.customTab)));
+        mobEquip = registerItem("mob_equip", new MobEquip(new Item.Properties().stacksTo(1).tab(MobBattleTab.customTab)));
+        mobEffectGiver = registerItem("mob_effect_give", new MobEffectGive(new Item.Properties().stacksTo(1).tab(MobBattleTab.customTab)));
+        spawner = registerItem("egg_ex", new ItemExtendedSpawnEgg(new Item.Properties().tab(MobBattleTab.customTab)));
         DispenserBlock.registerBehavior(ModItems.spawner, (source, stack) -> {
             Direction enumfacing = source.getBlockState().getValue(DispenserBlock.FACING);
             double x = source.x() + enumfacing.getStepX();
@@ -67,7 +67,7 @@ public class ModItems {
         });
     }
 
-    private static void registerItem(String name, Item item) {
-        Registry.register(Registry.ITEM, new ResourceLocation(MobBattle.MODID, name), item);
+    private static Item registerItem(String name, Item item) {
+        return Registry.register(Registry.ITEM, new ResourceLocation(MobBattle.MODID, name), item);
     }
 }

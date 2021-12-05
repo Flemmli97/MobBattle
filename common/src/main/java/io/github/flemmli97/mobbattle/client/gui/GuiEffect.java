@@ -1,11 +1,10 @@
 package io.github.flemmli97.mobbattle.client.gui;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.flemmli97.mobbattle.CrossPlatformStuff;
 import io.github.flemmli97.mobbattle.MobBattle;
-import io.github.flemmli97.mobbattle.client.CrossClientHandler;
+import io.github.flemmli97.mobbattle.client.ClientHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -123,7 +122,7 @@ public class GuiEffect extends Screen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int p_keyPressed_3_) {
         boolean texFocused = this.potion.isFocused() || this.amplifier.isFocused() || this.duration.isFocused();
-        if ((keyCode == 256 && this.shouldCloseOnEsc()) || (!texFocused && CrossClientHandler.keyMatches(this.minecraft.options.keyInventory, keyCode, scanCode))) {
+        if ((keyCode == 256 && this.shouldCloseOnEsc()) || (!texFocused && ClientHandler.keyMatches(this.minecraft.options.keyInventory, keyCode, scanCode))) {
             if (this.stack.hasTag())
                 CrossPlatformStuff.itemStackUpdatePacket(this.stack.getTag());
             this.onClose();

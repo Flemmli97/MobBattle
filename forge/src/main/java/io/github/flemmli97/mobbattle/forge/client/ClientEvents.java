@@ -68,7 +68,7 @@ public class ClientEvents {
     }
 
     public static void registerTextureSprite(TextureStitchEvent.Pre event) {
-        if(event.getAtlas().location() == InventoryMenu.BLOCK_ATLAS)
+        if (event.getAtlas().location() == InventoryMenu.BLOCK_ATLAS)
             event.addSprite(new ResourceLocation(MobBattle.MODID, "gui/armor_slot_sword"));
     }
 
@@ -77,7 +77,7 @@ public class ClientEvents {
     }
 
     public static void clientSetup(FMLClientSetupEvent event) {
-        event.enqueueWork(()-> {
+        event.enqueueWork(() -> {
             MenuScreens.register(ModMenuType.armorMenu.get(), GuiArmor::new);
         });
     }

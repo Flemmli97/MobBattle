@@ -33,7 +33,7 @@ public class ClientEvents {
         WorldRenderEvents.END.register(ClientEvents::render);
         ScreenRegistry.register(ModMenuType.armorMenu, GuiArmor::new);
         ClientSpriteRegistryCallback.event(InventoryMenu.BLOCK_ATLAS)
-            .register(((atlas, reg) -> reg.register(new ResourceLocation(MobBattle.MODID, "gui/armor_slot_sword"))));
+                .register(((atlas, reg) -> reg.register(new ResourceLocation(MobBattle.MODID, "gui/armor_slot_sword"))));
     }
 
     public static void render(WorldRenderContext event) {

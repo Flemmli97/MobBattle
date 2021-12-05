@@ -12,5 +12,5 @@ public class ModMenuType {
 
     public static final DeferredRegister<MenuType<?>> MENU_TYPE = DeferredRegister.create(ForgeRegistries.CONTAINERS, MobBattle.MODID);
 
-    public static final RegistryObject<MenuType<ContainerArmor>> armorMenu = MENU_TYPE.register("armor_menu", ()-> IForgeMenuType.create(ContainerArmor::new));
+    public static final RegistryObject<MenuType<ContainerArmor>> armorMenu = MENU_TYPE.register("armor_menu", () -> IForgeMenuType.create(ContainerArmor::new));
 }

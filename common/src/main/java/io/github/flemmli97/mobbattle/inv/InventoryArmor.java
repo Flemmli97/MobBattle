@@ -21,7 +21,8 @@ public class InventoryArmor extends SimpleContainer {
 
     @Override
     public void setItem(int index, ItemStack stack) {
-        CrossPlatformStuff.sendEquipMessage(stack, this.theEntity.getId(), index);
+        if(this.theEntity.level.isClientSide)
+            CrossPlatformStuff.sendEquipMessage(stack, this.theEntity.getId(), index);
         super.setItem(index, stack);
     }
 
