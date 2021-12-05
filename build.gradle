@@ -121,11 +121,11 @@ curseforge {
             changelogType = "markdown"
             releaseType = 'release'
         }
-        /*relations {
+        relations {
             "${project.curse_dep_fabric}".split(', ').each {
                 requiredDependency "${it}"
             }
-        }*/
+        }
     }
     project {
         id = "${curse_id_forge}"
