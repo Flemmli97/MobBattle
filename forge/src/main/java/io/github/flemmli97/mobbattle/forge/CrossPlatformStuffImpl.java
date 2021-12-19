@@ -11,6 +11,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.player.Inventory;
@@ -57,6 +59,10 @@ public class CrossPlatformStuffImpl {
 
     public static void itemStackUpdatePacket(CompoundTag tag) {
         PacketHandler.sendToServer(new ItemStackUpdate(tag));
+    }
+
+    public static boolean canEquip(ItemStack stack, EquipmentSlot slot, LivingEntity living) {
+        return stack.canEquip(slot, living);
     }
 
     public static GoalSelector goalSelectorFrom(Mob mob, boolean target) {

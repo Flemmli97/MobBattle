@@ -1,3 +1,7 @@
+Mob Battle 2.3.9
+================
+- Fix crash with mob equipment item
+
 Mob Battle 2.3.8
 ================
 - Port to 1.18

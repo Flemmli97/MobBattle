@@ -14,6 +14,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.player.Inventory;
@@ -74,6 +76,10 @@ public class CrossPlatformStuffImpl {
         FriendlyByteBuf buf = PacketByteBufs.create();
         buf.writeNbt(tag);
         ClientPlayNetworking.send(PacketID.effectMessage, buf);
+    }
+
+    public static boolean canEquip(ItemStack stack, EquipmentSlot slot, LivingEntity living) {
+        return slot == Mob.getEquipmentSlotForItem(stack);
     }
 
     public static GoalSelector goalSelectorFrom(Mob mob, boolean target) {
