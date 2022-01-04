@@ -56,23 +56,21 @@ public class MobBattleForge {
         animania = ModList.get().isLoaded("animania");
         mca = ModList.get().isLoaded("mca");
         PacketHandler.register();
-        e.enqueueWork(() -> {
-            DispenserBlock.registerBehavior(ModItems.spawner.get(), (source, stack) -> {
-                Direction enumfacing = source.getBlockState().getValue(DispenserBlock.FACING);
-                double x = source.x() + enumfacing.getStepX();
-                double y = source.getPos().getY() + enumfacing.getStepY() + 0.2;
-                double z = source.z() + enumfacing.getStepZ();
-                BlockPos blockpos = new BlockPos(x, y, z);
-                Entity entity = ItemExtendedSpawnEgg.spawnEntity(source.getLevel(), stack, blockpos.getX() + 0.5D, blockpos.getY(),
-                        blockpos.getZ() + 0.5D);
-                if (entity != null) {
-                    stack.shrink(1);
-                    if (stack.hasCustomHoverName() && entity instanceof Mob) {
-                        Utils.updateEntity(stack.getHoverName().getContents(), (Mob) entity);
-                    }
+        e.enqueueWork(() -> DispenserBlock.registerBehavior(ModItems.spawner.get(), (source, stack) -> {
+            Direction enumfacing = source.getBlockState().getValue(DispenserBlock.FACING);
+            double x = source.x() + enumfacing.getStepX();
+            double y = source.getPos().getY() + enumfacing.getStepY() + 0.2;
+            double z = source.z() + enumfacing.getStepZ();
+            BlockPos blockpos = new BlockPos(x, y, z);
+            Entity entity = ItemExtendedSpawnEgg.spawnEntity(source.getLevel(), stack, blockpos.getX() + 0.5D, blockpos.getY(),
+                    blockpos.getZ() + 0.5D);
+            if (entity != null) {
+                stack.shrink(1);
+                if (stack.hasCustomHoverName() && entity instanceof Mob) {
+                    Utils.updateEntity(stack.getHoverName().getContents(), (Mob) entity);
                 }
-                return stack;
-            });
-        });
+            }
+            return stack;
+        }));
     }
 }

@@ -50,8 +50,7 @@ public class EventHandler {
         if (entity.getTeam() != null) {
             if (source.getEntity() instanceof LivingEntity) {
                 LivingEntity attacker = (LivingEntity) source.getEntity();
-                if (Utils.isOnSameTeam(entity, attacker) && !entity.getTeam().isAllowFriendlyFire())
-                    return false;
+                return !Utils.isOnSameTeam(entity, attacker) || entity.getTeam().isAllowFriendlyFire();
             }
         }
         return true;

@@ -77,8 +77,6 @@ public class ClientEvents {
     }
 
     public static void clientSetup(FMLClientSetupEvent event) {
-        event.enqueueWork(() -> {
-            MenuScreens.register(ModMenuType.armorMenu.get(), GuiArmor::new);
-        });
+        event.enqueueWork(() -> MenuScreens.register(ModMenuType.armorMenu.get(), GuiArmor::new));
     }
 }
