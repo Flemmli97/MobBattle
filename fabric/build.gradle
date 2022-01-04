@@ -15,28 +15,16 @@ configurations {
     developmentFabric.extendsFrom common
 }
 
-repositories {
-    mavenLocal()
-    maven {
-        name = "TenshiLib"
-        url "https://gitlab.com/api/v4/projects/21830712/packages/maven"
-    }
-}
-
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_version}"
-    // Remove the next line if you don't want to depend on the API
-    // modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
-
-    //modCompileOnly "io.github.flemmli97:tenshilib:1.18-1.4.0:fabric"
 }
 
 sourceSets.main.resources {
-    srcDir "$rootDir/forge/src/generated/resources"
+    srcDir project(":forge").file("src/generated/resources")
 }
 
 processResources {

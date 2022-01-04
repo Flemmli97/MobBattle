@@ -28,23 +28,11 @@ configurations {
     developmentForge.extendsFrom common
 }
 
-repositories {
-    mavenLocal()
-    maven {
-        name = "TenshiLib"
-        url "https://gitlab.com/api/v4/projects/21830712/packages/maven"
-    }
-}
-
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.forge_version}"
-    // Remove the next line if you don't want to depend on the API
-    // modApi "dev.architectury:architectury-forge:${rootProject.architectury_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
-
-    // modCompileOnly "io.github.flemmli97:tenshilib:1.18-1.4.0:forge"
 }
 
 processResources {
