@@ -16,12 +16,12 @@ authors="Flemmli97"
 [[dependencies.mobbattle]]
   modId="minecraft"
   mandatory=true
-  versionRange="[1.16.2,)"
+  versionRange="[1.18,)"
   ordering="NONE"
   side="BOTH"
 [[dependencies.mobbattle]]
   modId="tenshilib"
   mandatory=false
-  versionRange="[1.0,)"
+  versionRange="[1.4.0,)"
   ordering="NONE"
   side="BOTH"
