@@ -33,8 +33,7 @@ public class EventHandler {
 
     public static void addTeamTarget(Entity entity) {
         if (!entity.level.isClientSide && entity instanceof Mob) {
-            if (entity instanceof Vex) {
-                Vex vex = (Vex) entity;
+            if (entity instanceof Vex vex) {
                 if (vex.getOwner() != null && vex.getOwner().getTeam() != null) {
                     Utils.addEntityToTeam(vex, vex.getOwner().getTeam().getName());
                 }
@@ -48,8 +47,7 @@ public class EventHandler {
 
     public static boolean teamFriendlyFire(LivingEntity entity, DamageSource source, float amount) {
         if (entity.getTeam() != null) {
-            if (source.getEntity() instanceof LivingEntity) {
-                LivingEntity attacker = (LivingEntity) source.getEntity();
+            if (source.getEntity() instanceof LivingEntity attacker) {
                 return !Utils.isOnSameTeam(entity, attacker) || entity.getTeam().isAllowFriendlyFire();
             }
         }
@@ -57,8 +55,7 @@ public class EventHandler {
     }
 
     public static void livingTick(LivingEntity entity) {
-        if (entity instanceof Mob) {
-            Mob e = (Mob) entity;
+        if (entity instanceof Mob e) {
             if (e.getTeam() != null) {
                 if (Config.config.showTeamParticleTypes && e.level.isClientSide) {
                     DustParticleOptions color = Utils.teamColor.get(e.getTeam().getColor());

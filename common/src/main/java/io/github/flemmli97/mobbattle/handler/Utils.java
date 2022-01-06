@@ -88,7 +88,6 @@ public class Utils {
     /**
      * like {@link GoalSelector#removeGoal(Goal)} but with a predicate
      */
-    @SuppressWarnings("unchecked")
     private static void removeGoal(GoalSelector goalSel, Predicate<Goal> pred) {
         Set<WrappedGoal> goals = goalSel.getAvailableGoals()
                 .stream().filter(prio -> pred.test(prio.getGoal())).collect(Collectors.toSet());

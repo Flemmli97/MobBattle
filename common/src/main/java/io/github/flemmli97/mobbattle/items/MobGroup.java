@@ -50,8 +50,7 @@ public class MobGroup extends Item implements LeftClickInteractItem {
             ListTag list = stack.getTag().getList(LibTags.savedEntityList, 8);
             for (int i = 0; i < list.size(); i++) {
                 Mob e = Utils.fromUUID((ServerLevel) player.level, list.getString(i));
-                if (entity instanceof Mob && entity != e) {
-                    Mob living = (Mob) entity;
+                if (entity instanceof Mob living && entity != e) {
                     Utils.setAttackTarget(living, e, true);
                 }
             }

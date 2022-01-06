@@ -18,8 +18,7 @@ public class EventHandler {
     @SubscribeEvent
     public void addTeamTarget(EntityJoinWorldEvent event) {
         if (!event.getWorld().isClientSide && event.getEntity() instanceof Mob) {
-            if (event.getEntity() instanceof Vex) {
-                Vex vex = (Vex) event.getEntity();
+            if (event.getEntity() instanceof Vex vex) {
                 if (vex.getOwner() != null && vex.getOwner().getTeam() != null) {
                     Utils.addEntityToTeam(vex, vex.getOwner().getTeam().getName());
                 }
@@ -33,10 +32,8 @@ public class EventHandler {
 
     @SubscribeEvent
     public void teamFriendlyFire(LivingAttackEvent event) {
-        if (event.getEntity() instanceof LivingEntity && event.getEntity().getTeam() != null) {
-            LivingEntity ent = (LivingEntity) event.getEntity();
-            if (event.getSource().getEntity() instanceof LivingEntity) {
-                LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
+        if (event.getEntity() instanceof LivingEntity ent && event.getEntity().getTeam() != null) {
+            if (event.getSource().getEntity() instanceof LivingEntity attacker) {
                 if (Utils.isOnSameTeam(ent, attacker) && !ent.getTeam().isAllowFriendlyFire())
                     event.setCanceled(true);
             }
@@ -45,8 +42,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public void livingTick(LivingUpdateEvent event) {
-        if (event.getEntity() instanceof Mob) {
-            Mob e = (Mob) event.getEntity();
+        if (event.getEntity() instanceof Mob e) {
             if (e.getTeam() != null) {
                 if (Config.clientConf.showTeamParticleTypes.get() && e.level.isClientSide) {
                     DustParticleOptions color = Utils.teamColor.get(e.getTeam().getColor());

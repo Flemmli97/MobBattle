@@ -59,8 +59,7 @@ public class MobStick extends Item implements LeftClickInteractItem {
         if (player.level instanceof ServerLevel)
             if (stack.hasTag() && stack.getTag().contains(LibTags.savedEntity)) {
                 Mob storedEntity = Utils.fromUUID((ServerLevel) player.level, stack.getTag().getString(LibTags.savedEntity));
-                if (entity instanceof Mob && entity != storedEntity) {
-                    Mob living = (Mob) entity;
+                if (entity instanceof Mob living && entity != storedEntity) {
                     Utils.setAttackTarget(living, storedEntity, true);
                     stack.getTag().remove(LibTags.savedEntity);
                     stack.getTag().remove(LibTags.savedEntityName);

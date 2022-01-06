@@ -67,9 +67,8 @@ public class EntityAIItemPickup extends Goal {
         if (stack.getItem() instanceof ArmorItem) {
             if (!(currentEquipped.getItem() instanceof ArmorItem) || EnchantmentHelper.hasBindingCurse(currentEquipped))
                 return true;
-            else if (currentEquipped.getItem() instanceof ArmorItem) {
+            else if (currentEquipped.getItem() instanceof ArmorItem itemarmor1) {
                 ArmorItem itemarmor = (ArmorItem) stack.getItem();
-                ArmorItem itemarmor1 = (ArmorItem) currentEquipped.getItem();
 
                 if (itemarmor.getDefense() == itemarmor1.getDefense()) {
                     return stack.getDamageValue() > currentEquipped.getDamageValue() || stack.hasTag() && !currentEquipped.hasTag();

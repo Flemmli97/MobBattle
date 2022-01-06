@@ -61,8 +61,7 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (entity instanceof Mob) {
-            Mob e = (Mob) entity;
+        if (entity instanceof Mob e) {
             boolean nbt = false;
             CompoundTag compound = stack.getTag();
             if (compound == null)
@@ -98,8 +97,7 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
         BlockState iblockstate = ctx.getLevel().getBlockState(ctx.getClickedPos());
         if (hasSavedEntity(itemstack)) {
             BlockEntity tile = ctx.getLevel().getBlockEntity(ctx.getClickedPos());
-            if (tile instanceof SpawnerBlockEntity) {
-                SpawnerBlockEntity spawner = (SpawnerBlockEntity) tile;
+            if (tile instanceof SpawnerBlockEntity spawner) {
                 CompoundTag nbt = new CompoundTag();
                 spawner.getSpawner().save(nbt);
                 nbt.remove("SpawnPotentials");
@@ -167,8 +165,7 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
         if (ItemExtendedSpawnEgg.hasSavedEntity(stack)) {
             CompoundTag tag = stack.getTag().getCompound(LibTags.spawnEggTag);
             entity = EntityType.loadEntityRecursive(tag, world, Functions.identity());
-            if (entity instanceof Mob) {
-                Mob entityliving = (Mob) entity;
+            if (entity instanceof Mob entityliving) {
                 entity.moveTo(x, y, z, Mth.wrapDegrees(world.random.nextFloat() * 360.0F), 0.0F);
                 entityliving.yHeadRot = entityliving.getYRot();
                 entityliving.yBodyRot = entityliving.getYRot();

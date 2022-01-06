@@ -25,9 +25,8 @@ public class ContainerArmor extends AbstractContainerMenu {
 
     public ContainerArmor(int windowID, Inventory playerInv, Entity e) {
         super(CrossPlatformStuff.getArmorMenuType(), windowID);
-        if (!(e instanceof Mob))
+        if (!(e instanceof Mob living))
             return;
-        Mob living = (Mob) e;
         this.inv = new InventoryArmor(living);
         this.inv.startOpen(playerInv.player);
         this.addSlot(new Slot(this.inv, 0, 80, 17) {
