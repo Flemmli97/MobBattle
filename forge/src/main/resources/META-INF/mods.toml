@@ -1,27 +1,24 @@
-modLoader = "javafml"
-loaderVersion = "[38,)"
+modLoader="javafml"
+loaderVersion="[38,)"
 license="All rights reserved"
 issueTrackerURL="https://github.com/Flemmli97/MobBattle/issues"
-displayURL="https://github.com/Flemmli97/MobBattle"
-# logoFile=""
-credits=""
-authors="Flemmli97"
 [[mods]]
-  modId="mobbattle"
-  version="${version}"
-  displayName="Mob Battle Mod"
-  # updateJSONURL=""
-  authors="Flemmli97"
-  description='''Creative utensils in creating spectacular mob battles'''
+modId="mobbattle"
+version="${version}"
+displayName="Mob Battle Mod"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/mob-battle-mod"
+logoFile="icon.png"
+authors="Flemmli97"
+description='''Creative utensils in creating spectacular mob battles'''
 [[dependencies.mobbattle]]
-  modId="minecraft"
-  mandatory=true
-  versionRange="[1.18,)"
-  ordering="NONE"
-  side="BOTH"
+modId="minecraft"
+mandatory=true
+versionRange="[1.18,)"
+ordering="NONE"
+side="BOTH"
 [[dependencies.mobbattle]]
-  modId="tenshilib"
-  mandatory=false
-  versionRange="[1.4.0,)"
-  ordering="NONE"
-  side="BOTH"
+modId="tenshilib"
+mandatory=false
+versionRange="[1.4.0,)"
+ordering="NONE"
+side="BOTH"

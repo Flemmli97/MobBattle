@@ -9,10 +9,11 @@
   ],
   "contact": {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/mob-battle-mod-fabric",
+    "issues": "https://github.com/Flemmli97/MobBattle/issues",
     "sources": "https://github.com/Flemmli97/MobBattle"
   },
   "license": "ARR",
-  "icon": "",
+  "icon": "icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -25,8 +26,5 @@
   "depends": {
     "fabric": "*",
     "minecraft": ">=1.18"
-  },
-  "suggests": {
-    "flamingo": "*"
   }
 }
