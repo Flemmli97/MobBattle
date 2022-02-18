@@ -29,5 +29,8 @@
   "depends": {
     "fabric": "*",
     "minecraft": ">=1.18"
+  },
+  "breaks": {
+    "tenshilib": "<1.18.1-1.5.0"
   }
 }
