@@ -1,4 +1,4 @@
-package io.github.flemmli97.mobbattle.forge;
+package io.github.flemmli97.mobbattle.forge.platform;
 
 import io.github.flemmli97.mobbattle.SimpleRegistryWrapper;
 import net.minecraft.resources.ResourceLocation;

@@ -2,10 +2,9 @@ package io.github.flemmli97.mobbattle.fabric;
 
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.MobBattleTab;
-import io.github.flemmli97.mobbattle.fabric.client.ClientEvents;
 import io.github.flemmli97.mobbattle.fabric.handler.EventHandler;
 import io.github.flemmli97.mobbattle.fabric.network.ServerPacketHandler;
-import net.fabricmc.api.EnvType;
+import io.github.flemmli97.mobbattle.fabric.platform.CrossPlatformStuffImpl;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
@@ -17,14 +16,13 @@ public class MobBattleFabric implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        CrossPlatformStuffImpl.init();
         MobBattleTab.customTab = FabricItemGroupBuilder.build(
                 new ResourceLocation("mobbattle", "tab"),
                 () -> new ItemStack(ModItems.mobStick));
         ModItems.registerItems();
         ModMenuType.register();
         AttackEntityCallback.EVENT.register(EventHandler::attackCallback);
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
-            ClientEvents.register();
         ServerPacketHandler.register();
         Config.initConfig();
         MobBattle.tenshiLib = FabricLoader.getInstance().isModLoaded("tenshilib");

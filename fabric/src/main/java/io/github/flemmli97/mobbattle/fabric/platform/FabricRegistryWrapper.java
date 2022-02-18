@@ -1,4 +1,4 @@
-package io.github.flemmli97.mobbattle.fabric;
+package io.github.flemmli97.mobbattle.fabric.platform;
 
 import io.github.flemmli97.mobbattle.SimpleRegistryWrapper;
 import net.minecraft.core.Registry;

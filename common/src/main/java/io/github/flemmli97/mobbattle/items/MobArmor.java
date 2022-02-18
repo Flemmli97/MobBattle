@@ -1,6 +1,6 @@
 package io.github.flemmli97.mobbattle.items;
 
-import io.github.flemmli97.mobbattle.CrossPlatformStuff;
+import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -44,7 +44,7 @@ public class MobArmor extends Item implements LeftClickInteractItem {
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
         if (target instanceof Mob && player instanceof ServerPlayer) {
-            CrossPlatformStuff.openGuiArmor((ServerPlayer) player, (Mob) target);
+            CrossPlatformStuff.instance().openGuiArmor((ServerPlayer) player, (Mob) target);
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;

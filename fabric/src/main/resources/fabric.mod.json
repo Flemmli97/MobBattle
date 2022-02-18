@@ -18,6 +18,9 @@
   "entrypoints": {
     "main": [
       "io.github.flemmli97.mobbattle.fabric.MobBattleFabric"
+    ],
+    "client": [
+      "io.github.flemmli97.mobbattle.fabric.client.MobBattleFabricClient"
     ]
   },
   "mixins": [

@@ -1,9 +1,11 @@
-package io.github.flemmli97.mobbattle.fabric;
+package io.github.flemmli97.mobbattle.fabric.platform;
 
 import io.github.flemmli97.mobbattle.SimpleRegistryWrapper;
+import io.github.flemmli97.mobbattle.fabric.ModMenuType;
 import io.github.flemmli97.mobbattle.fabric.mixin.MobAccessor;
 import io.github.flemmli97.mobbattle.fabric.network.PacketID;
 import io.github.flemmli97.mobbattle.inv.ContainerArmor;
+import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
@@ -26,21 +28,29 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 
-public class CrossPlatformStuffImpl {
+public class CrossPlatformStuffImpl extends CrossPlatformStuff {
 
-    public static MenuType<ContainerArmor> getArmorMenuType() {
+    public static void init() {
+        INSTANCE = new CrossPlatformStuffImpl();
+    }
+
+    @Override
+    public MenuType<ContainerArmor> getArmorMenuType() {
         return ModMenuType.armorMenu;
     }
 
-    public static SimpleRegistryWrapper<MobEffect> registryStatusEffects() {
+    @Override
+    public SimpleRegistryWrapper<MobEffect> registryStatusEffects() {
         return new FabricRegistryWrapper<>(Registry.MOB_EFFECT);
     }
 
-    public static SimpleRegistryWrapper<EntityType<?>> registryEntities() {
+    @Override
+    public SimpleRegistryWrapper<EntityType<?>> registryEntities() {
         return new FabricRegistryWrapper<>(Registry.ENTITY_TYPE);
     }
 
-    public static void sendEquipMessage(ItemStack stack, int entityId, int slot) {
+    @Override
+    public void sendEquipMessage(ItemStack stack, int entityId, int slot) {
         FriendlyByteBuf buf = PacketByteBufs.create();
         CompoundTag compound = new CompoundTag();
         CompoundTag tag = new CompoundTag();
@@ -52,7 +62,8 @@ public class CrossPlatformStuffImpl {
         ClientPlayNetworking.send(PacketID.equipMessage, buf);
     }
 
-    public static void openGuiArmor(ServerPlayer player, Mob living) {
+    @Override
+    public void openGuiArmor(ServerPlayer player, Mob living) {
         player.openMenu(new ExtendedScreenHandlerFactory() {
             @Override
             public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
@@ -72,17 +83,20 @@ public class CrossPlatformStuffImpl {
         });
     }
 
-    public static void itemStackUpdatePacket(CompoundTag tag) {
+    @Override
+    public void itemStackUpdatePacket(CompoundTag tag) {
         FriendlyByteBuf buf = PacketByteBufs.create();
         buf.writeNbt(tag);
         ClientPlayNetworking.send(PacketID.effectMessage, buf);
     }
 
-    public static boolean canEquip(ItemStack stack, EquipmentSlot slot, LivingEntity living) {
+    @Override
+    public boolean canEquip(ItemStack stack, EquipmentSlot slot, LivingEntity living) {
         return slot == Mob.getEquipmentSlotForItem(stack);
     }
 
-    public static GoalSelector goalSelectorFrom(Mob mob, boolean target) {
+    @Override
+    public GoalSelector goalSelectorFrom(Mob mob, boolean target) {
         MobAccessor acc = (MobAccessor) mob;
         return target ? acc.getTargetSelector() : acc.getGoalSelector();
     }

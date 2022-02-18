@@ -1,7 +1,7 @@
 package io.github.flemmli97.mobbattle.handler;
 
 import com.mojang.math.Vector3f;
-import io.github.flemmli97.mobbattle.CrossPlatformStuff;
+import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -79,9 +79,9 @@ public class Utils {
 
     public static void updateEntity(String team, Mob e) {
         addEntityToTeam(e, team);
-        removeGoal(CrossPlatformStuff.goalSelectorFrom(e, true), targetGoal);
+        removeGoal(CrossPlatformStuff.instance().goalSelectorFrom(e, true), targetGoal);
         e.setTarget(null);
-        CrossPlatformStuff.goalSelectorFrom(e, true).addGoal(0, new EntityAITeamTarget(e, false, true));
+        CrossPlatformStuff.instance().goalSelectorFrom(e, true).addGoal(0, new EntityAITeamTarget(e, false, true));
         e.addTag(LibTags.entityAIAdded);
     }
 

@@ -1,10 +1,12 @@
-package io.github.flemmli97.mobbattle.forge;
+package io.github.flemmli97.mobbattle.forge.platform;
 
 import io.github.flemmli97.mobbattle.SimpleRegistryWrapper;
+import io.github.flemmli97.mobbattle.forge.ModMenuType;
 import io.github.flemmli97.mobbattle.forge.network.EquipMessage;
 import io.github.flemmli97.mobbattle.forge.network.ItemStackUpdate;
 import io.github.flemmli97.mobbattle.forge.network.PacketHandler;
 import io.github.flemmli97.mobbattle.inv.ContainerArmor;
+import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,25 +26,34 @@ import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
-public class CrossPlatformStuffImpl {
+public class CrossPlatformStuffImpl extends CrossPlatformStuff {
 
-    public static MenuType<ContainerArmor> getArmorMenuType() {
+    public static void init() {
+        INSTANCE = new CrossPlatformStuffImpl();
+    }
+
+    @Override
+    public MenuType<ContainerArmor> getArmorMenuType() {
         return ModMenuType.armorMenu.get();
     }
 
-    public static SimpleRegistryWrapper<MobEffect> registryStatusEffects() {
+    @Override
+    public SimpleRegistryWrapper<MobEffect> registryStatusEffects() {
         return new ForgeRegistryWrapper<>(ForgeRegistries.MOB_EFFECTS);
     }
 
-    public static SimpleRegistryWrapper<EntityType<?>> registryEntities() {
+    @Override
+    public SimpleRegistryWrapper<EntityType<?>> registryEntities() {
         return new ForgeRegistryWrapper<>(ForgeRegistries.ENTITIES);
     }
 
-    public static void sendEquipMessage(ItemStack stack, int entityId, int slot) {
+    @Override
+    public void sendEquipMessage(ItemStack stack, int entityId, int slot) {
         PacketHandler.sendToServer(new EquipMessage(stack, entityId, slot));
     }
 
-    public static void openGuiArmor(ServerPlayer player, Mob living) {
+    @Override
+    public void openGuiArmor(ServerPlayer player, Mob living) {
         NetworkHooks.openGui(player, new MenuProvider() {
             @Override
             public Component getDisplayName() {
@@ -57,15 +68,18 @@ public class CrossPlatformStuffImpl {
         }, buf -> buf.writeInt(living.getId()));
     }
 
-    public static void itemStackUpdatePacket(CompoundTag tag) {
+    @Override
+    public void itemStackUpdatePacket(CompoundTag tag) {
         PacketHandler.sendToServer(new ItemStackUpdate(tag));
     }
 
-    public static boolean canEquip(ItemStack stack, EquipmentSlot slot, LivingEntity living) {
+    @Override
+    public boolean canEquip(ItemStack stack, EquipmentSlot slot, LivingEntity living) {
         return stack.canEquip(slot, living);
     }
 
-    public static GoalSelector goalSelectorFrom(Mob mob, boolean target) {
+    @Override
+    public GoalSelector goalSelectorFrom(Mob mob, boolean target) {
         return target ? mob.targetSelector : mob.goalSelector;
     }
 }

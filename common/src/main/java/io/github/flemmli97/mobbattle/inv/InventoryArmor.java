@@ -1,7 +1,7 @@
 package io.github.flemmli97.mobbattle.inv;
 
-import io.github.flemmli97.mobbattle.CrossPlatformStuff;
 import io.github.flemmli97.mobbattle.MobBattle;
+import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +22,7 @@ public class InventoryArmor extends SimpleContainer {
     @Override
     public void setItem(int index, ItemStack stack) {
         if (this.theEntity.level.isClientSide)
-            CrossPlatformStuff.sendEquipMessage(stack, this.theEntity.getId(), index);
+            CrossPlatformStuff.instance().sendEquipMessage(stack, this.theEntity.getId(), index);
         super.setItem(index, stack);
     }
 

@@ -1,8 +1,8 @@
 package io.github.flemmli97.mobbattle.items;
 
-import io.github.flemmli97.mobbattle.CrossPlatformStuff;
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.client.ClientHandler;
+import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -58,7 +58,7 @@ public class MobEffectGive extends Item implements LeftClickInteractItem {
                 int duration = compound.getInt(MobBattle.MODID + ":duration");
                 int amplifier = compound.getInt(MobBattle.MODID + ":amplifier");
                 boolean showEffect = compound.getBoolean(MobBattle.MODID + ":show");
-                MobEffect potion = CrossPlatformStuff.registryStatusEffects().getFromId(new ResourceLocation(potionString));
+                MobEffect potion = CrossPlatformStuff.instance().registryStatusEffects().getFromId(new ResourceLocation(potionString));
                 if (potion != null) {
                     e.addEffect(new MobEffectInstance(potion, duration, amplifier, false, showEffect));
                     player.sendMessage(new TranslatableComponent("tooltip.effect.give.add", potionString, amplifier, duration).withStyle(ChatFormatting.GOLD), player.getUUID());

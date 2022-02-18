@@ -1,10 +1,10 @@
 package io.github.flemmli97.mobbattle.items;
 
 import com.google.common.base.Functions;
-import io.github.flemmli97.mobbattle.CrossPlatformStuff;
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.handler.LibTags;
 import io.github.flemmli97.mobbattle.handler.Utils;
+import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
@@ -72,7 +72,7 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
                 this.removeMobSpecifigTags(tag);
                 nbt = true;
             } else {
-                String name = CrossPlatformStuff.registryEntities().getIDFrom(e.getType()).toString();
+                String name = CrossPlatformStuff.instance().registryEntities().getIDFrom(e.getType()).toString();
                 if (name != null)
                     tag.putString("id", name);
             }
