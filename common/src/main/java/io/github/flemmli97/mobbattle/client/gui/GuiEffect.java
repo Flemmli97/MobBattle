@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class GuiEffect extends Screen {
 
-    private static final ResourceLocation tex = new ResourceLocation(MobBattle.MODID + ":textures/gui/effect.png");
+    private static final ResourceLocation tex = new ResourceLocation(MobBattle.MODID, "textures/gui/effect.png");
     private final int xSize = 176;
     private final int ySize = 80;
     private EditBox potion;

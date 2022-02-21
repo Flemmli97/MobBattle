@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ButtonCheck extends Button {
 
-    private static final ResourceLocation tex = new ResourceLocation(MobBattle.MODID + ":textures/gui/effect.png");
+    private static final ResourceLocation tex = new ResourceLocation(MobBattle.MODID, "textures/gui/effect.png");
     private boolean check;
 
     public ButtonCheck(int x, int y, OnPress press) {
