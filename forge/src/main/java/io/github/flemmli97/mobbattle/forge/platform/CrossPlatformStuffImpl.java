@@ -26,11 +26,7 @@ import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
-public class CrossPlatformStuffImpl extends CrossPlatformStuff {
-
-    public static void init() {
-        INSTANCE = new CrossPlatformStuffImpl();
-    }
+public class CrossPlatformStuffImpl implements CrossPlatformStuff {
 
     @Override
     public MenuType<ContainerArmor> getArmorMenuType() {

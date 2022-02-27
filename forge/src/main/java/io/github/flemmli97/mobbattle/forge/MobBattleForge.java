@@ -5,8 +5,6 @@ import io.github.flemmli97.mobbattle.MobBattleTab;
 import io.github.flemmli97.mobbattle.forge.client.ClientEvents;
 import io.github.flemmli97.mobbattle.forge.handler.EventHandler;
 import io.github.flemmli97.mobbattle.forge.network.PacketHandler;
-import io.github.flemmli97.mobbattle.forge.platform.ClientPlatformImpl;
-import io.github.flemmli97.mobbattle.forge.platform.CrossPlatformStuffImpl;
 import io.github.flemmli97.mobbattle.handler.Utils;
 import io.github.flemmli97.mobbattle.items.ItemExtendedSpawnEgg;
 import net.minecraft.core.BlockPos;
@@ -31,9 +29,6 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 public class MobBattleForge {
 
     public MobBattleForge() {
-        CrossPlatformStuffImpl.init();
-        if (FMLEnvironment.dist == Dist.CLIENT)
-            ClientPlatformImpl.init();
         ModLoadingContext.get().registerConfig(Type.CLIENT, Config.clientSpec, MobBattle.MODID + "-client.toml");
         ModLoadingContext.get().registerConfig(Type.COMMON, Config.commonSpec, MobBattle.MODID + ".toml");
         MinecraftForge.EVENT_BUS.register(new EventHandler());
@@ -50,16 +45,10 @@ public class MobBattleForge {
                 return new ItemStack(ModItems.mobStick.get());
             }
         };
+        MobBattle.tenshiLib = ModList.get().isLoaded("tenshilib");
     }
 
-    public static boolean tenshiLib;
-    public static boolean animania;
-    public static boolean mca;
-
     public static void preInit(FMLCommonSetupEvent e) {
-        tenshiLib = ModList.get().isLoaded("tenshilib");
-        animania = ModList.get().isLoaded("animania");
-        mca = ModList.get().isLoaded("mca");
         PacketHandler.register();
         e.enqueueWork(() -> DispenserBlock.registerBehavior(ModItems.spawner.get(), (source, stack) -> {
             Direction enumfacing = source.getBlockState().getValue(DispenserBlock.FACING);

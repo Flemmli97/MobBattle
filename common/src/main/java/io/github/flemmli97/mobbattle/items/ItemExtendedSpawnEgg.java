@@ -72,7 +72,7 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
                 this.removeMobSpecifigTags(tag);
                 nbt = true;
             } else {
-                String name = CrossPlatformStuff.instance().registryEntities().getIDFrom(e.getType()).toString();
+                String name = CrossPlatformStuff.INSTANCE.registryEntities().getIDFrom(e.getType()).toString();
                 if (name != null)
                     tag.putString("id", name);
             }

@@ -1,5 +1,6 @@
 package io.github.flemmli97.mobbattle.platform;
 
+import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.SimpleRegistryWrapper;
 import io.github.flemmli97.mobbattle.inv.ContainerArmor;
 import net.minecraft.nbt.CompoundTag;
@@ -13,27 +14,25 @@ import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 
-public abstract class CrossPlatformStuff {
+public interface CrossPlatformStuff {
 
-    protected static CrossPlatformStuff INSTANCE;
+    CrossPlatformStuff INSTANCE = MobBattle.getPlatformInstance(CrossPlatformStuff.class,
+            "io.github.flemmli97.mobbattle.fabric.platform.CrossPlatformStuffImpl",
+            "io.github.flemmli97.mobbattle.forge.platform.CrossPlatformStuffImpl");
 
-    public static CrossPlatformStuff instance() {
-        return INSTANCE;
-    }
+    MenuType<ContainerArmor> getArmorMenuType();
 
-    public abstract MenuType<ContainerArmor> getArmorMenuType();
+    SimpleRegistryWrapper<MobEffect> registryStatusEffects();
 
-    public abstract SimpleRegistryWrapper<MobEffect> registryStatusEffects();
+    SimpleRegistryWrapper<EntityType<?>> registryEntities();
 
-    public abstract SimpleRegistryWrapper<EntityType<?>> registryEntities();
+    void sendEquipMessage(ItemStack stack, int entityId, int slot);
 
-    public abstract void sendEquipMessage(ItemStack stack, int entityId, int slot);
+    void openGuiArmor(ServerPlayer sender, Mob entity);
 
-    public abstract void openGuiArmor(ServerPlayer sender, Mob entity);
+    void itemStackUpdatePacket(CompoundTag tag);
 
-    public abstract void itemStackUpdatePacket(CompoundTag tag);
+    boolean canEquip(ItemStack stack, EquipmentSlot slot, LivingEntity living);
 
-    public abstract boolean canEquip(ItemStack stack, EquipmentSlot slot, LivingEntity living);
-
-    public abstract GoalSelector goalSelectorFrom(Mob mob, boolean target);
+    GoalSelector goalSelectorFrom(Mob mob, boolean target);
 }

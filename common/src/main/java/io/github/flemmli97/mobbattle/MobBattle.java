@@ -1,8 +1,12 @@
 package io.github.flemmli97.mobbattle;
 
+import io.github.flemmli97.tenshilib.TenshiLib;
 import net.minecraft.world.entity.EquipmentSlot;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 public class MobBattle {
 
@@ -12,4 +16,29 @@ public class MobBattle {
 
     public static final EquipmentSlot[] slot = {EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND, EquipmentSlot.HEAD,
             EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
+
+    @SuppressWarnings("unchecked")
+    public static <T> T getPlatformInstance(Class<T> abstractClss, String fabricImpl, String forgeImpl) {
+        Class<?> clss = null;
+        try {
+            clss = Class.forName(forgeImpl);
+        } catch (ClassNotFoundException e) {
+            try {
+                clss = Class.forName(fabricImpl);
+            } catch (ClassNotFoundException ex) {
+                TenshiLib.logger.fatal("No Implementation of " + abstractClss + " found with given paths " + forgeImpl + " and " + fabricImpl);
+            }
+        }
+        if (clss != null && abstractClss.isAssignableFrom(clss)) {
+            try {
+                Constructor<T> constructor = (Constructor<T>) clss.getDeclaredConstructor();
+                return constructor.newInstance();
+            } catch (NoSuchMethodException e) {
+                TenshiLib.logger.fatal("Implementation of " + clss + " needs to provide an no arg constructor");
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+        throw new IllegalStateException("Couldn't create an instance of " + abstractClss);
+    }
 }

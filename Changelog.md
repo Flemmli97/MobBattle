@@ -1,3 +1,7 @@
+Mob Battle 2.4.1
+================
+- Internal changes
+
 Mob Battle 2.4.0
 ================
 - Internal changes

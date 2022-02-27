@@ -1,15 +1,14 @@
 package io.github.flemmli97.mobbattle.platform;
 
+import io.github.flemmli97.mobbattle.MobBattle;
 import net.minecraft.client.KeyMapping;
 
-public abstract class ClientPlatform {
+public interface ClientPlatform {
 
-    protected static ClientPlatform INSTANCE;
+    ClientPlatform INSTANCE = MobBattle.getPlatformInstance(ClientPlatform.class,
+            "io.github.flemmli97.mobbattle.fabric.platform.ClientPlatformImpl",
+            "io.github.flemmli97.mobbattle.forge.platform.ClientPlatformImpl");
 
-    public static ClientPlatform instance() {
-        return INSTANCE;
-    }
-
-    public abstract boolean keyMatches(KeyMapping mapping, int keyCode, int scanCode);
+    boolean keyMatches(KeyMapping mapping, int keyCode, int scanCode);
 
 }

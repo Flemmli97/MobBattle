@@ -122,9 +122,9 @@ public class GuiEffect extends Screen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int p_keyPressed_3_) {
         boolean texFocused = this.potion.isFocused() || this.amplifier.isFocused() || this.duration.isFocused();
-        if ((keyCode == 256 && this.shouldCloseOnEsc()) || (!texFocused && ClientPlatform.instance().keyMatches(this.minecraft.options.keyInventory, keyCode, scanCode))) {
+        if ((keyCode == 256 && this.shouldCloseOnEsc()) || (!texFocused && ClientPlatform.INSTANCE.keyMatches(this.minecraft.options.keyInventory, keyCode, scanCode))) {
             if (this.stack.hasTag())
-                CrossPlatformStuff.instance().itemStackUpdatePacket(this.stack.getTag());
+                CrossPlatformStuff.INSTANCE.itemStackUpdatePacket(this.stack.getTag());
             this.onClose();
             return true;
         } else

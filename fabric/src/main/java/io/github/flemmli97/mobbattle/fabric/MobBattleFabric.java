@@ -4,7 +4,6 @@ import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.MobBattleTab;
 import io.github.flemmli97.mobbattle.fabric.handler.EventHandler;
 import io.github.flemmli97.mobbattle.fabric.network.ServerPacketHandler;
-import io.github.flemmli97.mobbattle.fabric.platform.CrossPlatformStuffImpl;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
@@ -16,7 +15,6 @@ public class MobBattleFabric implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        CrossPlatformStuffImpl.init();
         MobBattleTab.customTab = FabricItemGroupBuilder.build(
                 new ResourceLocation("mobbattle", "tab"),
                 () -> new ItemStack(ModItems.mobStick));

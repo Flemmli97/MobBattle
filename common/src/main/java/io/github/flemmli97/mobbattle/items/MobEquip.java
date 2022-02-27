@@ -92,7 +92,7 @@ public class MobEquip extends Item implements LeftClickInteractItem {
                 List<Mob> list = player.level.getEntitiesOfClass(Mob.class, bb);
                 for (Mob living : list) {
                     living.addTag(LibTags.entityPickup);
-                    CrossPlatformStuff.instance().goalSelectorFrom(living, false).addGoal(10, new EntityAIItemPickup(living));
+                    CrossPlatformStuff.INSTANCE.goalSelectorFrom(living, false).addGoal(10, new EntityAIItemPickup(living));
                 }
                 player.sendMessage(new TranslatableComponent("tooltip.equip.add").withStyle(ChatFormatting.GOLD), player.getUUID());
             }
@@ -103,7 +103,7 @@ public class MobEquip extends Item implements LeftClickInteractItem {
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (entity instanceof Mob && !player.level.isClientSide) {
             entity.addTag(LibTags.entityPickup);
-            CrossPlatformStuff.instance().goalSelectorFrom((Mob) entity, false).addGoal(10, new EntityAIItemPickup((Mob) entity));
+            CrossPlatformStuff.INSTANCE.goalSelectorFrom((Mob) entity, false).addGoal(10, new EntityAIItemPickup((Mob) entity));
             player.sendMessage(new TranslatableComponent("tooltip.equip.add").withStyle(ChatFormatting.GOLD), player.getUUID());
         }
         return true;

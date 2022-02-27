@@ -28,11 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 
-public class CrossPlatformStuffImpl extends CrossPlatformStuff {
-
-    public static void init() {
-        INSTANCE = new CrossPlatformStuffImpl();
-    }
+public class CrossPlatformStuffImpl implements CrossPlatformStuff {
 
     @Override
     public MenuType<ContainerArmor> getArmorMenuType() {

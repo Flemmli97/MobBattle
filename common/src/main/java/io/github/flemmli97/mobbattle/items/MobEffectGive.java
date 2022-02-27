@@ -58,7 +58,7 @@ public class MobEffectGive extends Item implements LeftClickInteractItem {
                 int duration = compound.getInt(MobBattle.MODID + ":duration");
                 int amplifier = compound.getInt(MobBattle.MODID + ":amplifier");
                 boolean showEffect = compound.getBoolean(MobBattle.MODID + ":show");
-                MobEffect potion = CrossPlatformStuff.instance().registryStatusEffects().getFromId(new ResourceLocation(potionString));
+                MobEffect potion = CrossPlatformStuff.INSTANCE.registryStatusEffects().getFromId(new ResourceLocation(potionString));
                 if (potion != null) {
                     e.addEffect(new MobEffectInstance(potion, duration, amplifier, false, showEffect));
                     player.sendMessage(new TranslatableComponent("tooltip.effect.give.add", potionString, amplifier, duration).withStyle(ChatFormatting.GOLD), player.getUUID());

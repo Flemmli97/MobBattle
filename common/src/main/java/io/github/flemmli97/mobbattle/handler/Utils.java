@@ -79,9 +79,9 @@ public class Utils {
 
     public static void updateEntity(String team, Mob e) {
         addEntityToTeam(e, team);
-        removeGoal(CrossPlatformStuff.instance().goalSelectorFrom(e, true), targetGoal);
+        removeGoal(CrossPlatformStuff.INSTANCE.goalSelectorFrom(e, true), targetGoal);
         e.setTarget(null);
-        CrossPlatformStuff.instance().goalSelectorFrom(e, true).addGoal(0, new EntityAITeamTarget(e, false, true));
+        CrossPlatformStuff.INSTANCE.goalSelectorFrom(e, true).addGoal(0, new EntityAITeamTarget(e, false, true));
         e.addTag(LibTags.entityAIAdded);
     }
 

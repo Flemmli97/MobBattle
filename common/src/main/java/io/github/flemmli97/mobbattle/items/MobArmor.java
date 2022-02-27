@@ -44,7 +44,7 @@ public class MobArmor extends Item implements LeftClickInteractItem {
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
         if (target instanceof Mob && player instanceof ServerPlayer) {
-            CrossPlatformStuff.instance().openGuiArmor((ServerPlayer) player, (Mob) target);
+            CrossPlatformStuff.INSTANCE.openGuiArmor((ServerPlayer) player, (Mob) target);
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;
