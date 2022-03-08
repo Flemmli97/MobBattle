@@ -20,6 +20,10 @@ dependencies {
     modCompileOnly "${tenshilib_dep}:fabric"
 }
 
+sourceSets.main.resources {
+    srcDir "src/generated/resources"
+}
+
 publishing {
     publications {
         mavenCommon(MavenPublication) {

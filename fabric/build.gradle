@@ -23,10 +23,6 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 }
 
-sourceSets.main.resources {
-    srcDir project(":forge").file("src/generated/resources")
-}
-
 processResources {
     inputs.property "version", project.version
 

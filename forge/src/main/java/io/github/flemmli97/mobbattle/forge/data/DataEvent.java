@@ -15,6 +15,7 @@ public class DataEvent {
         DataGenerator data = event.getGenerator();
         if (event.includeClient()) {
             data.addProvider(new Lang(data));
+            data.addProvider(new ItemModels(data, event.getExistingFileHelper()));
         }
     }
 
