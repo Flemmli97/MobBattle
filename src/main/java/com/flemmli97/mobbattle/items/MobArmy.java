@@ -95,7 +95,7 @@ public class MobArmy extends Item {
                 for (MobEntity living : list) {
                     Utils.updateEntity(team, living);
                 }
-                player.sendMessage(new TranslationTextComponent("tooltip.armor.add.box", team).mergeStyle(TextFormatting.GOLD), player.getUniqueID());
+                player.sendMessage(new TranslationTextComponent("tooltip.army.add.box", team).mergeStyle(TextFormatting.GOLD), player.getUniqueID());
             }
         }
         return new ActionResult<>(ActionResultType.SUCCESS, stack);
@@ -106,7 +106,7 @@ public class MobArmy extends Item {
         if (entity instanceof MobEntity && !player.world.isRemote) {
             String team = stack.hasDisplayName() ? stack.getDisplayName().getUnformattedComponentText() : "DEFAULT";
             Utils.updateEntity(team, (MobEntity) entity);
-            player.sendMessage(new TranslationTextComponent("tooltip.armor.add", team).mergeStyle(TextFormatting.GOLD), player.getUniqueID());
+            player.sendMessage(new TranslationTextComponent("tooltip.army.add", team).mergeStyle(TextFormatting.GOLD), player.getUniqueID());
         }
         return true;
     }

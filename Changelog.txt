@@ -1,3 +1,7 @@
+Mob Battle 2.3.8.2
+================
+- Fix wrong translation key with army tool
+
 Mob Battle 2.3.8
 ================
 - Fix broken translation with multi enrager
