@@ -24,6 +24,10 @@ sourceSets.main.resources {
     srcDir "src/generated/resources"
 }
 
+processResources {
+    exclude '.cache'
+}
+
 publishing {
     publications {
         mavenCommon(MavenPublication) {
