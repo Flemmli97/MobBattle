@@ -46,10 +46,8 @@ public class EventHandler {
     }
 
     public static boolean teamFriendlyFire(LivingEntity entity, DamageSource source, float amount) {
-        if (entity.getTeam() != null) {
-            if (source.getEntity() instanceof LivingEntity attacker) {
-                return !Utils.isOnSameTeam(entity, attacker) || entity.getTeam().isAllowFriendlyFire();
-            }
+        if (source.getEntity() instanceof LivingEntity attacker) {
+            return !Utils.isOnSameTeam(entity, attacker) || entity.getTeam().isAllowFriendlyFire();
         }
         return true;
     }

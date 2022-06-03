@@ -32,11 +32,9 @@ public class EventHandler {
 
     @SubscribeEvent
     public void teamFriendlyFire(LivingAttackEvent event) {
-        if (event.getEntity() instanceof LivingEntity ent && event.getEntity().getTeam() != null) {
-            if (event.getSource().getEntity() instanceof LivingEntity attacker) {
-                if (Utils.isOnSameTeam(ent, attacker) && !ent.getTeam().isAllowFriendlyFire())
-                    event.setCanceled(true);
-            }
+        if (event.getSource().getEntity() instanceof LivingEntity attacker) {
+            if (Utils.isOnSameTeam(event.getEntityLiving(), attacker) && !event.getEntityLiving().getTeam().isAllowFriendlyFire())
+                event.setCanceled(true);
         }
     }
 

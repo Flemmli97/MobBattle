@@ -53,11 +53,9 @@ public class Utils {
     }
 
     public static boolean isOnSameTeam(Entity entity, Entity entity2) {
-        if (entity.getTeam() == null)
-            return true;
-        if (entity2.getTeam() == null)
-            return true;
-        return entity.isAlliedTo(entity2);
+        if (entity.getTeam() != null && entity2.getTeam() != null)
+            return entity.isAlliedTo(entity2);
+        return false;
     }
 
     public static void addEntityToTeam(Entity entity, String team) {
