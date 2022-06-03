@@ -1,3 +1,7 @@
+Mob Battle 2.3.8.3
+================
+- Fix team friendly fire treating mobs without teams as same team
+
 Mob Battle 2.3.8.2
 ================
 - Fix wrong translation key with army tool

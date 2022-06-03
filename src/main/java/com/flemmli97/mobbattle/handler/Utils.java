@@ -64,11 +64,9 @@ public class Utils {
     }
 
     public static boolean isOnSameTeam(Entity entity, Entity entity2) {
-        if (entity.getTeam() == null)
-            return true;
-        if (entity2.getTeam() == null)
-            return true;
-        return entity.isOnSameTeam(entity2);
+        if (entity.getTeam() != null && entity2.getTeam() != null)
+            return entity.isOnSameTeam(entity2);
+        return false;
     }
 
     public static void addEntityToTeam(Entity entity, String team) {
@@ -103,7 +101,7 @@ public class Utils {
     private static void removeGoal(GoalSelector goalSel, Predicate<Goal> pred) {
         try {
             Set<PrioritizedGoal> goals = ((Set<PrioritizedGoal>) goalSelector_goal.get(goalSel))
-                    .stream().filter(prio->pred.test(prio.getGoal())).collect(Collectors.toSet());
+                    .stream().filter(prio -> pred.test(prio.getGoal())).collect(Collectors.toSet());
             goals.forEach(goalSel::removeGoal);
         } catch (IllegalArgumentException | IllegalAccessException e) {
             e.printStackTrace();
