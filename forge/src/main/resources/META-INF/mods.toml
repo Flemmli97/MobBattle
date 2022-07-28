@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[40,)"
+loaderVersion="[41,)"
 license="All rights reserved"
 issueTrackerURL="https://github.com/Flemmli97/MobBattle/issues"
 [[mods]]
@@ -13,12 +13,12 @@ description='''Creative utensils in creating spectacular mob battles'''
 [[dependencies.mobbattle]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.18,)"
+versionRange="[1.19,)"
 ordering="NONE"
 side="BOTH"
 [[dependencies.mobbattle]]
-modId="tenshilib"
-mandatory=false
-versionRange="[1.18.1-1.5.0,)"
+modId="forge"
+mandatory=true
+versionRange="[41.1.0,)"
 ordering="NONE"
 side="BOTH"
