@@ -20,9 +20,9 @@ public class ItemModels extends ItemModelProvider {
     protected void registerModels() {
         for (RegistryObject<Item> reg : ModItems.ITEMS.getEntries()) {
             if (reg == ModItems.spawner) {
-                this.withExistingParent(reg.get().getRegistryName().toString(), ModelLocationUtils.decorateItemModelLocation("template_spawn_egg"));
+                this.withExistingParent(reg.getId().toString(), ModelLocationUtils.decorateItemModelLocation("template_spawn_egg"));
             } else
-                this.withExistingParent(reg.get().getRegistryName().toString(), ModelLocationUtils.decorateItemModelLocation("handheld"))
+                this.withExistingParent(reg.getId().toString(), ModelLocationUtils.decorateItemModelLocation("handheld"))
                         .texture("layer0", new ResourceLocation(reg.getId().getNamespace(), "items/" + reg.getId().getPath()));
         }
     }

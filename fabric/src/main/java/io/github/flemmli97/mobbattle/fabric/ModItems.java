@@ -50,17 +50,17 @@ public class ModItems {
         mobEffectGiver = registerItem("mob_effect_give", new MobEffectGive(new Item.Properties().stacksTo(1).tab(MobBattleTab.customTab)));
         spawner = registerItem("egg_ex", new ItemExtendedSpawnEgg(new Item.Properties().tab(MobBattleTab.customTab)));
         DispenserBlock.registerBehavior(ModItems.spawner, (source, stack) -> {
-            Direction enumfacing = source.getBlockState().getValue(DispenserBlock.FACING);
-            double x = source.x() + enumfacing.getStepX();
-            double y = source.getPos().getY() + enumfacing.getStepY() + 0.2;
-            double z = source.z() + enumfacing.getStepZ();
+            Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
+            double x = source.x() + direction.getStepX();
+            double y = source.getPos().getY() + direction.getStepY() + 0.2;
+            double z = source.z() + direction.getStepZ();
             BlockPos blockpos = new BlockPos(x, y, z);
             Entity entity = ItemExtendedSpawnEgg.spawnEntity(source.getLevel(), stack, blockpos.getX() + 0.5D, blockpos.getY(),
                     blockpos.getZ() + 0.5D);
             if (entity != null) {
                 stack.shrink(1);
                 if (stack.hasCustomHoverName() && entity instanceof Mob) {
-                    Utils.updateEntity(stack.getHoverName().getContents(), (Mob) entity);
+                    Utils.updateEntity(stack.getHoverName().getString(), (Mob) entity);
                 }
             }
             return stack;

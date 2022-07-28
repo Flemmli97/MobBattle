@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -25,7 +25,7 @@ public class GuiEffect extends Screen {
     private final ItemStack stack;
 
     public GuiEffect() {
-        super(new TextComponent("Potions"));
+        super(Component.translatable("mobbattle.gui.potions"));
         this.stack = Minecraft.getInstance().player.getMainHandItem();
     }
 
@@ -40,7 +40,7 @@ public class GuiEffect extends Screen {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
-        this.potion = new EditBox(this.font, i + 30, j + 21, 108, 14, TextComponent.EMPTY) {
+        this.potion = new EditBox(this.font, i + 30, j + 21, 108, 14, Component.empty()) {
             @Override
             public boolean charTyped(char typedChar, int keyCode) {
                 if (super.charTyped(typedChar, keyCode)) {
@@ -57,7 +57,7 @@ public class GuiEffect extends Screen {
         this.potion.setValue(this.stack.hasTag() ? this.stack.getTag().getString(MobBattle.MODID + ":potion") : "");
         this.addWidget(this.potion);
 
-        this.duration = new EditBox(this.font, i + 18, j + 49, 34, 10, TextComponent.EMPTY) {
+        this.duration = new EditBox(this.font, i + 18, j + 49, 34, 10, Component.empty()) {
 
             @Override
             public boolean charTyped(char typedChar, int keyCode) {
@@ -81,7 +81,7 @@ public class GuiEffect extends Screen {
         this.duration.setValue(this.stack.hasTag() ? "" + this.stack.getTag().getInt(MobBattle.MODID + ":duration") : "");
         this.addWidget(this.duration);
 
-        this.amplifier = new EditBox(this.font, i + 70, j + 49, 28, 10, TextComponent.EMPTY) {
+        this.amplifier = new EditBox(this.font, i + 70, j + 49, 28, 10, Component.empty()) {
 
             @Override
             public boolean charTyped(char typedChar, int keyCode) {

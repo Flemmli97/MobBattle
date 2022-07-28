@@ -5,7 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.flemmli97.mobbattle.MobBattle;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class ButtonCheck extends Button {
@@ -14,7 +14,7 @@ public class ButtonCheck extends Button {
     private boolean check;
 
     public ButtonCheck(int x, int y, OnPress press) {
-        super(x, y, 10, 10, TextComponent.EMPTY, press);
+        super(x, y, 10, 10, Component.empty(), press);
     }
 
     @Override

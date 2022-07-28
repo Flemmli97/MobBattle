@@ -10,7 +10,6 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -46,7 +45,7 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
 
     @Override
     public void appendHoverText(ItemStack stack, Level worldIn, List<Component> list, TooltipFlag flagIn) {
-        list.add(new TranslatableComponent("tooltip.spawnegg").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.spawnegg").withStyle(ChatFormatting.AQUA));
         if (ItemExtendedSpawnEgg.hasSavedEntity(stack)) {
             CompoundTag compound = stack.getTag().getCompound(LibTags.spawnEggTag);
             String entity = EntityType.byString(compound.getString("id")).isPresent()
@@ -54,7 +53,7 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
                     : "";
             if (!entity.isEmpty()) {
                 String entityName = compound.contains("CustomName") ? compound.getString("CustomName") : I18n.get(entity);
-                list.add(new TranslatableComponent("tooltip.spawnegg.spawn", entityName + (compound.size() > 1 ? " (+NBT)" : "")).withStyle(ChatFormatting.GOLD));
+                list.add(Component.translatable("tooltip.spawnegg.spawn", entityName + (compound.size() > 1 ? " (+NBT)" : "")).withStyle(ChatFormatting.GOLD));
             }
         }
     }
@@ -80,7 +79,7 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
             stack.setTag(compound);
 
             if (!player.level.isClientSide) {
-                player.sendMessage(new TranslatableComponent("tooltip.spawnegg.save", (nbt ? " + nbt" : "")).withStyle(ChatFormatting.GOLD), player.getUUID());
+                player.sendSystemMessage(Component.translatable("tooltip.spawnegg.save", (nbt ? " + nbt" : "")).withStyle(ChatFormatting.GOLD));
             }
             return true;
         }
@@ -122,7 +121,7 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
             if (!ctx.getPlayer().getAbilities().instabuild)
                 itemstack.shrink(1);
             if (itemstack.hasCustomHoverName() && entity instanceof Mob) {
-                Utils.updateEntity(itemstack.getHoverName().getContents(), (Mob) entity);
+                Utils.updateEntity(itemstack.getHoverName().getString(), (Mob) entity);
             }
         }
         return InteractionResult.SUCCESS;
@@ -148,7 +147,7 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
                         if (!player.getAbilities().instabuild)
                             itemstack.shrink(1);
                         if (itemstack.hasCustomHoverName() && entity instanceof Mob) {
-                            Utils.updateEntity(itemstack.getHoverName().getContents(), (Mob) entity);
+                            Utils.updateEntity(itemstack.getHoverName().getString(), (Mob) entity);
                         }
                         return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
                     }

@@ -8,16 +8,16 @@ import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.Vex;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class EventHandler {
 
     @SubscribeEvent
-    public void addTeamTarget(EntityJoinWorldEvent event) {
-        if (!event.getWorld().isClientSide && event.getEntity() instanceof Mob) {
+    public void addTeamTarget(EntityJoinLevelEvent event) {
+        if (!event.getLevel().isClientSide && event.getEntity() instanceof Mob) {
             if (event.getEntity() instanceof Vex vex) {
                 if (vex.getOwner() != null && vex.getOwner().getTeam() != null) {
                     Utils.addEntityToTeam(vex, vex.getOwner().getTeam().getName());
@@ -33,13 +33,13 @@ public class EventHandler {
     @SubscribeEvent
     public void teamFriendlyFire(LivingAttackEvent event) {
         if (event.getSource().getEntity() instanceof LivingEntity attacker) {
-            if (Utils.isOnSameTeam(event.getEntityLiving(), attacker) && !event.getEntityLiving().getTeam().isAllowFriendlyFire())
+            if (Utils.isOnSameTeam(event.getEntity(), attacker) && !event.getEntity().getTeam().isAllowFriendlyFire())
                 event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
-    public void livingTick(LivingUpdateEvent event) {
+    public void livingTick(LivingEvent.LivingTickEvent event) {
         if (event.getEntity() instanceof Mob e) {
             if (e.getTeam() != null) {
                 if (Config.clientConf.showTeamParticleTypes.get() && e.level.isClientSide) {

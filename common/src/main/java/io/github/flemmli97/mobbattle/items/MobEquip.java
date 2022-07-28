@@ -8,7 +8,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -38,9 +37,9 @@ public class MobEquip extends Item implements LeftClickInteractItem {
 
     @Override
     public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag b) {
-        list.add(new TranslatableComponent("tooltip.equip.first").withStyle(ChatFormatting.AQUA));
-        list.add(new TranslatableComponent("tooltip.equip.second").withStyle(ChatFormatting.AQUA));
-        list.add(new TranslatableComponent("tooltip.equip.third").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.equip.first").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.equip.second").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.equip.third").withStyle(ChatFormatting.AQUA));
     }
 
     public BlockPos[] getSelPos(ItemStack stack) {
@@ -82,7 +81,7 @@ public class MobEquip extends Item implements LeftClickInteractItem {
             if (player.isShiftKeyDown()) {
                 stack.getTag().remove(LibTags.savedPos1);
                 stack.getTag().remove(LibTags.savedPos2);
-                player.sendMessage(new TranslatableComponent("tooltip.equip.reset").withStyle(ChatFormatting.RED), player.getUUID());
+                player.sendSystemMessage(Component.translatable("tooltip.equip.reset").withStyle(ChatFormatting.RED));
             } else if (stack.getTag().contains(LibTags.savedPos1) && stack.getTag().contains(LibTags.savedPos2)) {
                 BlockPos pos1 = new BlockPos(stack.getTag().getIntArray(LibTags.savedPos1)[0], stack.getTag().getIntArray(LibTags.savedPos1)[1],
                         stack.getTag().getIntArray(LibTags.savedPos1)[2]);
@@ -94,7 +93,7 @@ public class MobEquip extends Item implements LeftClickInteractItem {
                     living.addTag(LibTags.entityPickup);
                     CrossPlatformStuff.INSTANCE.goalSelectorFrom(living, false).addGoal(10, new EntityAIItemPickup(living));
                 }
-                player.sendMessage(new TranslatableComponent("tooltip.equip.add").withStyle(ChatFormatting.GOLD), player.getUUID());
+                player.sendSystemMessage(Component.translatable("tooltip.equip.add").withStyle(ChatFormatting.GOLD));
             }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
     }
@@ -104,7 +103,7 @@ public class MobEquip extends Item implements LeftClickInteractItem {
         if (entity instanceof Mob && !player.level.isClientSide) {
             entity.addTag(LibTags.entityPickup);
             CrossPlatformStuff.INSTANCE.goalSelectorFrom((Mob) entity, false).addGoal(10, new EntityAIItemPickup((Mob) entity));
-            player.sendMessage(new TranslatableComponent("tooltip.equip.add").withStyle(ChatFormatting.GOLD), player.getUUID());
+            player.sendSystemMessage(Component.translatable("tooltip.equip.add").withStyle(ChatFormatting.GOLD));
         }
         return true;
     }

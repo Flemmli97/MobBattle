@@ -8,7 +8,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -39,9 +38,9 @@ public class MobGroup extends Item implements LeftClickInteractItem {
 
     @Override
     public void appendHoverText(ItemStack stack, Level player, List<Component> list, TooltipFlag b) {
-        list.add(new TranslatableComponent("tooltip.group.first").withStyle(ChatFormatting.AQUA));
-        list.add(new TranslatableComponent("tooltip.group.second").withStyle(ChatFormatting.AQUA));
-        list.add(new TranslatableComponent("tooltip.group.third").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.group.first").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.group.second").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.group.third").withStyle(ChatFormatting.AQUA));
     }
 
     @Override
@@ -68,10 +67,10 @@ public class MobGroup extends Item implements LeftClickInteractItem {
                 ListTag list = stack.getTag().getList(LibTags.savedEntityList, 8);
                 list.remove(list.size() - 1);
                 stack.getTag().put(LibTags.savedEntityList, list);
-                player.sendMessage(new TranslatableComponent("tooltip.group.remove").withStyle(ChatFormatting.RED), player.getUUID());
+                player.sendSystemMessage(Component.translatable("tooltip.group.remove").withStyle(ChatFormatting.RED));
             } else {
                 stack.getTag().remove(LibTags.savedEntityList);
-                player.sendMessage(new TranslatableComponent("tooltip.group.reset").withStyle(ChatFormatting.RED), player.getUUID());
+                player.sendSystemMessage(Component.translatable("tooltip.group.reset").withStyle(ChatFormatting.RED));
             }
         }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
@@ -97,7 +96,7 @@ public class MobGroup extends Item implements LeftClickInteractItem {
                 nbttaglist.add(StringTag.valueOf(entity.getStringUUID()));
                 compound.put(LibTags.savedEntityList, nbttaglist);
                 stack.setTag(compound);
-                player.sendMessage(new TranslatableComponent("tooltip.group.add").withStyle(ChatFormatting.GOLD), player.getUUID());
+                player.sendSystemMessage(Component.translatable("tooltip.group.add").withStyle(ChatFormatting.GOLD));
             }
         }
         return true;

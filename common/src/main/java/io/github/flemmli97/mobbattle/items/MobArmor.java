@@ -4,7 +4,6 @@ import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -33,7 +32,7 @@ public class MobArmor extends Item implements LeftClickInteractItem {
 
     @Override
     public void appendHoverText(ItemStack stack, Level worldIn, List<Component> list, TooltipFlag flagIn) {
-        list.add(new TranslatableComponent("tooltip.armor").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.armor").withStyle(ChatFormatting.AQUA));
     }
 
     @Override

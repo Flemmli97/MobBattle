@@ -40,7 +40,7 @@ public class CrossPlatformStuffImpl implements CrossPlatformStuff {
 
     @Override
     public SimpleRegistryWrapper<EntityType<?>> registryEntities() {
-        return new ForgeRegistryWrapper<>(ForgeRegistries.ENTITIES);
+        return new ForgeRegistryWrapper<>(ForgeRegistries.ENTITY_TYPES);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class CrossPlatformStuffImpl implements CrossPlatformStuff {
 
     @Override
     public void openGuiArmor(ServerPlayer player, Mob living) {
-        NetworkHooks.openGui(player, new MenuProvider() {
+        NetworkHooks.openScreen(player, new MenuProvider() {
             @Override
             public Component getDisplayName() {
                 return living.getName();

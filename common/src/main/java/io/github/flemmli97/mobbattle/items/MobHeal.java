@@ -4,7 +4,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
@@ -39,6 +38,6 @@ public class MobHeal extends Item implements LeftClickInteractItem {
 
     @Override
     public void appendHoverText(ItemStack stack, Level worldIn, List<Component> list, TooltipFlag flagIn) {
-        list.add(new TranslatableComponent("tooltip.heal").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.heal").withStyle(ChatFormatting.AQUA));
     }
 }

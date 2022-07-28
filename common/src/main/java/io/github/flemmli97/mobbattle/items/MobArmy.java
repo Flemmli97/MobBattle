@@ -6,7 +6,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -36,10 +35,10 @@ public class MobArmy extends Item implements LeftClickInteractItem {
 
     @Override
     public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag b) {
-        list.add(new TranslatableComponent("tooltip.army.first").withStyle(ChatFormatting.AQUA));
-        list.add(new TranslatableComponent("tooltip.army.second").withStyle(ChatFormatting.AQUA));
-        list.add(new TranslatableComponent("tooltip.army.third").withStyle(ChatFormatting.AQUA));
-        list.add(new TranslatableComponent("tooltip.army.forth").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.army.first").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.army.second").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.army.third").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.army.forth").withStyle(ChatFormatting.AQUA));
     }
 
     public BlockPos[] getSelPos(ItemStack stack) {
@@ -81,7 +80,7 @@ public class MobArmy extends Item implements LeftClickInteractItem {
             if (player.isShiftKeyDown()) {
                 stack.getTag().remove(LibTags.savedPos1);
                 stack.getTag().remove(LibTags.savedPos2);
-                player.sendMessage(new TranslatableComponent("tooltip.army.reset").withStyle(ChatFormatting.RED), player.getUUID());
+                player.sendSystemMessage(Component.translatable("tooltip.army.reset").withStyle(ChatFormatting.RED));
             } else if (stack.getTag().contains(LibTags.savedPos1) && stack.getTag().contains(LibTags.savedPos2)) {
                 BlockPos pos1 = new BlockPos(stack.getTag().getIntArray(LibTags.savedPos1)[0], stack.getTag().getIntArray(LibTags.savedPos1)[1],
                         stack.getTag().getIntArray(LibTags.savedPos1)[2]);
@@ -89,12 +88,12 @@ public class MobArmy extends Item implements LeftClickInteractItem {
                         stack.getTag().getIntArray(LibTags.savedPos2)[2]);
                 AABB bb = Utils.getBoundingBoxPositions(pos1, pos2);
                 List<Mob> list = player.level.getEntitiesOfClass(Mob.class, bb);
-                String team = stack.hasCustomHoverName() ? stack.getHoverName().getContents() : "DEFAULT";
+                String team = stack.hasCustomHoverName() ? stack.getHoverName().getString() : "DEFAULT";
 
                 for (Mob living : list) {
                     Utils.updateEntity(team, living);
                 }
-                player.sendMessage(new TranslatableComponent("tooltip.army.add.box", team).withStyle(ChatFormatting.GOLD), player.getUUID());
+                player.sendSystemMessage(Component.translatable("tooltip.army.add.box", team).withStyle(ChatFormatting.GOLD));
             }
         }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
@@ -103,9 +102,9 @@ public class MobArmy extends Item implements LeftClickInteractItem {
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (entity instanceof Mob && !player.level.isClientSide) {
-            String team = stack.hasCustomHoverName() ? stack.getHoverName().getContents() : "DEFAULT";
+            String team = stack.hasCustomHoverName() ? stack.getHoverName().getString() : "DEFAULT";
             Utils.updateEntity(team, (Mob) entity);
-            player.sendMessage(new TranslatableComponent("tooltip.army.add", team).withStyle(ChatFormatting.GOLD), player.getUUID());
+            player.sendSystemMessage(Component.translatable("tooltip.army.add", team).withStyle(ChatFormatting.GOLD));
         }
         return true;
     }

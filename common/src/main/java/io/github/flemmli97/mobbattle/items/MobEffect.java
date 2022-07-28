@@ -3,7 +3,6 @@ package io.github.flemmli97.mobbattle.items;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -28,7 +27,7 @@ public class MobEffect extends Item implements LeftClickInteractItem {
 
     @Override
     public void appendHoverText(ItemStack stack, Level worldIn, List<Component> list, TooltipFlag flagIn) {
-        list.add(new TranslatableComponent("tooltip.effect.remove").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.effect.remove").withStyle(ChatFormatting.AQUA));
     }
 
     @Override
@@ -36,7 +35,7 @@ public class MobEffect extends Item implements LeftClickInteractItem {
         if (!player.level.isClientSide && entity instanceof LivingEntity e) {
             //Clear Potion effects
             e.removeAllEffects();
-            player.sendMessage(new TranslatableComponent("tooltip.effect.remove.clear").withStyle(ChatFormatting.GOLD), player.getUUID());
+            player.sendSystemMessage(Component.translatable("tooltip.effect.remove.clear").withStyle(ChatFormatting.GOLD));
         }
         return true;
     }

@@ -61,7 +61,7 @@ public class MobBattleForge {
             if (entity != null) {
                 stack.shrink(1);
                 if (stack.hasCustomHoverName() && entity instanceof Mob) {
-                    Utils.updateEntity(stack.getHoverName().getContents(), (Mob) entity);
+                    Utils.updateEntity(stack.getHoverName().getString(), (Mob) entity);
                 }
             }
             return stack;

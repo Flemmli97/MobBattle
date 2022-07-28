@@ -2,19 +2,16 @@ package io.github.flemmli97.mobbattle.data;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import io.github.flemmli97.mobbattle.MobBattle;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
-import org.apache.commons.lang3.text.translate.JavaUnicodeEscaper;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class Lang implements DataProvider {
 
@@ -96,14 +93,15 @@ public class Lang implements DataProvider {
         this.add("tooltip.stick.second", "Right click to reset");
         this.add("tooltip.stick.reset", "Reset entities");
         this.add("tooltip.stick.add", "First entity set, hit another entity to set target");
+        this.add("mobbattle.gui.potions", "Potions");
 
     }
 
     @Override
-    public void run(HashCache cache) throws IOException {
+    public void run(CachedOutput cache) throws IOException {
         this.addTranslations();
         if (!this.data.isEmpty())
-            this.save(cache, this.data, this.gen.getOutputFolder().resolve("assets/" + this.modid + "/lang/" + this.locale + ".json"));
+            this.save(cache, this.gen.getOutputFolder().resolve("assets/" + this.modid + "/lang/" + this.locale + ".json"));
     }
 
     @Override
@@ -111,20 +109,12 @@ public class Lang implements DataProvider {
         return "Languages: " + this.locale;
     }
 
-    @SuppressWarnings("deprecation")
-    private void save(HashCache cache, Object object, Path target) throws IOException {
-        String data = GSON.toJson(object);
-        data = JavaUnicodeEscaper.outsideOf(0, 0x7f).translate(data); // Escape unicode after the fact so that it's not double escaped by GSON
-        String hash = DataProvider.SHA1.hashUnencodedChars(data).toString();
-        if (!Objects.equals(cache.getHash(target), hash) || !Files.exists(target)) {
-            Files.createDirectories(target.getParent());
-
-            try (BufferedWriter bufferedwriter = Files.newBufferedWriter(target)) {
-                bufferedwriter.write(data);
-            }
+    private void save(CachedOutput cache, Path target) throws IOException {
+        JsonObject json = new JsonObject();
+        for (Map.Entry<String, String> pair : this.data.entrySet()) {
+            json.addProperty(pair.getKey(), pair.getValue());
         }
-
-        cache.putNew(target, hash);
+        DataProvider.saveStable(cache, json, target);
     }
 
     public void add(String key, String value) {

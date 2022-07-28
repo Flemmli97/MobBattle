@@ -1,6 +1,7 @@
 Mob Battle 2.4.2
 ================
-- Fix team friendly fire treating mobs without teams as same team
+- (Fix team friendly fire treating mobs without teams as same team)
+- Updated to 1.19
 
 Mob Battle 2.4.1
 ================

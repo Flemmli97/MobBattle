@@ -6,7 +6,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -36,10 +35,10 @@ public class MobStick extends Item implements LeftClickInteractItem {
     @Override
     public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag b) {
         if (stack.hasTag() && stack.getTag().contains(LibTags.savedEntityName)) {
-            list.add(new TranslatableComponent("tooltip.stick.contains", stack.getTag().getString(LibTags.savedEntityName)).withStyle(ChatFormatting.GREEN));
+            list.add(Component.translatable("tooltip.stick.contains", stack.getTag().getString(LibTags.savedEntityName)).withStyle(ChatFormatting.GREEN));
         }
-        list.add(new TranslatableComponent("tooltip.stick.first").withStyle(ChatFormatting.AQUA));
-        list.add(new TranslatableComponent("tooltip.stick.second").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.stick.first").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.stick.second").withStyle(ChatFormatting.AQUA));
     }
 
     @Override
@@ -49,7 +48,7 @@ public class MobStick extends Item implements LeftClickInteractItem {
             if (stack.hasTag()) {
                 stack.getTag().remove(LibTags.savedEntity);
                 stack.getTag().remove(LibTags.savedEntityName);
-                player.sendMessage(new TranslatableComponent("tooltip.stick.reset").withStyle(ChatFormatting.RED), player.getUUID());
+                player.sendSystemMessage(Component.translatable("tooltip.stick.reset").withStyle(ChatFormatting.RED));
             }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
     }
@@ -72,7 +71,7 @@ public class MobStick extends Item implements LeftClickInteractItem {
                 compound.putString(LibTags.savedEntity, entity.getStringUUID());
                 compound.putString(LibTags.savedEntityName, entity.getClass().getSimpleName());
                 stack.setTag(compound);
-                player.sendMessage(new TranslatableComponent("tooltip.stick.add").withStyle(ChatFormatting.GOLD), player.getUUID());
+                player.sendSystemMessage(Component.translatable("tooltip.stick.add").withStyle(ChatFormatting.GOLD));
                 return true;
             }
         return true;

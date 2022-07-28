@@ -7,7 +7,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -38,8 +37,8 @@ public class MobEffectGive extends Item implements LeftClickInteractItem {
 
     @Override
     public void appendHoverText(ItemStack stack, Level worldIn, List<Component> list, TooltipFlag flagIn) {
-        list.add(new TranslatableComponent("tooltip.effect.give.first").withStyle(ChatFormatting.AQUA));
-        list.add(new TranslatableComponent("tooltip.effect.give.second").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.effect.give.first").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.effect.give.second").withStyle(ChatFormatting.AQUA));
     }
 
     @Override
@@ -61,7 +60,7 @@ public class MobEffectGive extends Item implements LeftClickInteractItem {
                 MobEffect potion = CrossPlatformStuff.INSTANCE.registryStatusEffects().getFromId(new ResourceLocation(potionString));
                 if (potion != null) {
                     e.addEffect(new MobEffectInstance(potion, duration, amplifier, false, showEffect));
-                    player.sendMessage(new TranslatableComponent("tooltip.effect.give.add", potionString, amplifier, duration).withStyle(ChatFormatting.GOLD), player.getUUID());
+                    player.sendSystemMessage(Component.translatable("tooltip.effect.give.add", potionString, amplifier, duration).withStyle(ChatFormatting.GOLD));
                 }
             }
         }

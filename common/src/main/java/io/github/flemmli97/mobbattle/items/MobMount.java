@@ -6,7 +6,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -35,8 +34,8 @@ public class MobMount extends Item implements LeftClickInteractItem {
 
     @Override
     public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag b) {
-        list.add(new TranslatableComponent("tooltip.mount.first").withStyle(ChatFormatting.AQUA));
-        list.add(new TranslatableComponent("tooltip.mount.second").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mount.first").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mount.second").withStyle(ChatFormatting.AQUA));
     }
 
     @Override
@@ -50,7 +49,7 @@ public class MobMount extends Item implements LeftClickInteractItem {
         if (!player.level.isClientSide)
             if (stack.hasTag()) {
                 stack.getTag().remove(LibTags.savedEntity);
-                player.sendMessage(new TranslatableComponent("tooltip.mount.reset").withStyle(ChatFormatting.RED), player.getUUID());
+                player.sendSystemMessage(Component.translatable("tooltip.mount.reset").withStyle(ChatFormatting.RED));
             }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
     }

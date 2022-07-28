@@ -3,7 +3,6 @@ package io.github.flemmli97.mobbattle.items;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -34,6 +33,6 @@ public class MobKill extends Item implements LeftClickInteractItem {
 
     @Override
     public void appendHoverText(ItemStack stack, Level worldIn, List<Component> list, TooltipFlag flagIn) {
-        list.add(new TranslatableComponent("tooltip.kill").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.kill").withStyle(ChatFormatting.AQUA));
     }
 }

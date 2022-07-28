@@ -21,8 +21,8 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.client.event.RenderLevelLastEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -41,7 +41,9 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public void render(RenderLevelLastEvent event) {
+    public void render(RenderLevelStageEvent event) {
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_SOLID_BLOCKS)
+            return;
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         ItemStack heldItem = player.getMainHandItem();
@@ -72,8 +74,8 @@ public class ClientEvents {
             event.addSprite(new ResourceLocation(MobBattle.MODID, "gui/armor_slot_sword"));
     }
 
-    public static void spawnEggColor(ColorHandlerEvent.Item e) {
-        e.getItemColors().register(new MultiItemColor(), ModItems.spawner.get());
+    public static void spawnEggColor(RegisterColorHandlersEvent.Item e) {
+        e.register(new MultiItemColor(), ModItems.spawner.get());
     }
 
     public static void clientSetup(FMLClientSetupEvent event) {

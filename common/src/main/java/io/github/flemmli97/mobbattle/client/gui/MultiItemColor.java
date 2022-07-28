@@ -40,7 +40,7 @@ public class MultiItemColor implements ItemColor {
             if (MobBattle.tenshiLib) {
                 Optional<SpawnEgg> egg = SpawnEgg.fromID(id);
                 if (egg.isPresent())
-                    return egg.get().getColor(tintIndex);
+                    return egg.get().getColor(stack, tintIndex);
             }
         }
         return -1;

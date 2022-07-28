@@ -21,8 +21,7 @@ public class GuiArmor extends AbstractContainerScreen<ContainerArmor> {
 
     @Override
     protected void renderLabels(PoseStack matrix, int mouseX, int mouseY) {
-        String s = this.chatComponent.getContents();
-        this.font.draw(matrix, s, this.imageWidth / 2 - this.font.width(s) / 2, 6, 4210752);
+        this.font.draw(matrix, this.chatComponent, this.imageWidth / 2 - this.font.width(this.chatComponent) / 2, 6, 4210752);
     }
 
     @Override
