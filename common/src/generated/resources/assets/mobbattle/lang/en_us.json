@@ -52,5 +52,6 @@
   "tooltip.stick.first": "Left click to asign an entity",
   "tooltip.stick.second": "Right click to reset",
   "tooltip.stick.reset": "Reset entities",
-  "tooltip.stick.add": "First entity set, hit another entity to set target"
+  "tooltip.stick.add": "First entity set, hit another entity to set target",
+  "mobbattle.gui.potions": "Potions"
 }
