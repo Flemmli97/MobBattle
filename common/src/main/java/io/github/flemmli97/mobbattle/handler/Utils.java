@@ -13,6 +13,8 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.monster.warden.AngerLevel;
+import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
@@ -129,13 +131,19 @@ public class Utils {
     public static void setAttackTarget(Mob entity, LivingEntity target, boolean both) {
         if (target == null)
             return;
+        setTargetTo(entity, target);
+        if (target instanceof Mob mobTarget && both) {
+            setTargetTo(mobTarget, entity);
+        }
+    }
+
+    private static void setTargetTo(Mob entity, LivingEntity target) {
         entity.setTarget(target);
         entity.getBrain().setMemoryWithExpiry(MemoryModuleType.ANGRY_AT, target.getUUID(), 600);
         entity.getBrain().setMemoryWithExpiry(MemoryModuleType.ATTACK_TARGET, target, 600);
-        if (target instanceof Mob && both) {
-            ((Mob) target).setTarget(entity);
-            target.getBrain().setMemoryWithExpiry(MemoryModuleType.ANGRY_AT, entity.getUUID(), 600);
-            target.getBrain().setMemoryWithExpiry(MemoryModuleType.ATTACK_TARGET, entity, 600);
+        if (entity instanceof Warden warden) {
+            warden.increaseAngerAt(target, AngerLevel.ANGRY.getMinimumAnger() + 20, false);
+            warden.setAttackTarget(target);
         }
     }
 }

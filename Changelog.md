@@ -1,3 +1,7 @@
+Mob Battle 2.4.3
+================
+- Fix warden not targeting set target
+
 Mob Battle 2.4.2
 ================
 - (Fix team friendly fire treating mobs without teams as same team)
