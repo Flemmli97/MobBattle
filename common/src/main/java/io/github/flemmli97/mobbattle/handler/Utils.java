@@ -1,6 +1,7 @@
 package io.github.flemmli97.mobbattle.handler;
 
 import com.mojang.math.Vector3f;
+import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -58,6 +59,12 @@ public class Utils {
         return false;
     }
 
+    public static boolean canTargetEntity(Entity entity, Entity entity2) {
+        if (entity.getTeam() == null || entity2.getTeam() == null)
+            return false;
+        return !entity.isAlliedTo(entity2);
+    }
+
     public static void addEntityToTeam(Entity entity, String team) {
         Scoreboard score = entity.level.getScoreboard();
         PlayerTeam scoreTeam = score.getPlayerTeam(team);
@@ -77,10 +84,14 @@ public class Utils {
 
     public static void updateEntity(String team, Mob e) {
         addEntityToTeam(e, team);
-        removeGoal(CrossPlatformStuff.INSTANCE.goalSelectorFrom(e, true), targetGoal);
         e.setTarget(null);
-        CrossPlatformStuff.INSTANCE.goalSelectorFrom(e, true).addGoal(0, new EntityAITeamTarget(e, false, true));
         e.addTag(LibTags.entityAIAdded);
+        if (e.getType().is(MobBattle.IGNORED))
+            return;
+        removeGoal(CrossPlatformStuff.INSTANCE.goalSelectorFrom(e, true), targetGoal);
+        CrossPlatformStuff.INSTANCE.goalSelectorFrom(e, true).addGoal(0, new EntityAIHurt(e));
+        CrossPlatformStuff.INSTANCE.goalSelectorFrom(e, true).addGoal(3, new EntityAITeamTarget(e, false, true));
+
     }
 
     /**
