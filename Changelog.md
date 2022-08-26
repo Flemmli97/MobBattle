@@ -1,6 +1,11 @@
 Mob Battle 2.4.3
 ================
 - Fix warden not targeting set target
+- Fix mobs attacking invulnerable mobs when using team targeting
+- Add entity tag: "mobbattle:ignored_mobs".  
+  Mobs in this tag will not get their ai modified
+- Mobs will select another target if it cant reach it due to other mobs teaming up on it
+- Fix mobs targeting non team mobs
 
 Mob Battle 2.4.2
 ================
