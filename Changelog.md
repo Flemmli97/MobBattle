@@ -1,3 +1,7 @@
+Mob Battle 2.4.3.1
+================
+- Fix mixin failing on fabric
+
 Mob Battle 2.4.3
 ================
 - Fix warden not targeting set target

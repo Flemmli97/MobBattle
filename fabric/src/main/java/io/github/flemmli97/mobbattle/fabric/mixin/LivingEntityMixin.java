@@ -25,7 +25,7 @@ public class LivingEntityMixin {
      * Vanilla sets it in Mob#doHurtTarget but all mobs that override that method dont so...
      */
     @Inject(method = "actuallyHurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getDamageAfterArmorAbsorb(Lnet/minecraft/world/damagesource/DamageSource;F)F"))
-    private void mobSetHurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> info) {
+    private void mobSetHurt(DamageSource source, float amount, CallbackInfo info) {
         if (source.getEntity() instanceof Mob mob)
             mob.setLastHurtMob((LivingEntity) (Object) this);
     }
