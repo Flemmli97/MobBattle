@@ -2,7 +2,7 @@ package io.github.flemmli97.mobbattle.forge.data;
 
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.forge.ModItems;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.models.model.ModelLocationUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -12,8 +12,8 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ItemModels extends ItemModelProvider {
 
-    public ItemModels(DataGenerator generator, ExistingFileHelper existingFileHelper) {
-        super(generator, MobBattle.MODID, existingFileHelper);
+    public ItemModels(PackOutput output, ExistingFileHelper existingFileHelper) {
+        super(output, MobBattle.MODID, existingFileHelper);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class ItemModels extends ItemModelProvider {
                 this.withExistingParent(reg.getId().toString(), ModelLocationUtils.decorateItemModelLocation("template_spawn_egg"));
             } else
                 this.withExistingParent(reg.getId().toString(), ModelLocationUtils.decorateItemModelLocation("handheld"))
-                        .texture("layer0", new ResourceLocation(reg.getId().getNamespace(), "items/" + reg.getId().getPath()));
+                        .texture("layer0", new ResourceLocation(reg.getId().getNamespace(), "item/" + reg.getId().getPath()));
         }
     }
 }

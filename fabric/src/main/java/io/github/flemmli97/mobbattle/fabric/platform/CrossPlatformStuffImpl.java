@@ -9,7 +9,7 @@ import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -37,12 +37,12 @@ public class CrossPlatformStuffImpl implements CrossPlatformStuff {
 
     @Override
     public SimpleRegistryWrapper<MobEffect> registryStatusEffects() {
-        return new FabricRegistryWrapper<>(Registry.MOB_EFFECT);
+        return new FabricRegistryWrapper<>(BuiltInRegistries.MOB_EFFECT);
     }
 
     @Override
     public SimpleRegistryWrapper<EntityType<?>> registryEntities() {
-        return new FabricRegistryWrapper<>(Registry.ENTITY_TYPE);
+        return new FabricRegistryWrapper<>(BuiltInRegistries.ENTITY_TYPE);
     }
 
     @Override

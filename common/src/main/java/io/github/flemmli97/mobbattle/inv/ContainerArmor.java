@@ -33,7 +33,7 @@ public class ContainerArmor extends AbstractContainerMenu {
             @Nullable
             @Override
             public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-                return Pair.of(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(MobBattle.MODID, "gui/armor_slot_sword"));
+                return Pair.of(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(MobBattle.MODID, "item/armor_slot_sword"));
             }
         });
         this.addSlot(new Slot(this.inv, 1, 80, 35) {

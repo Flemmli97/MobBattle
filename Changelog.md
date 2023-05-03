@@ -1,6 +1,9 @@
 Mob Battle 2.4.3.1
 ================
-- Fix mixin failing on fabric
+- Update to 1.19.4
+<i>
+  - Fix mixin failing on fabric
+  </i>
 
 Mob Battle 2.4.3
 ================

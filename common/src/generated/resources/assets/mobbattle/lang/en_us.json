@@ -10,7 +10,7 @@
   "item.mobbattle.mob_mount": "Mob Mount",
   "item.mobbattle.mob_equip": "Mob Equip",
   "item.mobbattle.egg_ex": "Mob Spawner",
-  "itemGroup.mobbattle.tab": "Mob Battle",
+  "mobbattle.tab": "Mob Battle",
   "conf.mobbattle.particle": "Show Team Particles",
   "conf.mobbattle.addai": "Auto add team-target-ai",
   "tooltip.spawnegg": "Left click an entity to save it. Shift while doing saves nbt too.",

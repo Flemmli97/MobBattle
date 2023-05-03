@@ -14,17 +14,17 @@ public class ButtonCheck extends Button {
     private boolean check;
 
     public ButtonCheck(int x, int y, OnPress press) {
-        super(x, y, 10, 10, Component.empty(), press);
+        super(x, y, 10, 10, Component.empty(), press, DEFAULT_NARRATION);
     }
 
     @Override
-    public void renderButton(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
         RenderSystem.setShaderTexture(0, tex);
         RenderSystem.enableBlend();
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
                 GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        this.blit(matrix, this.x, this.y, 178, this.check ? 14 : 1, this.width, this.height);
+        blit(matrix, this.getX(), this.getY(), 178, this.check ? 14 : 1, this.width, this.height);
     }
 
     public void checkUncheck(boolean check) {

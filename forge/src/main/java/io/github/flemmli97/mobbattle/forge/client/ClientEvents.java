@@ -1,7 +1,6 @@
 package io.github.flemmli97.mobbattle.forge.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.client.gui.GuiArmor;
 import io.github.flemmli97.mobbattle.client.gui.MultiItemColor;
 import io.github.flemmli97.mobbattle.forge.ModItems;
@@ -16,14 +15,11 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -35,7 +31,6 @@ public class ClientEvents {
     public static void register() {
         MinecraftForge.EVENT_BUS.register(new ClientEvents());
         IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
-        modbus.addListener(ClientEvents::registerTextureSprite);
         modbus.addListener(ClientEvents::spawnEggColor);
         modbus.addListener(ClientEvents::clientSetup);
     }
@@ -67,11 +62,6 @@ public class ClientEvents {
         AABB aabb = Utils.getBoundingBoxPositions(pos, pos2).deflate(0.1);
         LevelRenderer.renderLineBox(stack, buffer.getBuffer(RenderType.lines()), aabb.inflate(0.002).move(-vec.x, -vec.y, -vec.z), 1, 0.5F, 0.5F, 1);
         buffer.endBatch(RenderType.LINES);
-    }
-
-    public static void registerTextureSprite(TextureStitchEvent.Pre event) {
-        if (event.getAtlas().location() == InventoryMenu.BLOCK_ATLAS)
-            event.addSprite(new ResourceLocation(MobBattle.MODID, "gui/armor_slot_sword"));
     }
 
     public static void spawnEggColor(RegisterColorHandlersEvent.Item e) {

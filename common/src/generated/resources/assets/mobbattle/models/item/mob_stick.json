@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "mobbattle:items/mob_stick"
+    "layer0": "mobbattle:item/mob_stick"
   }
 }

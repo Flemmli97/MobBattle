@@ -13,8 +13,8 @@ public class DataEvent {
     @SubscribeEvent
     public static void data(GatherDataEvent event) {
         DataGenerator data = event.getGenerator();
-        data.addProvider(event.includeClient(), new Lang(data));
-        data.addProvider(event.includeClient(), new ItemModels(data, event.getExistingFileHelper()));
+        data.addProvider(event.includeClient(), new Lang(data.getPackOutput()));
+        data.addProvider(event.includeClient(), new ItemModels(data.getPackOutput(), event.getExistingFileHelper()));
     }
 
 }

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "mobbattle:items/mob_army"
+    "layer0": "mobbattle:item/mob_army"
   }
 }

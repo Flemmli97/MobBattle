@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "mobbattle:items/mob_kill"
+    "layer0": "mobbattle:item/mob_kill"
   }
 }

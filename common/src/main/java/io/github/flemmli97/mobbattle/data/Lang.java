@@ -9,8 +9,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import io.github.flemmli97.mobbattle.MobBattle;
 import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
+import net.minecraft.data.PackOutput;
 import net.minecraft.util.GsonHelper;
 
 import java.io.ByteArrayOutputStream;
@@ -20,17 +20,18 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class Lang implements DataProvider {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private final Map<String, String> data = new LinkedHashMap<>();
-    private final DataGenerator gen;
+    private final PackOutput packOutput;
     private final String modid;
     private final String locale;
 
-    public Lang(DataGenerator gen) {
-        this.gen = gen;
+    public Lang(PackOutput output) {
+        this.packOutput = output;
         this.modid = MobBattle.MODID;
         this.locale = "en_us";
     }
@@ -47,7 +48,9 @@ public class Lang implements DataProvider {
         this.add("item.mobbattle.mob_mount", "Mob Mount");
         this.add("item.mobbattle.mob_equip", "Mob Equip");
         this.add("item.mobbattle.egg_ex", "Mob Spawner");
-        this.add("itemGroup.mobbattle.tab", "Mob Battle");
+
+        this.add("mobbattle.tab", "Mob Battle");
+
         this.add("conf.mobbattle.particle", "Show Team Particles");
         this.add("conf.mobbattle.addai", "Auto add team-target-ai");
 
@@ -105,10 +108,17 @@ public class Lang implements DataProvider {
     }
 
     @Override
-    public void run(CachedOutput cache) throws IOException {
-        this.addTranslations();
-        if (!this.data.isEmpty())
-            this.save(cache, this.gen.getOutputFolder().resolve("assets/" + this.modid + "/lang/" + this.locale + ".json"));
+    public CompletableFuture<?> run(CachedOutput cache) {
+        return CompletableFuture.runAsync(() -> {
+            this.addTranslations();
+            if (!this.data.isEmpty()) {
+                try {
+                    this.save(cache, this.packOutput.getOutputFolder(PackOutput.Target.RESOURCE_PACK).resolve(this.modid + "/lang/" + this.locale + ".json"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override

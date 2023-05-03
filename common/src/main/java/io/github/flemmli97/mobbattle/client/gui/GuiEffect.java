@@ -37,7 +37,6 @@ public class GuiEffect extends Screen {
     @Override
     protected void init() {
         super.init();
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
         this.potion = new EditBox(this.font, i + 30, j + 21, 108, 14, Component.empty()) {

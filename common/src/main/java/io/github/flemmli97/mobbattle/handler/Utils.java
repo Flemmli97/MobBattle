@@ -1,6 +1,5 @@
 package io.github.flemmli97.mobbattle.handler;
 
-import com.mojang.math.Vector3f;
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
@@ -20,6 +19,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.Team.CollisionRule;
+import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.Map;

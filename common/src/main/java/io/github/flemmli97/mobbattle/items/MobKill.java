@@ -3,7 +3,6 @@ package io.github.flemmli97.mobbattle.items;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -27,7 +26,7 @@ public class MobKill extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        entity.hurt(DamageSource.OUT_OF_WORLD, Float.MAX_VALUE);
+        entity.hurt(entity.damageSources().outOfWorld(), Float.MAX_VALUE);
         return true;
     }
 

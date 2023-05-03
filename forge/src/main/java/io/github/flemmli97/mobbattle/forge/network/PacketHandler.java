@@ -23,6 +23,6 @@ public class PacketHandler {
     }
 
     public static <T> void sendToClient(T message, ServerPlayer player) {
-        dispatcher.sendTo(message, player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+        dispatcher.sendTo(message, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
     }
 }

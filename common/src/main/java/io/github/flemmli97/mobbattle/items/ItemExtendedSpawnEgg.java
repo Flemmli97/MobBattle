@@ -169,7 +169,7 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
                 entityliving.yHeadRot = entityliving.getYRot();
                 entityliving.yBodyRot = entityliving.getYRot();
                 if (tag.size() == 1)
-                    entityliving.finalizeSpawn(world, world.getCurrentDifficultyAt(new BlockPos(entityliving.position())), MobSpawnType.SPAWN_EGG, null, null);
+                    entityliving.finalizeSpawn(world, world.getCurrentDifficultyAt(BlockPos.containing(entityliving.position())), MobSpawnType.SPAWN_EGG, null, null);
                 world.addFreshEntity(entity);
                 entityliving.playAmbientSound();
             }
