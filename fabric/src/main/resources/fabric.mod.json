@@ -8,7 +8,7 @@
     "Flemmli97"
   ],
   "contact": {
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/mob-battle-mod-fabric",
+    "homepage": "${homepage}",
     "issues": "https://github.com/Flemmli97/MobBattle/issues",
     "sources": "https://github.com/Flemmli97/MobBattle"
   },
@@ -27,8 +27,8 @@
     "mobbattle.fabric.mixins.json"
   ],
   "depends": {
-    "fabric": "*",
-    "minecraft": ">=1.18"
+    "fabric": ">=${fabric_version}",
+    "minecraft": ">=${mcversion}"
   },
   "breaks": {
     "tenshilib": "<1.18.1-1.5.0"
