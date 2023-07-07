@@ -9,6 +9,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -25,8 +26,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.SpawnData;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
@@ -36,6 +39,7 @@ import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem {
 
@@ -100,8 +104,10 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
                 CompoundTag nbt = new CompoundTag();
                 spawner.getSpawner().save(nbt);
                 nbt.remove("SpawnPotentials");
-                nbt.remove("SpawnData");
-                nbt.put("SpawnData", itemstack.getTag().get(LibTags.spawnEggTag).copy());
+                nbt.remove(BaseSpawner.SPAWN_DATA_TAG);
+                SpawnData.CODEC.encodeStart(NbtOps.INSTANCE, new SpawnData(itemstack.getTag().getCompound(LibTags.spawnEggTag), Optional.empty()))
+                        .resultOrPartial(string -> MobBattle.logger.warn("Invalid SpawnData: {}", string))
+                        .ifPresent(t -> nbt.put(BaseSpawner.SPAWN_DATA_TAG, t));
                 spawner.getSpawner().load(tile.getLevel(), tile.getBlockPos(), nbt);
                 spawner.setChanged();
                 ctx.getLevel().sendBlockUpdated(ctx.getClickedPos(), iblockstate, iblockstate, 3);
