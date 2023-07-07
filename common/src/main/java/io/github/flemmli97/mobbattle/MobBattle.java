@@ -23,6 +23,7 @@ public class MobBattle {
             EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 
     public static TagKey<EntityType<?>> IGNORED = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(MobBattle.MODID, "ignored_mobs"));
+    public static TagKey<EntityType<?>> HURT_IGNORED = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(MobBattle.MODID, "hurt_ignored_mobs"));
 
     public static CreativeModeTab customTab;
 
