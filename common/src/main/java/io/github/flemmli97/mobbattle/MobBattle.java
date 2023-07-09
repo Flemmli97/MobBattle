@@ -22,6 +22,7 @@ public class MobBattle {
             EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 
     public static TagKey<EntityType<?>> IGNORED = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(MobBattle.MODID, "ignored_mobs"));
+    public static TagKey<EntityType<?>> HURT_IGNORED = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(MobBattle.MODID, "hurt_ignored_mobs"));
 
     @SuppressWarnings("unchecked")
     public static <T> T getPlatformInstance(Class<T> abstractClss, String fabricImpl, String forgeImpl) {

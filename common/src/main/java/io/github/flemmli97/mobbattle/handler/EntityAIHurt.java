@@ -1,5 +1,6 @@
 package io.github.flemmli97.mobbattle.handler;
 
+import io.github.flemmli97.mobbattle.MobBattle;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -33,7 +34,7 @@ public class EntityAIHurt extends TargetGoal {
     public boolean canContinueToUse() {
         int i = this.mob.getLastHurtByMobTimestamp();
         LivingEntity livingEntity = this.mob.getLastHurtByMob();
-        if (this.mob.getLastHurtMobTimestamp() + 40 < i && this.mob.getTarget() != livingEntity) {
+        if (this.mob.getLastHurtMobTimestamp() + 40 < i && this.mob.getTarget() != livingEntity && !livingEntity.getType().is(MobBattle.HURT_IGNORED)) {
             return false;
         }
         return super.canContinueToUse();
