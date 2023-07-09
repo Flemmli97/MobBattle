@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    modCompileOnly "${tenshilib_dep}:fabric"
+    modCompileOnly "io.github.flemmli97:tenshilib:${tenshilib_version}:fabric"
 }
 
 sourceSets.main.resources {
