@@ -28,6 +28,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.SpawnData;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
@@ -37,6 +38,7 @@ import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem {
 
@@ -98,12 +100,7 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
         if (hasSavedEntity(itemstack)) {
             BlockEntity tile = ctx.getLevel().getBlockEntity(ctx.getClickedPos());
             if (tile instanceof SpawnerBlockEntity spawner) {
-                CompoundTag nbt = new CompoundTag();
-                spawner.getSpawner().save(nbt);
-                nbt.remove("SpawnPotentials");
-                nbt.remove("SpawnData");
-                nbt.put("SpawnData", itemstack.getTag().get(LibTags.spawnEggTag).copy());
-                spawner.getSpawner().load(tile.getLevel(), tile.getBlockPos(), nbt);
+                spawner.getSpawner().setNextSpawnData(ctx.getLevel(), ctx.getClickedPos(), new SpawnData(itemstack.getTag().getCompound(LibTags.spawnEggTag).copy(), Optional.empty()));
                 spawner.setChanged();
                 ctx.getLevel().sendBlockUpdated(ctx.getClickedPos(), iblockstate, iblockstate, 3);
                 return InteractionResult.SUCCESS;
