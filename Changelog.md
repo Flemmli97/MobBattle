@@ -1,3 +1,9 @@
+Mob Battle 2.4.4
+================
+- Add entity tag `mobbattle:hurt_ignored_mobs` for ignoring revenge targets. Useful for attacking 
+  summoner mobs like evokers. Default includes vex
+- Fix spawn egg item not working on spawners
+
 Mob Battle 2.4.3
 ================
 - Fix mobs attacking invulnerable mobs when using team targeting
