@@ -1,9 +1,8 @@
 package io.github.flemmli97.mobbattle.client.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.inv.ContainerArmor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -20,21 +19,20 @@ public class GuiArmor extends AbstractContainerScreen<ContainerArmor> {
     }
 
     @Override
-    protected void renderLabels(PoseStack matrix, int mouseX, int mouseY) {
-        this.font.draw(matrix, this.chatComponent, this.imageWidth / 2 - this.font.width(this.chatComponent) / 2, 6, 4210752);
+    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
+        graphics.drawString(this.font, this.chatComponent, this.imageWidth / 2 - this.font.width(this.chatComponent) / 2, 6, 4210752, false);
     }
 
     @Override
-    public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrix, mouseX, mouseY, partialTicks);
-        this.renderTooltip(matrix, mouseX, mouseY);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphics, mouseX, mouseY, partialTicks);
+        this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.setShaderTexture(0, armorGui);
+    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        this.blit(matrix, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        graphics.blit(armorGui, i, j, 0, 0, this.imageWidth, this.imageHeight);
     }
 }

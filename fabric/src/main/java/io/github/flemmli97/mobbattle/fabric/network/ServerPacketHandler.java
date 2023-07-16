@@ -28,7 +28,7 @@ public class ServerPacketHandler {
         ItemStack equipment = compound.contains("Stack") ? ItemStack.of(compound.getCompound("Stack")) : ItemStack.EMPTY;
         int entityId = compound.getInt("EntityID");
         int slot = compound.getInt("Slot");
-        Level world = player.level;
+        Level world = player.level();
         Entity e = world.getEntity(entityId);
         if (e instanceof Mob) {
             e.setItemSlot(MobBattle.slot[slot], equipment);

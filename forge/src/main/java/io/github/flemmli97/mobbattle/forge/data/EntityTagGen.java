@@ -12,6 +12,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class EntityTagGen extends IntrinsicHolderTagsProvider<EntityType<?>> {
 
+    @SuppressWarnings("deprecation")
     public EntityTagGen(PackOutput arg2, CompletableFuture<HolderLookup.Provider> completableFuture, ExistingFileHelper existingFileHelper) {
         super(arg2, Registries.ENTITY_TYPE, completableFuture, (arg) -> arg.builtInRegistryHolder().key(), MobBattle.MODID, existingFileHelper);
     }

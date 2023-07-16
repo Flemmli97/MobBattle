@@ -1,11 +1,10 @@
 package io.github.flemmli97.mobbattle.client.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.platform.ClientPlatform;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
@@ -143,18 +142,17 @@ public class GuiEffect extends Screen {
     }
 
     @Override
-    public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-        RenderSystem.setShaderTexture(0, tex);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
-        this.blit(matrix, i, j, 0, 0, this.xSize, this.ySize);
-        this.potion.render(matrix, mouseX, mouseY, partialTicks);
-        this.duration.render(matrix, mouseX, mouseY, partialTicks);
-        this.amplifier.render(matrix, mouseX, mouseY, partialTicks);
-        this.font.draw(matrix, "Potion:", i + 30, j + 10, 1);
-        this.font.draw(matrix, "Duration:", i + 18, j + 39, 1);
-        this.font.draw(matrix, "Amplifier:", i + 70, j + 39, 1);
-        this.font.draw(matrix, "Particle:", i + 130, j + 39, 1);
-        super.render(matrix, mouseX, mouseY, partialTicks);
+        graphics.blit(tex, i, j, 0, 0, this.xSize, this.ySize);
+        this.potion.render(graphics, mouseX, mouseY, partialTicks);
+        this.duration.render(graphics, mouseX, mouseY, partialTicks);
+        this.amplifier.render(graphics, mouseX, mouseY, partialTicks);
+        graphics.drawString(this.font, "Potion:", i + 30, j + 10, 1, false);
+        graphics.drawString(this.font, "Duration:", i + 18, j + 39, 1, false);
+        graphics.drawString(this.font, "Amplifier:", i + 70, j + 39, 1, false);
+        graphics.drawString(this.font, "Particle:", i + 130, j + 39, 1, false);
+        super.render(graphics, mouseX, mouseY, partialTicks);
     }
 }

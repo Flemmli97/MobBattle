@@ -44,7 +44,7 @@ public class EquipMessage {
         if (ctx.get().getSender() == null || ctx.get().getSender().getMainHandItem().getItem() != ModItems.mobArmor.get())
             return;
         ctx.get().enqueueWork(() -> {
-            Level world = ctx.get().getSender().level;
+            Level world = ctx.get().getSender().level();
             Entity e = world.getEntity(msg.entityId);
             if (e instanceof Mob) {
                 e.setItemSlot(MobBattle.slot[msg.slot], msg.equipment);

@@ -50,7 +50,7 @@ public class MobEffectGive extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (entity instanceof LivingEntity e && !player.level.isClientSide) {
+        if (entity instanceof LivingEntity e && !player.level().isClientSide) {
             if (stack.hasTag()) {
                 CompoundTag compound = stack.getTag();
                 String potionString = compound.getString(MobBattle.MODID + ":potion");

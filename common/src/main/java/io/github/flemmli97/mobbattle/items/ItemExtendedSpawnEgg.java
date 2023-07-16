@@ -82,7 +82,7 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
             compound.put(LibTags.spawnEggTag, tag);
             stack.setTag(compound);
 
-            if (!player.level.isClientSide) {
+            if (!player.level().isClientSide) {
                 player.sendSystemMessage(Component.translatable("tooltip.spawnegg.save", (nbt ? " + nbt" : "")).withStyle(ChatFormatting.GOLD));
             }
             return true;

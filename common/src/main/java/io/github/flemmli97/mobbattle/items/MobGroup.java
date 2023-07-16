@@ -45,10 +45,10 @@ public class MobGroup extends Item implements LeftClickInteractItem {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand hand) {
-        if (!player.isShiftKeyDown() && !player.level.isClientSide && stack.hasTag() && stack.getTag().contains(LibTags.savedEntityList)) {
+        if (!player.isShiftKeyDown() && !player.level().isClientSide && stack.hasTag() && stack.getTag().contains(LibTags.savedEntityList)) {
             ListTag list = stack.getTag().getList(LibTags.savedEntityList, 8);
             for (int i = 0; i < list.size(); i++) {
-                Mob e = Utils.fromUUID((ServerLevel) player.level, list.getString(i));
+                Mob e = Utils.fromUUID((ServerLevel) player.level(), list.getString(i));
                 if (entity instanceof Mob living && entity != e) {
                     Utils.setAttackTarget(living, e, true);
                 }
@@ -62,7 +62,7 @@ public class MobGroup extends Item implements LeftClickInteractItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!player.level.isClientSide && stack.hasTag() && stack.getTag().contains(LibTags.savedEntityList)) {
+        if (!player.level().isClientSide && stack.hasTag() && stack.getTag().contains(LibTags.savedEntityList)) {
             if (!player.isShiftKeyDown() && stack.getTag().getList(LibTags.savedEntityList, 8).size() > 0) {
                 ListTag list = stack.getTag().getList(LibTags.savedEntityList, 8);
                 list.remove(list.size() - 1);
@@ -78,7 +78,7 @@ public class MobGroup extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (entity instanceof Mob && !player.level.isClientSide) {
+        if (entity instanceof Mob && !player.level().isClientSide) {
             CompoundTag compound = new CompoundTag();
             if (stack.hasTag())
                 compound = stack.getTag();

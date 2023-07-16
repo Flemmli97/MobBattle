@@ -1,9 +1,7 @@
 package io.github.flemmli97.mobbattle.client.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.flemmli97.mobbattle.MobBattle;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -18,13 +16,8 @@ public class ButtonCheck extends Button {
     }
 
     @Override
-    public void renderWidget(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-        RenderSystem.setShaderTexture(0, tex);
-        RenderSystem.enableBlend();
-        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-                GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        blit(matrix, this.getX(), this.getY(), 178, this.check ? 14 : 1, this.width, this.height);
+    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        graphics.blit(tex, this.getX(), this.getY(), 178, this.check ? 14 : 1, this.width, this.height);
     }
 
     public void checkUncheck(boolean check) {

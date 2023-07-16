@@ -32,7 +32,7 @@ public class MobEffect extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (!player.level.isClientSide && entity instanceof LivingEntity e) {
+        if (!player.level().isClientSide && entity instanceof LivingEntity e) {
             //Clear Potion effects
             e.removeAllEffects();
             player.sendSystemMessage(Component.translatable("tooltip.effect.remove.clear").withStyle(ChatFormatting.GOLD));

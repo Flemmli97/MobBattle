@@ -53,10 +53,10 @@ public class EventHandler {
     public void livingTick(LivingEvent.LivingTickEvent event) {
         if (event.getEntity() instanceof Mob e) {
             if (e.getTeam() != null) {
-                if (Config.clientConf.showTeamParticleTypes.get() && e.level.isClientSide) {
+                if (Config.clientConf.showTeamParticleTypes.get() && e.level().isClientSide) {
                     DustParticleOptions color = Utils.teamColor.get(e.getTeam().getColor());
                     if (color != null)
-                        e.level.addParticle(color, e.getX(), e.getY() + e.getBbHeight() + 0.5, e.getZ(), 0, 0, 0);
+                        e.level().addParticle(color, e.getX(), e.getY() + e.getBbHeight() + 0.5, e.getZ(), 0, 0, 0);
                 } else if (Config.commonConf.autoAddAI.get() && !e.getTags().contains(LibTags.entityAIAdded)) {
                     Utils.updateEntity(e.getTeam().getName(), e);
                 }

@@ -68,7 +68,7 @@ public class Utils {
     }
 
     public static void addEntityToTeam(Entity entity, String team) {
-        Scoreboard score = entity.level.getScoreboard();
+        Scoreboard score = entity.level().getScoreboard();
         PlayerTeam scoreTeam = score.getPlayerTeam(team);
         if (scoreTeam == null) {
             scoreTeam = score.addPlayerTeam(team);
@@ -79,7 +79,7 @@ public class Utils {
     }
 
     public static int getTeamSize(Entity entity, String team) {
-        return entity.level.getScoreboard().getPlayerTeam(team) != null ? entity.level.getScoreboard().getPlayerTeam(team).getPlayers().size() : 0;
+        return entity.level().getScoreboard().getPlayerTeam(team) != null ? entity.level().getScoreboard().getPlayerTeam(team).getPlayers().size() : 0;
     }
 
     private static final Predicate<Goal> targetGoal = (goal) -> true;

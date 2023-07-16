@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.function.Supplier;
 
 public class MobBattle {
 
@@ -25,7 +26,7 @@ public class MobBattle {
     public static TagKey<EntityType<?>> IGNORED = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(MobBattle.MODID, "ignored_mobs"));
     public static TagKey<EntityType<?>> HURT_IGNORED = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(MobBattle.MODID, "hurt_ignored_mobs"));
 
-    public static CreativeModeTab customTab;
+    public static Supplier<CreativeModeTab> customTab;
 
     @SuppressWarnings("unchecked")
     public static <T> T getPlatformInstance(Class<T> abstractClss, String fabricImpl, String forgeImpl) {

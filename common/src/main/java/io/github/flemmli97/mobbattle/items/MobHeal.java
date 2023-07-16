@@ -30,7 +30,7 @@ public class MobHeal extends Item implements LeftClickInteractItem {
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (entity instanceof Mob) {
             ((Mob) entity).heal(((Mob) entity).getMaxHealth() - ((Mob) entity).getHealth());
-            entity.level.addParticle(ParticleTypes.HEART, entity.getX(), entity.getY() + entity.getBbHeight() + 0.5, entity.getZ(), 0, 0.1, 0);
+            entity.level().addParticle(ParticleTypes.HEART, entity.getX(), entity.getY() + entity.getBbHeight() + 0.5, entity.getZ(), 0, 0.1, 0);
         }
         return true;
 

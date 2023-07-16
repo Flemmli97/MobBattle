@@ -32,7 +32,7 @@ public class EventHandler {
     }
 
     public static void addTeamTarget(Entity entity) {
-        if (!entity.level.isClientSide && entity instanceof Mob) {
+        if (!entity.level().isClientSide && entity instanceof Mob) {
             if (entity instanceof Vex vex) {
                 if (vex.getOwner() != null && vex.getOwner().getTeam() != null) {
                     Utils.addEntityToTeam(vex, vex.getOwner().getTeam().getName());
@@ -55,10 +55,10 @@ public class EventHandler {
     public static void livingTick(LivingEntity entity) {
         if (entity instanceof Mob e) {
             if (e.getTeam() != null) {
-                if (Config.config.showTeamParticleTypes && e.level.isClientSide) {
+                if (Config.config.showTeamParticleTypes && e.level().isClientSide) {
                     DustParticleOptions color = Utils.teamColor.get(e.getTeam().getColor());
                     if (color != null)
-                        e.level.addParticle(color, e.getX(), e.getY() + e.getBbHeight() + 0.5, e.getZ(), 0, 0, 0);
+                        e.level().addParticle(color, e.getX(), e.getY() + e.getBbHeight() + 0.5, e.getZ(), 0, 0, 0);
                 } else if (Config.config.autoAddAI && !e.getTags().contains(LibTags.entityAIAdded)) {
                     Utils.updateEntity(e.getTeam().getName(), e);
                 }

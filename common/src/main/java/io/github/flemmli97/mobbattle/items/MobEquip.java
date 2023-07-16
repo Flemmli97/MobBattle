@@ -88,7 +88,7 @@ public class MobEquip extends Item implements LeftClickInteractItem {
                 BlockPos pos2 = new BlockPos(stack.getTag().getIntArray(LibTags.savedPos2)[0], stack.getTag().getIntArray(LibTags.savedPos2)[1],
                         stack.getTag().getIntArray(LibTags.savedPos2)[2]);
                 AABB bb = Utils.getBoundingBoxPositions(pos1, pos2);
-                List<Mob> list = player.level.getEntitiesOfClass(Mob.class, bb);
+                List<Mob> list = player.level().getEntitiesOfClass(Mob.class, bb);
                 for (Mob living : list) {
                     living.addTag(LibTags.entityPickup);
                     CrossPlatformStuff.INSTANCE.goalSelectorFrom(living, false).addGoal(10, new EntityAIItemPickup(living));
@@ -100,7 +100,7 @@ public class MobEquip extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (entity instanceof Mob && !player.level.isClientSide) {
+        if (entity instanceof Mob && !player.level().isClientSide) {
             entity.addTag(LibTags.entityPickup);
             CrossPlatformStuff.INSTANCE.goalSelectorFrom((Mob) entity, false).addGoal(10, new EntityAIItemPickup((Mob) entity));
             player.sendSystemMessage(Component.translatable("tooltip.equip.add").withStyle(ChatFormatting.GOLD));

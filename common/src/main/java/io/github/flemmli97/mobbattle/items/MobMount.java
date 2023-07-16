@@ -46,7 +46,7 @@ public class MobMount extends Item implements LeftClickInteractItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!player.level.isClientSide)
+        if (!player.level().isClientSide)
             if (stack.hasTag()) {
                 stack.getTag().remove(LibTags.savedEntity);
                 player.sendSystemMessage(Component.translatable("tooltip.mount.reset").withStyle(ChatFormatting.RED));
@@ -56,9 +56,9 @@ public class MobMount extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (entity instanceof Mob && !player.level.isClientSide) {
+        if (entity instanceof Mob && !player.level().isClientSide) {
             if (stack.hasTag() && stack.getTag().contains(LibTags.savedEntity)) {
-                Mob storedEntity = Utils.fromUUID((ServerLevel) player.level, stack.getTag().getString(LibTags.savedEntity));
+                Mob storedEntity = Utils.fromUUID((ServerLevel) player.level(), stack.getTag().getString(LibTags.savedEntity));
                 if (storedEntity != null && storedEntity != entity && !this.passengerContainsEntity(storedEntity, entity)) {
                     storedEntity.startRiding(entity);
                     stack.getTag().remove(LibTags.savedEntity);

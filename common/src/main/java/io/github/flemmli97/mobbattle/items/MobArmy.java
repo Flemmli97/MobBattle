@@ -87,7 +87,7 @@ public class MobArmy extends Item implements LeftClickInteractItem {
                 BlockPos pos2 = new BlockPos(stack.getTag().getIntArray(LibTags.savedPos2)[0], stack.getTag().getIntArray(LibTags.savedPos2)[1],
                         stack.getTag().getIntArray(LibTags.savedPos2)[2]);
                 AABB bb = Utils.getBoundingBoxPositions(pos1, pos2);
-                List<Mob> list = player.level.getEntitiesOfClass(Mob.class, bb);
+                List<Mob> list = player.level().getEntitiesOfClass(Mob.class, bb);
                 String team = stack.hasCustomHoverName() ? stack.getHoverName().getString() : "DEFAULT";
 
                 for (Mob living : list) {
@@ -101,7 +101,7 @@ public class MobArmy extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (entity instanceof Mob && !player.level.isClientSide) {
+        if (entity instanceof Mob && !player.level().isClientSide) {
             String team = stack.hasCustomHoverName() ? stack.getHoverName().getString() : "DEFAULT";
             Utils.updateEntity(team, (Mob) entity);
             player.sendSystemMessage(Component.translatable("tooltip.army.add", team).withStyle(ChatFormatting.GOLD));

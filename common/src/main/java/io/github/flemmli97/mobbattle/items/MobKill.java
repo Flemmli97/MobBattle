@@ -26,7 +26,7 @@ public class MobKill extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        entity.hurt(entity.damageSources().outOfWorld(), Float.MAX_VALUE);
+        entity.hurt(entity.damageSources().fellOutOfWorld(), Float.MAX_VALUE);
         return true;
     }
 

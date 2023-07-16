@@ -20,7 +20,7 @@ public class ContainerArmor extends AbstractContainerMenu {
     private InventoryArmor inv;
 
     public ContainerArmor(int windowID, Inventory playerInv, FriendlyByteBuf buf) {
-        this(windowID, playerInv, playerInv.player.level.getEntity(buf.readInt()));
+        this(windowID, playerInv, playerInv.player.level().getEntity(buf.readInt()));
     }
 
     public ContainerArmor(int windowID, Inventory playerInv, Entity e) {

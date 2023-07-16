@@ -8,11 +8,11 @@ import net.minecraft.world.item.ItemStack;
 
 public class InventoryArmor extends SimpleContainer {
 
-    private final Mob theEntity;
+    private final Mob mob;
 
     public InventoryArmor(Mob living) {
         super(6);
-        this.theEntity = living;
+        this.mob = living;
         for (int x = 0; x < 6; x++) {
             ItemStack stack = living.getItemBySlot(MobBattle.slot[x]);
             this.updateSlotContents(x, stack);
@@ -21,8 +21,8 @@ public class InventoryArmor extends SimpleContainer {
 
     @Override
     public void setItem(int index, ItemStack stack) {
-        if (this.theEntity.level.isClientSide)
-            CrossPlatformStuff.INSTANCE.sendEquipMessage(stack, this.theEntity.getId(), index);
+        if (this.mob.level().isClientSide)
+            CrossPlatformStuff.INSTANCE.sendEquipMessage(stack, this.mob.getId(), index);
         super.setItem(index, stack);
     }
 

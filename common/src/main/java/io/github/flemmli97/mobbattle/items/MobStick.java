@@ -44,7 +44,7 @@ public class MobStick extends Item implements LeftClickInteractItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!player.level.isClientSide)
+        if (!player.level().isClientSide)
             if (stack.hasTag()) {
                 stack.getTag().remove(LibTags.savedEntity);
                 stack.getTag().remove(LibTags.savedEntityName);
@@ -55,9 +55,9 @@ public class MobStick extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (player.level instanceof ServerLevel)
+        if (player.level() instanceof ServerLevel)
             if (stack.hasTag() && stack.getTag().contains(LibTags.savedEntity)) {
-                Mob storedEntity = Utils.fromUUID((ServerLevel) player.level, stack.getTag().getString(LibTags.savedEntity));
+                Mob storedEntity = Utils.fromUUID((ServerLevel) player.level(), stack.getTag().getString(LibTags.savedEntity));
                 if (entity instanceof Mob living && entity != storedEntity) {
                     Utils.setAttackTarget(living, storedEntity, true);
                     stack.getTag().remove(LibTags.savedEntity);

@@ -34,7 +34,7 @@ public class EntityAIItemPickup extends Goal {
     @Override
     public boolean canUse() {
         if (this.entity.getTarget() == null) {
-            List<ItemEntity> list = this.entity.level.getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(8));
+            List<ItemEntity> list = this.entity.level().getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(8));
             if (list.isEmpty()) {
                 return false;
             } else {
@@ -56,7 +56,7 @@ public class EntityAIItemPickup extends Goal {
 
     @Override
     public void tick() {
-        for (ItemEntity entityitem : this.entity.level.getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(1.0D, 0.0D, 1.0D))) {
+        for (ItemEntity entityitem : this.entity.level().getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(1.0D, 0.0D, 1.0D))) {
             if (!entityitem.getItem().isEmpty() && !entityitem.hasPickUpDelay()) {
                 this.updateEquipmentIfNeeded(entityitem);
             }
@@ -119,7 +119,7 @@ public class EntityAIItemPickup extends Goal {
             this.entity.setItemSlot(EquipmentSlotType, itemstack);
             this.entity.setDropChance(EquipmentSlotType, 0);
             this.entity.setPersistenceRequired();
-            this.entity.level.playSound(null, this.entity.getX(), this.entity.getY(), this.entity.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F,
+            this.entity.level().playSound(null, this.entity.getX(), this.entity.getY(), this.entity.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F,
                     (this.entity.getRandom().nextFloat() - this.entity.getRandom().nextFloat()) * 1.4F + 2.0F);
             itemEntity.getItem().shrink(1);
         }
