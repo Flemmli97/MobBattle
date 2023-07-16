@@ -1,6 +1,6 @@
 Mob Battle 2.4.4
 ================
-- Port 1.20.1
+- Port 1.20.1  
 ~~- Add entity tag `mobbattle:hurt_ignored_mobs` for ignoring revenge targets. Useful for attacking 
   summoner mobs like evokers. Default includes vex~~
 ~~- Fix spawn egg item not working on spawners~~
