@@ -1,3 +1,7 @@
+Mob Battle 2.4.5
+================
+- Update dependency
+
 Mob Battle 2.4.4
 ================
 - Add entity tag `mobbattle:hurt_ignored_mobs` for ignoring revenge targets. Useful for attacking 
