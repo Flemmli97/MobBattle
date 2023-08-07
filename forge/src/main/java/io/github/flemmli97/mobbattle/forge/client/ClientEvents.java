@@ -22,7 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.client.event.RenderLevelLastEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -41,7 +41,9 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public void render(RenderLevelLastEvent event) {
+    public void render(RenderLevelStageEvent event) {
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_SOLID_BLOCKS)
+            return;
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         ItemStack heldItem = player.getMainHandItem();
