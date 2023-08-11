@@ -34,7 +34,7 @@ public class EntityAIHurt extends TargetGoal {
     public boolean canContinueToUse() {
         int i = this.mob.getLastHurtByMobTimestamp();
         LivingEntity livingEntity = this.mob.getLastHurtByMob();
-        if (this.mob.getLastHurtMobTimestamp() + 40 < i && this.mob.getTarget() != livingEntity && !livingEntity.getType().is(MobBattle.HURT_IGNORED)) {
+        if (this.mob.getLastHurtMobTimestamp() + 40 < i && (this.mob.getTarget() == null || (this.mob.getTarget() != livingEntity && !livingEntity.getType().is(MobBattle.HURT_IGNORED)))) {
             return false;
         }
         return super.canContinueToUse();

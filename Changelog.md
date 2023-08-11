@@ -1,3 +1,7 @@
+Mob Battle 2.4.6
+================
+- Fix nullpoint error with hurt ai
+
 Mob Battle 2.4.4
 ================
 - Add entity tag `mobbattle:hurt_ignored_mobs` for ignoring revenge targets. Useful for attacking 
