@@ -1,3 +1,7 @@
+Mob Battle 2.4.7
+================
+- Fix another nullpoint error with hurt ai
+
 Mob Battle 2.4.6
 ================
 - Fix nullpoint error with hurt ai
