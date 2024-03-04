@@ -6,23 +6,12 @@ apply from: "https://raw.githubusercontent.com/Flemmli97/GradleScripts/mc-archit
 
 
 loom {
-    forge {
-        dataGen {
-            mod "mobbattle"
-        }
-        launches {
-            data {
-                arg "--existing", project(":common").file("src/main/resources").absolutePath
-            }
+    runs {
+        data {
+            data()
+            programArgs "--all", "--mod", "mobbattle"
+            programArgs "--output", project(":common").file("src/generated/resources").absolutePath
+            programArgs "--existing", project(":common").file("src/main/resources").absolutePath
         }
     }
-}
-
-// Make datagen output to common folder
-configureLaunch.doLast {
-    def file = file(".gradle/loom-cache/launch.cfg");
-    def cfg = file.getText('UTF-8')
-    cfg = cfg.replaceAll(project(":forge").file("src/generated/resources").absolutePath,
-            project(":common").file("src/generated/resources").absolutePath)
-    file.write(cfg, 'UTF-8')
 }
