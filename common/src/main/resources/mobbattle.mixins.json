@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.flemmli97.mobbattle.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "SlimeMixin"
+  ],
+  "server": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
