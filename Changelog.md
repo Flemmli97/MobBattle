@@ -1,3 +1,8 @@
+Mob Battle 2.4.8
+================
+- Team targeting mobs can now see through walls
+- Slimes can now damage their targets (vanilla can only hurt players/iron golems)
+
 Mob Battle 2.4.7
 ================
 - Fix another nullpoint error with hurt ai
