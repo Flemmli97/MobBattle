@@ -9,4 +9,7 @@ loom {
             programArgs "--existing", project(":common").file("src/main/resources").absolutePath
         }
     }
+    forge {
+        mixinConfigs = ["mobbattle.mixins.json"]
+    }
 }
