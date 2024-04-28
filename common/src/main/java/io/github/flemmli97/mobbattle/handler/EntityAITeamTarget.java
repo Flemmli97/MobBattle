@@ -11,6 +11,7 @@ public class EntityAITeamTarget extends NearestAttackableTargetGoal<LivingEntity
 
     public EntityAITeamTarget(Mob mob, boolean checkSight, boolean onlyNearby) {
         super(mob, LivingEntity.class, 10, checkSight, onlyNearby, targetPred(mob));
+        this.targetConditions.ignoreLineOfSight();
     }
 
     public static Predicate<LivingEntity> targetPred(Mob mob) {
