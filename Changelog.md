@@ -3,6 +3,7 @@ Mob Battle 2.4.8
 - Team targeting mobs can now see through walls
 - Slimes can now damage their targets (vanilla can only hurt players/iron golems)
 - Wardens can now hurt each other if in different teams
+- Add russian translation (#31)
 
 Mob Battle 2.4.7
 ================
