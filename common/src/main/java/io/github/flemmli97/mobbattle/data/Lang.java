@@ -65,8 +65,8 @@ public class Lang implements DataProvider {
         this.add("tooltip.effect.remove", "Left click an entity to remove their potion effects");
         this.add("tooltip.effect.remove.clear", "Effects cleared");
 
-        this.add("tooltip.effect.give.first", "Left click an entity to remove their potion effects");
-        this.add("tooltip.effect.give.second", "Left click an entity to remove their potion effects");
+        this.add("tooltip.effect.give.first", "Left click an entity to add saved potion effects");
+        this.add("tooltip.effect.give.second", "Right click to edit potion effect");
         this.add("tooltip.effect.give.add", "Added effect %1$s with amplifier %2$s for %3$s ticks");
 
         this.add("tooltip.equip.first", "Right click block to set first, and then second corner of the box");

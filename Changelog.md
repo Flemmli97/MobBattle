@@ -1,3 +1,7 @@
+Mob Battle 2.4.9
+================
+- Fix tooltip for effect giver
+
 Mob Battle 2.4.8
 ================
 - Team targeting mobs can now see through walls
