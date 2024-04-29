@@ -60,7 +60,7 @@ public class MobEffectGive extends Item implements LeftClickInteractItem {
                 MobEffect potion = CrossPlatformStuff.INSTANCE.registryStatusEffects().getFromId(new ResourceLocation(potionString));
                 if (potion != null) {
                     e.addEffect(new MobEffectInstance(potion, duration, amplifier, false, showEffect));
-                    player.sendSystemMessage(Component.translatable("tooltip.effect.give.add", potionString, amplifier, duration).withStyle(ChatFormatting.GOLD));
+                    player.sendSystemMessage(Component.translatable("tooltip.effect.give.add", Component.translatable(potion.getDescriptionId()), amplifier, duration).withStyle(ChatFormatting.GOLD));
                 }
             }
         }
