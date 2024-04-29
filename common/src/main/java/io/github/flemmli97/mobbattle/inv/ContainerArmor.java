@@ -3,7 +3,7 @@ package io.github.flemmli97.mobbattle.inv;
 import com.mojang.datafixers.util.Pair;
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
@@ -19,7 +19,7 @@ public class ContainerArmor extends AbstractContainerMenu {
 
     private InventoryArmor inv;
 
-    public ContainerArmor(int windowID, Inventory playerInv, FriendlyByteBuf buf) {
+    public ContainerArmor(int windowID, Inventory playerInv, RegistryFriendlyByteBuf buf) {
         this(windowID, playerInv, playerInv.player.level().getEntity(buf.readInt()));
     }
 
@@ -65,7 +65,7 @@ public class ContainerArmor extends AbstractContainerMenu {
 
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return CrossPlatformStuff.INSTANCE.canEquip(stack, MobBattle.slot[3], living);
+                return CrossPlatformStuff.INSTANCE.canEquip(stack, MobBattle.SLOT[3], living);
             }
 
             @Nullable
@@ -83,7 +83,7 @@ public class ContainerArmor extends AbstractContainerMenu {
 
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return CrossPlatformStuff.INSTANCE.canEquip(stack, MobBattle.slot[4], living);
+                return CrossPlatformStuff.INSTANCE.canEquip(stack, MobBattle.SLOT[4], living);
             }
 
             @Nullable
@@ -101,7 +101,7 @@ public class ContainerArmor extends AbstractContainerMenu {
 
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return CrossPlatformStuff.INSTANCE.canEquip(stack, MobBattle.slot[5], living);
+                return CrossPlatformStuff.INSTANCE.canEquip(stack, MobBattle.SLOT[5], living);
             }
 
             @Nullable
@@ -138,28 +138,28 @@ public class ContainerArmor extends AbstractContainerMenu {
                 if (!this.moveItemStackTo(itemstack1, 6, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.slots.get(2).hasItem() && CrossPlatformStuff.INSTANCE.canEquip(itemstack1, MobBattle.slot[2], null)) {
+            } else if (!this.slots.get(2).hasItem() && CrossPlatformStuff.INSTANCE.canEquip(itemstack1, MobBattle.SLOT[2], null)) {
                 Slot slot1 = (this.slots.get(2));
                 slot1.set(itemstack);
                 slot1.setChanged();
                 size--;
                 itemstack1.setCount(size);
                 return ItemStack.EMPTY;
-            } else if (!this.slots.get(3).hasItem() && CrossPlatformStuff.INSTANCE.canEquip(itemstack1, MobBattle.slot[3], null)) {
+            } else if (!this.slots.get(3).hasItem() && CrossPlatformStuff.INSTANCE.canEquip(itemstack1, MobBattle.SLOT[3], null)) {
                 Slot slot1 = (this.slots.get(3));
                 slot1.set(itemstack);
                 slot1.setChanged();
                 size--;
                 itemstack1.setCount(size);
                 return ItemStack.EMPTY;
-            } else if (!this.slots.get(4).hasItem() && CrossPlatformStuff.INSTANCE.canEquip(itemstack1, MobBattle.slot[4], null)) {
+            } else if (!this.slots.get(4).hasItem() && CrossPlatformStuff.INSTANCE.canEquip(itemstack1, MobBattle.SLOT[4], null)) {
                 Slot slot1 = (this.slots.get(4));
                 slot1.set(itemstack);
                 slot1.setChanged();
                 size--;
                 itemstack1.setCount(size);
                 return ItemStack.EMPTY;
-            } else if (!this.slots.get(5).hasItem() && CrossPlatformStuff.INSTANCE.canEquip(itemstack1, MobBattle.slot[5], null)) {
+            } else if (!this.slots.get(5).hasItem() && CrossPlatformStuff.INSTANCE.canEquip(itemstack1, MobBattle.SLOT[5], null)) {
                 Slot slot1 = (this.slots.get(5));
                 slot1.set(itemstack);
                 slot1.setChanged();

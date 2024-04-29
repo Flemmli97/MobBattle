@@ -1,12 +1,12 @@
 package io.github.flemmli97.mobbattle.items;
 
+import io.github.flemmli97.mobbattle.components.AreaPositionComponent;
 import io.github.flemmli97.mobbattle.handler.EntityAIItemPickup;
 import io.github.flemmli97.mobbattle.handler.LibTags;
 import io.github.flemmli97.mobbattle.handler.Utils;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -36,40 +36,27 @@ public class MobEquip extends Item implements LeftClickInteractItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag b) {
+    public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag b) {
         list.add(Component.translatable("tooltip.equip.first").withStyle(ChatFormatting.AQUA));
         list.add(Component.translatable("tooltip.equip.second").withStyle(ChatFormatting.AQUA));
         list.add(Component.translatable("tooltip.equip.third").withStyle(ChatFormatting.AQUA));
-    }
-
-    public BlockPos[] getSelPos(ItemStack stack) {
-        if (stack.hasTag()) {
-            CompoundTag compound = stack.getTag();
-            BlockPos pos1 = null;
-            if (compound.contains(LibTags.savedPos1) && compound.getIntArray(LibTags.savedPos1).length == 3)
-                pos1 = new BlockPos(compound.getIntArray(LibTags.savedPos1)[0], compound.getIntArray(LibTags.savedPos1)[1], compound.getIntArray(LibTags.savedPos1)[2]);
-            BlockPos pos2 = null;
-            if (compound.contains(LibTags.savedPos2) && compound.getIntArray(LibTags.savedPos2).length == 3)
-                pos2 = new BlockPos(compound.getIntArray(LibTags.savedPos2)[0], compound.getIntArray(LibTags.savedPos2)[1], compound.getIntArray(LibTags.savedPos2)[2]);
-            return new BlockPos[]{pos1, pos2};
-        }
-        return new BlockPos[]{null, null};
     }
 
     @Override
     public InteractionResult useOn(UseOnContext ctx) {
         ItemStack stack = ctx.getItemInHand();
         if (!ctx.getLevel().isClientSide) {
-            CompoundTag compound = stack.getTag();
-            if (compound == null)
-                compound = new CompoundTag();
-            if (!compound.contains(LibTags.savedPos1) || compound.getIntArray(LibTags.savedPos1).length != 3) {
-                compound.putIntArray(LibTags.savedPos1, new int[]{ctx.getClickedPos().getX(), ctx.getClickedPos().getY(), ctx.getClickedPos().getZ()});
-            } else if (!ctx.getClickedPos().equals(
-                    new BlockPos(compound.getIntArray(LibTags.savedPos1)[0], compound.getIntArray(LibTags.savedPos1)[1], compound.getIntArray(LibTags.savedPos1)[2]))) {
-                compound.putIntArray(LibTags.savedPos2, new int[]{ctx.getClickedPos().getX(), ctx.getClickedPos().getY(), ctx.getClickedPos().getZ()});
+            AreaPositionComponent comp = stack.getOrDefault(CrossPlatformStuff.INSTANCE.getComponentAreaSelection(), AreaPositionComponent.DEFAULT);
+            boolean update = false;
+            if (comp.first() == null) {
+                comp = comp.withFirst(ctx.getClickedPos());
+                update = true;
+            } else if (!ctx.getClickedPos().equals(comp.first())) {
+                comp.withSecond(ctx.getClickedPos());
+                update = true;
             }
-            stack.setTag(compound);
+            if (update)
+                stack.set(CrossPlatformStuff.INSTANCE.getComponentAreaSelection(), comp);
         }
         return InteractionResult.SUCCESS;
     }
@@ -77,24 +64,23 @@ public class MobEquip extends Item implements LeftClickInteractItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!world.isClientSide && stack.hasTag())
+        if (!world.isClientSide && stack.has(CrossPlatformStuff.INSTANCE.getComponentAreaSelection())) {
             if (player.isShiftKeyDown()) {
-                stack.getTag().remove(LibTags.savedPos1);
-                stack.getTag().remove(LibTags.savedPos2);
+                stack.remove(CrossPlatformStuff.INSTANCE.getComponentAreaSelection());
                 player.sendSystemMessage(Component.translatable("tooltip.equip.reset").withStyle(ChatFormatting.RED));
-            } else if (stack.getTag().contains(LibTags.savedPos1) && stack.getTag().contains(LibTags.savedPos2)) {
-                BlockPos pos1 = new BlockPos(stack.getTag().getIntArray(LibTags.savedPos1)[0], stack.getTag().getIntArray(LibTags.savedPos1)[1],
-                        stack.getTag().getIntArray(LibTags.savedPos1)[2]);
-                BlockPos pos2 = new BlockPos(stack.getTag().getIntArray(LibTags.savedPos2)[0], stack.getTag().getIntArray(LibTags.savedPos2)[1],
-                        stack.getTag().getIntArray(LibTags.savedPos2)[2]);
-                AABB bb = Utils.getBoundingBoxPositions(pos1, pos2);
-                List<Mob> list = player.level().getEntitiesOfClass(Mob.class, bb);
-                for (Mob living : list) {
-                    living.addTag(LibTags.entityPickup);
-                    CrossPlatformStuff.INSTANCE.goalSelectorFrom(living, false).addGoal(10, new EntityAIItemPickup(living));
+            } else {
+                AreaPositionComponent comp = stack.get(CrossPlatformStuff.INSTANCE.getComponentAreaSelection());
+                if (comp.first() != null && comp.second() != null) {
+                    AABB bb = Utils.getBoundingBoxPositions(comp.first(), comp.second());
+                    List<Mob> list = player.level().getEntitiesOfClass(Mob.class, bb);
+                    for (Mob living : list) {
+                        living.addTag(LibTags.entityPickup);
+                        CrossPlatformStuff.INSTANCE.goalSelectorFrom(living, false).addGoal(10, new EntityAIItemPickup(living));
+                    }
+                    player.sendSystemMessage(Component.translatable("tooltip.equip.add").withStyle(ChatFormatting.GOLD));
                 }
-                player.sendSystemMessage(Component.translatable("tooltip.equip.add").withStyle(ChatFormatting.GOLD));
             }
+        }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
     }
 

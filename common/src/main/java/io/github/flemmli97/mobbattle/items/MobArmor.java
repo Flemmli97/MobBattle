@@ -31,7 +31,7 @@ public class MobArmor extends Item implements LeftClickInteractItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level worldIn, List<Component> list, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag flagIn) {
         list.add(Component.translatable("tooltip.armor").withStyle(ChatFormatting.AQUA));
     }
 

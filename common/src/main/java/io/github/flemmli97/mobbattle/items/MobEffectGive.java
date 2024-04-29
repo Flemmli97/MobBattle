@@ -1,17 +1,14 @@
 package io.github.flemmli97.mobbattle.items;
 
-import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.client.ClientHandler;
+import io.github.flemmli97.mobbattle.components.EffectComponent;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -36,14 +33,14 @@ public class MobEffectGive extends Item implements LeftClickInteractItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level worldIn, List<Component> list, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag flag) {
         list.add(Component.translatable("tooltip.effect.give.first").withStyle(ChatFormatting.AQUA));
         list.add(Component.translatable("tooltip.effect.give.second").withStyle(ChatFormatting.AQUA));
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
-        if (hand == InteractionHand.MAIN_HAND && world.isClientSide)
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        if (hand == InteractionHand.MAIN_HAND && level.isClientSide)
             ClientHandler.openEffectGui();
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, player.getItemInHand(hand));
     }
@@ -51,17 +48,12 @@ public class MobEffectGive extends Item implements LeftClickInteractItem {
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (entity instanceof LivingEntity e && !player.level().isClientSide) {
-            if (stack.hasTag()) {
-                CompoundTag compound = stack.getTag();
-                String potionString = compound.getString(MobBattle.MODID + ":potion");
-                int duration = compound.getInt(MobBattle.MODID + ":duration");
-                int amplifier = compound.getInt(MobBattle.MODID + ":amplifier");
-                boolean showEffect = compound.getBoolean(MobBattle.MODID + ":show");
-                MobEffect potion = CrossPlatformStuff.INSTANCE.registryStatusEffects().getFromId(new ResourceLocation(potionString));
-                if (potion != null) {
-                    e.addEffect(new MobEffectInstance(potion, duration, amplifier, false, showEffect));
-                    player.sendSystemMessage(Component.translatable("tooltip.effect.give.add", potionString, amplifier, duration).withStyle(ChatFormatting.GOLD));
-                }
+            if (stack.has(CrossPlatformStuff.INSTANCE.getComponentEffect())) {
+                EffectComponent effect = stack.get(CrossPlatformStuff.INSTANCE.getComponentEffect());
+                effect.effect().ifPresent(eff -> {
+                    e.addEffect(new MobEffectInstance(eff, effect.duration(), effect.amplifier(), false, effect.particles()));
+                    player.sendSystemMessage(Component.translatable("tooltip.effect.give.add", Component.translatable(eff.value().getDescriptionId()), effect.amplifier(), effect.duration()).withStyle(ChatFormatting.GOLD));
+                });
             }
         }
         return true;

@@ -21,19 +21,18 @@ public class MobEffect extends Item implements LeftClickInteractItem {
     }
 
     @Override
-    public boolean canAttackBlock(BlockState state, Level worldIn, BlockPos pos, Player player) {
+    public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) {
         return !player.isCreative();
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level worldIn, List<Component> list, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag flag) {
         list.add(Component.translatable("tooltip.effect.remove").withStyle(ChatFormatting.AQUA));
     }
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (!player.level().isClientSide && entity instanceof LivingEntity e) {
-            //Clear Potion effects
             e.removeAllEffects();
             player.sendSystemMessage(Component.translatable("tooltip.effect.remove.clear").withStyle(ChatFormatting.GOLD));
         }

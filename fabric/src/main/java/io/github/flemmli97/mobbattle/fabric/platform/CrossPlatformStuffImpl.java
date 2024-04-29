@@ -1,21 +1,18 @@
 package io.github.flemmli97.mobbattle.fabric.platform;
 
-import io.github.flemmli97.mobbattle.SimpleRegistryWrapper;
-import io.github.flemmli97.mobbattle.fabric.ModMenuType;
+import io.github.flemmli97.mobbattle.components.AreaPositionComponent;
+import io.github.flemmli97.mobbattle.components.EffectComponent;
+import io.github.flemmli97.mobbattle.components.UuidComponent;
+import io.github.flemmli97.mobbattle.components.UuidListComponent;
 import io.github.flemmli97.mobbattle.fabric.mixin.MobAccessor;
-import io.github.flemmli97.mobbattle.fabric.network.PacketID;
+import io.github.flemmli97.mobbattle.fabric.registry.ModComponents;
+import io.github.flemmli97.mobbattle.fabric.registry.ModMenuType;
 import io.github.flemmli97.mobbattle.inv.ContainerArmor;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -36,34 +33,31 @@ public class CrossPlatformStuffImpl implements CrossPlatformStuff {
     }
 
     @Override
-    public SimpleRegistryWrapper<MobEffect> registryStatusEffects() {
-        return new FabricRegistryWrapper<>(BuiltInRegistries.MOB_EFFECT);
+    public DataComponentType<UuidComponent> getComponentMobUuid() {
+        return ModComponents.SELECTED_MOB;
     }
 
     @Override
-    public SimpleRegistryWrapper<EntityType<?>> registryEntities() {
-        return new FabricRegistryWrapper<>(BuiltInRegistries.ENTITY_TYPE);
+    public DataComponentType<UuidListComponent> getComponentMobGroupUuid() {
+        return ModComponents.SELECTED_MOBS;
     }
 
     @Override
-    public void sendEquipMessage(ItemStack stack, int entityId, int slot) {
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        CompoundTag compound = new CompoundTag();
-        CompoundTag tag = new CompoundTag();
-        compound.putInt("EntityID", entityId);
-        if (!stack.isEmpty())
-            compound.put("Stack", stack.save(tag));
-        compound.putInt("Slot", slot);
-        buf.writeNbt(compound);
-        ClientPlayNetworking.send(PacketID.equipMessage, buf);
+    public DataComponentType<EffectComponent> getComponentEffect() {
+        return ModComponents.EFFECT;
+    }
+
+    @Override
+    public DataComponentType<AreaPositionComponent> getComponentAreaSelection() {
+        return ModComponents.BOX;
     }
 
     @Override
     public void openGuiArmor(ServerPlayer player, Mob living) {
-        player.openMenu(new ExtendedScreenHandlerFactory() {
+        player.openMenu(new ExtendedScreenHandlerFactory<>() {
             @Override
-            public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
-                buf.writeInt(living.getId());
+            public Integer getScreenOpeningData(ServerPlayer player) {
+                return living.getId();
             }
 
             @Override
@@ -77,13 +71,6 @@ public class CrossPlatformStuffImpl implements CrossPlatformStuff {
                 return new ContainerArmor(i, arg, living);
             }
         });
-    }
-
-    @Override
-    public void itemStackUpdatePacket(CompoundTag tag) {
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        buf.writeNbt(tag);
-        ClientPlayNetworking.send(PacketID.effectMessage, buf);
     }
 
     @Override

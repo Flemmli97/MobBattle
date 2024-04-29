@@ -129,9 +129,9 @@ public class Utils {
         }
     }
 
-    public static Mob fromUUID(ServerLevel world, String uuid) {
+    public static Mob fromUUID(ServerLevel world, UUID uuid) {
         if (uuid != null) {
-            Entity e = world.getEntity(UUID.fromString(uuid));
+            Entity e = world.getEntity(uuid);
             if (e instanceof Mob)
                 return (Mob) e;
         }

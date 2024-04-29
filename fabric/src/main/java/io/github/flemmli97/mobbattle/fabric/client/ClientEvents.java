@@ -1,10 +1,10 @@
 package io.github.flemmli97.mobbattle.fabric.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import io.github.flemmli97.mobbattle.fabric.ModItems;
+import io.github.flemmli97.mobbattle.components.AreaPositionComponent;
+import io.github.flemmli97.mobbattle.fabric.registry.ModItems;
 import io.github.flemmli97.mobbattle.handler.Utils;
-import io.github.flemmli97.mobbattle.items.MobArmy;
-import io.github.flemmli97.mobbattle.items.MobEquip;
+import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -22,18 +22,10 @@ public class ClientEvents {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         ItemStack heldItem = player.getMainHandItem();
-        if (heldItem.getItem() == ModItems.mobArmy) {
-            MobArmy item = (MobArmy) heldItem.getItem();
-            BlockPos pos = item.getSelPos(heldItem)[0];
-            BlockPos pos2 = item.getSelPos(heldItem)[1];
-            if (pos != null)
-                renderBlockOutline(event.matrixStack(), Minecraft.getInstance().renderBuffers().crumblingBufferSource(), pos, pos2);
-        } else if (heldItem.getItem() == ModItems.mobEquip) {
-            MobEquip item = (MobEquip) heldItem.getItem();
-            BlockPos pos = item.getSelPos(heldItem)[0];
-            BlockPos pos2 = item.getSelPos(heldItem)[1];
-            if (pos != null)
-                renderBlockOutline(event.matrixStack(), Minecraft.getInstance().renderBuffers().crumblingBufferSource(), pos, pos2);
+        if (heldItem.getItem() == ModItems.mobArmy || heldItem.getItem() == ModItems.mobEquip) {
+            AreaPositionComponent comp = heldItem.get(CrossPlatformStuff.INSTANCE.getComponentAreaSelection());
+            if (comp != null && comp.first() != null && comp.second() != null)
+                renderBlockOutline(event.matrixStack(), Minecraft.getInstance().renderBuffers().crumblingBufferSource(), comp.first(), comp.second());
         }
     }
 

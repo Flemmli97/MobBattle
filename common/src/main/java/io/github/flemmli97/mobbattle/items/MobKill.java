@@ -31,7 +31,7 @@ public class MobKill extends Item implements LeftClickInteractItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level worldIn, List<Component> list, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag flag) {
         list.add(Component.translatable("tooltip.kill").withStyle(ChatFormatting.AQUA));
     }
 }

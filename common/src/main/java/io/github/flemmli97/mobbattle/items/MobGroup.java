@@ -1,12 +1,10 @@
 package io.github.flemmli97.mobbattle.items;
 
-import io.github.flemmli97.mobbattle.handler.LibTags;
+import io.github.flemmli97.mobbattle.components.UuidListComponent;
 import io.github.flemmli97.mobbattle.handler.Utils;
+import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -22,8 +20,9 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MobGroup extends Item implements LeftClickInteractItem {
 
@@ -37,7 +36,7 @@ public class MobGroup extends Item implements LeftClickInteractItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level player, List<Component> list, TooltipFlag b) {
+    public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag b) {
         list.add(Component.translatable("tooltip.group.first").withStyle(ChatFormatting.AQUA));
         list.add(Component.translatable("tooltip.group.second").withStyle(ChatFormatting.AQUA));
         list.add(Component.translatable("tooltip.group.third").withStyle(ChatFormatting.AQUA));
@@ -45,15 +44,15 @@ public class MobGroup extends Item implements LeftClickInteractItem {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand hand) {
-        if (!player.isShiftKeyDown() && !player.level().isClientSide && stack.hasTag() && stack.getTag().contains(LibTags.savedEntityList)) {
-            ListTag list = stack.getTag().getList(LibTags.savedEntityList, 8);
-            for (int i = 0; i < list.size(); i++) {
-                Mob e = Utils.fromUUID((ServerLevel) player.level(), list.getString(i));
+        if (!player.isShiftKeyDown() && !player.level().isClientSide && stack.has(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid())) {
+            UuidListComponent ids = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid());
+            for (UUID id : ids.uuids()) {
+                Mob e = Utils.fromUUID((ServerLevel) player.level(), id);
                 if (entity instanceof Mob living && entity != e) {
                     Utils.setAttackTarget(living, e, true);
                 }
             }
-            stack.getTag().remove(LibTags.savedEntityList);
+            stack.remove(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid());
             player.setItemInHand(hand, stack);
         }
         return InteractionResult.SUCCESS;
@@ -62,15 +61,17 @@ public class MobGroup extends Item implements LeftClickInteractItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!player.level().isClientSide && stack.hasTag() && stack.getTag().contains(LibTags.savedEntityList)) {
-            if (!player.isShiftKeyDown() && stack.getTag().getList(LibTags.savedEntityList, 8).size() > 0) {
-                ListTag list = stack.getTag().getList(LibTags.savedEntityList, 8);
-                list.remove(list.size() - 1);
-                stack.getTag().put(LibTags.savedEntityList, list);
-                player.sendSystemMessage(Component.translatable("tooltip.group.remove").withStyle(ChatFormatting.RED));
-            } else {
-                stack.getTag().remove(LibTags.savedEntityList);
-                player.sendSystemMessage(Component.translatable("tooltip.group.reset").withStyle(ChatFormatting.RED));
+        if (!player.level().isClientSide) {
+            UuidListComponent ids = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid());
+            if (ids != null && !ids.uuids().isEmpty()) {
+                if (!player.isShiftKeyDown() && !ids.uuids().isEmpty()) {
+                    ids = ids.update(List::removeLast);
+                    stack.set(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid(), ids);
+                    player.sendSystemMessage(Component.translatable("tooltip.group.remove").withStyle(ChatFormatting.RED));
+                } else {
+                    stack.remove(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid());
+                    player.sendSystemMessage(Component.translatable("tooltip.group.reset").withStyle(ChatFormatting.RED));
+                }
             }
         }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
@@ -79,23 +80,16 @@ public class MobGroup extends Item implements LeftClickInteractItem {
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (entity instanceof Mob && !player.level().isClientSide) {
-            CompoundTag compound = new CompoundTag();
-            if (stack.hasTag())
-                compound = stack.getTag();
-            ArrayList<String> list = new ArrayList<>();
-
-            if (compound.contains(LibTags.savedEntityList)) {
-                for (int i = 0; i < compound.getList(LibTags.savedEntityList, 8).size(); i++) {
-                    list.add(compound.getList(LibTags.savedEntityList, 8).getString(i));
+            UuidListComponent ids = stack.getOrDefault(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid(), UuidListComponent.EMPTY);
+            AtomicBoolean changed = new AtomicBoolean();
+            ids = ids.update(list -> {
+                if (!list.contains(entity.getUUID())) {
+                    list.add(entity.getUUID());
+                    changed.set(true);
                 }
-            }
-            if (!list.contains(entity.getStringUUID())) {
-                ListTag nbttaglist = new ListTag();
-                if (compound.contains(LibTags.savedEntityList))
-                    nbttaglist = compound.getList(LibTags.savedEntityList, 8);
-                nbttaglist.add(StringTag.valueOf(entity.getStringUUID()));
-                compound.put(LibTags.savedEntityList, nbttaglist);
-                stack.setTag(compound);
+            });
+            if (changed.get()) {
+                stack.set(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid(), ids);
                 player.sendSystemMessage(Component.translatable("tooltip.group.add").withStyle(ChatFormatting.GOLD));
             }
         }

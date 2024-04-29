@@ -1,0 +1,12 @@
+apply from: "https://raw.githubusercontent.com/Flemmli97/GradleScripts/mc-architectury-fabric-neoforge/neoforge.gradle"
+
+loom {
+    runs {
+        data {
+            data()
+            programArgs "--all", "--mod", "mobbattle"
+            programArgs "--output", project(":common").file("src/generated/resources").absolutePath
+            programArgs "--existing", project(":common").file("src/main/resources").absolutePath
+        }
+    }
+}

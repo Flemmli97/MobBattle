@@ -3,6 +3,9 @@ package io.github.flemmli97.mobbattle.fabric;
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.fabric.handler.EventHandler;
 import io.github.flemmli97.mobbattle.fabric.network.ServerPacketHandler;
+import io.github.flemmli97.mobbattle.fabric.registry.ModComponents;
+import io.github.flemmli97.mobbattle.fabric.registry.ModItems;
+import io.github.flemmli97.mobbattle.fabric.registry.ModMenuType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
@@ -23,6 +26,7 @@ public class MobBattleFabric implements ModInitializer {
     public void onInitialize() {
         ModItems.registerItems();
         ModMenuType.register();
+        ModComponents.register();
         AttackEntityCallback.EVENT.register(EventHandler::attackCallback);
         ServerPacketHandler.register();
         Config.initConfig();

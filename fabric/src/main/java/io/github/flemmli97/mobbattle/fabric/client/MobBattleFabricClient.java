@@ -2,8 +2,8 @@ package io.github.flemmli97.mobbattle.fabric.client;
 
 import io.github.flemmli97.mobbattle.client.gui.GuiArmor;
 import io.github.flemmli97.mobbattle.client.gui.MultiItemColor;
-import io.github.flemmli97.mobbattle.fabric.ModItems;
-import io.github.flemmli97.mobbattle.fabric.ModMenuType;
+import io.github.flemmli97.mobbattle.fabric.registry.ModItems;
+import io.github.flemmli97.mobbattle.fabric.registry.ModMenuType;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;

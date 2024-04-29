@@ -1,17 +1,18 @@
 package io.github.flemmli97.mobbattle.handler;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 
@@ -71,7 +72,7 @@ public class EntityAIItemPickup extends Goal {
                 ArmorItem itemarmor = (ArmorItem) stack.getItem();
 
                 if (itemarmor.getDefense() == itemarmor1.getDefense()) {
-                    return stack.getDamageValue() > currentEquipped.getDamageValue() || stack.hasTag() && !currentEquipped.hasTag();
+                    return stack.getDamageValue() > currentEquipped.getDamageValue() || stack.getComponentsPatch().isEmpty() && !currentEquipped.getComponentsPatch().isEmpty();
                 } else {
                     return itemarmor.getDefense() > itemarmor1.getDefense();
                 }
@@ -80,8 +81,8 @@ public class EntityAIItemPickup extends Goal {
             if (currentEquipped.isEmpty())
                 return true;
             if (currentEquipped.getItem() instanceof BowItem) {
-                int power = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, stack);
-                int power2 = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, currentEquipped);
+                int power = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER, stack);
+                int power2 = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER, currentEquipped);
                 return power > power2;
             }
         } else {
@@ -89,8 +90,12 @@ public class EntityAIItemPickup extends Goal {
                 return true;
             AttributeInstance m = new AttributeInstance(Attributes.ATTACK_DAMAGE, (inst) -> {
             });
-            for (AttributeModifier a : stack.getAttributeModifiers(EquipmentSlot.MAINHAND).get(Attributes.ATTACK_DAMAGE))
-                m.addPermanentModifier(a);
+            ItemAttributeModifiers stackMod = stack.get(DataComponents.ATTRIBUTE_MODIFIERS);
+            if (stackMod != null)
+                stackMod.forEach(EquipmentSlot.MAINHAND, (attr, mod) -> {
+                    if (attr.equals(Attributes.ATTACK_DAMAGE))
+                        m.addTransientModifier(mod);
+                });
             double dmg = m.getValue();
             int sharp = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SHARPNESS, stack);
             if (sharp > 0)
@@ -98,8 +103,12 @@ public class EntityAIItemPickup extends Goal {
 
             AttributeInstance mEquip = new AttributeInstance(Attributes.ATTACK_DAMAGE, (inst) -> {
             });
-            for (AttributeModifier a : currentEquipped.getAttributeModifiers(EquipmentSlot.MAINHAND).get(Attributes.ATTACK_DAMAGE))
-                mEquip.addPermanentModifier(a);
+            ItemAttributeModifiers currentMod = currentEquipped.get(DataComponents.ATTRIBUTE_MODIFIERS);
+            if (currentMod != null)
+                currentMod.forEach(EquipmentSlot.MAINHAND, (attr, mod) -> {
+                    if (attr.equals(Attributes.ATTACK_DAMAGE))
+                        m.addTransientModifier(mod);
+                });
             double dmgEquip = mEquip.getValue();
             int sharpEquip = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SHARPNESS, currentEquipped);
             if (sharpEquip > 0)

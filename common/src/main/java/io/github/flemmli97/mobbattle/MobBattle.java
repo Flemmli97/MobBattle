@@ -18,9 +18,9 @@ public class MobBattle {
 
     public static final String MODID = "mobbattle";
     public static boolean tenshiLib;
-    public static final Logger logger = LogManager.getLogger(MobBattle.MODID);
+    public static final Logger LOGGER = LogManager.getLogger(MobBattle.MODID);
 
-    public static final EquipmentSlot[] slot = {EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND, EquipmentSlot.HEAD,
+    public static final EquipmentSlot[] SLOT = {EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND, EquipmentSlot.HEAD,
             EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 
     public static TagKey<EntityType<?>> IGNORED = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(MobBattle.MODID, "ignored_mobs"));

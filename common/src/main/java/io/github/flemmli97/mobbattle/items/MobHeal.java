@@ -22,7 +22,7 @@ public class MobHeal extends Item implements LeftClickInteractItem {
     }
 
     @Override
-    public boolean canAttackBlock(BlockState state, Level worldIn, BlockPos pos, Player player) {
+    public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) {
         return !player.isCreative();
     }
 
@@ -37,7 +37,7 @@ public class MobHeal extends Item implements LeftClickInteractItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level worldIn, List<Component> list, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag flag) {
         list.add(Component.translatable("tooltip.heal").withStyle(ChatFormatting.AQUA));
     }
 }
