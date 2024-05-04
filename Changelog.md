@@ -1,3 +1,7 @@
+Mob Battle 2.4.10
+================
+- Update tenshilib compat
+
 Mob Battle 2.4.9
 ================
 - Fix tooltip for effect giver
