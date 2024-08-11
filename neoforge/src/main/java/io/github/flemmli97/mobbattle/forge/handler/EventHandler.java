@@ -11,8 +11,8 @@ import net.minecraft.world.entity.monster.Vex;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
-import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 public class EventHandler {
@@ -33,7 +33,7 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public void teamFriendlyFire(LivingAttackEvent event) {
+    public void teamFriendlyFire(LivingIncomingDamageEvent event) {
         if (event.getSource().getEntity() instanceof LivingEntity attacker) {
             if (Utils.isOnSameTeam(event.getEntity(), attacker) && !event.getEntity().getTeam().isAllowFriendlyFire())
                 event.setCanceled(true);
@@ -44,7 +44,7 @@ public class EventHandler {
      * Vanilla sets it in Mob#doHurtTarget but all mobs that override that method dont so...
      */
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void setHurtMob(LivingHurtEvent event) {
+    public void setHurtMob(LivingDamageEvent.Pre event) {
         if (event.getSource().getEntity() instanceof Mob mob)
             mob.setLastHurtMob(event.getEntity());
     }

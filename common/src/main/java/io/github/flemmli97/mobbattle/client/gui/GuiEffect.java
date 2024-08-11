@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class GuiEffect extends Screen {
 
-    private static final ResourceLocation TEX = new ResourceLocation(MobBattle.MODID, "textures/gui/effect.png");
+    private static final ResourceLocation TEX = MobBattle.of("textures/gui/effect.png");
     private final int xSize = 176;
     private final int ySize = 80;
     private EditBox potion;
@@ -45,7 +45,7 @@ public class GuiEffect extends Screen {
             @Override
             public boolean charTyped(char typedChar, int keyCode) {
                 if (super.charTyped(typedChar, keyCode)) {
-                    BuiltInRegistries.MOB_EFFECT.getHolder(new ResourceLocation(this.getValue()))
+                    BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.parse(this.getValue()))
                             .ifPresent(eff -> GuiEffect.this.effect = GuiEffect.this.effect.withEffect(eff));
                     return true;
                 }

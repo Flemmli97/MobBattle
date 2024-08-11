@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 public class GuiArmor extends AbstractContainerScreen<ContainerArmor> {
 
     private final Component chatComponent;
-    private static final ResourceLocation ARMOR_GUI = new ResourceLocation(MobBattle.MODID, "textures/gui/armor.png");
+    private static final ResourceLocation ARMOR_GUI = MobBattle.of("textures/gui/armor.png");
 
     public GuiArmor(ContainerArmor container, Inventory playerInv, Component title) {
         super(container, playerInv, title);

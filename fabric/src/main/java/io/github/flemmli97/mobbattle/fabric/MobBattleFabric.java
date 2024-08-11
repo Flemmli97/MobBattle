@@ -31,7 +31,7 @@ public class MobBattleFabric implements ModInitializer {
         ServerPacketHandler.register();
         Config.initConfig();
         MobBattle.tenshiLib = FabricLoader.getInstance().isModLoaded("tenshilib");
-        ResourceLocation tab = new ResourceLocation("mobbattle", "tab");
+        ResourceLocation tab = MobBattle.of("tab");
         CreativeModeTab creativeModeTab = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, tab, FabricItemGroup.builder()
                 .title(Component.translatable("mobbattle.tab"))
                 .icon(() -> new ItemStack(ModItems.mobStick))

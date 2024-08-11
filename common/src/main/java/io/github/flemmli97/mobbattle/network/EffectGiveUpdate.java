@@ -5,11 +5,10 @@ import io.github.flemmli97.mobbattle.components.EffectComponent;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 
 public class EffectGiveUpdate implements CustomPacketPayload {
 
-    public static final Type<EffectGiveUpdate> TYPE = new Type<>(new ResourceLocation(MobBattle.MODID, "effect_update"));
+    public static final Type<EffectGiveUpdate> TYPE = new Type<>(MobBattle.of("effect_update"));
 
     public static final StreamCodec<FriendlyByteBuf, EffectGiveUpdate> STREAM_CODEC = new StreamCodec<>() {
         @Override

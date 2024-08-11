@@ -4,12 +4,11 @@ import io.github.flemmli97.mobbattle.MobBattle;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 public class EquipMessage implements CustomPacketPayload {
 
-    public static final Type<EquipMessage> TYPE = new Type<>(new ResourceLocation(MobBattle.MODID, "equip_msg"));
+    public static final Type<EquipMessage> TYPE = new Type<>(MobBattle.of("equip_msg"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, EquipMessage> STREAM_CODEC = new StreamCodec<RegistryFriendlyByteBuf, EquipMessage>() {
         @Override

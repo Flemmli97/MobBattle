@@ -8,7 +8,6 @@ import io.github.flemmli97.mobbattle.components.UuidListComponent;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 
 public class ModComponents {
 
@@ -25,6 +24,6 @@ public class ModComponents {
     }
 
     private static <T> DataComponentType<T> register(String name, DataComponentType<T> type) {
-        return Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, new ResourceLocation(MobBattle.MODID, name), type);
+        return Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, MobBattle.of(name), type);
     }
 }

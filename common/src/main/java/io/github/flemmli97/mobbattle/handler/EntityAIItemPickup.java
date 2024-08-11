@@ -1,20 +1,20 @@
 package io.github.flemmli97.mobbattle.handler;
 
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -65,8 +65,9 @@ public class EntityAIItemPickup extends Goal {
     }
 
     private boolean isItemBetter(ItemStack stack, ItemStack currentEquipped) {
+        LivingEntity target = this.entity.getTarget() != null ? this.entity.getTarget() : this.entity;
         if (stack.getItem() instanceof ArmorItem) {
-            if (!(currentEquipped.getItem() instanceof ArmorItem) || EnchantmentHelper.hasBindingCurse(currentEquipped))
+            if (!(currentEquipped.getItem() instanceof ArmorItem) || EnchantmentHelper.has(currentEquipped, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE))
                 return true;
             else if (currentEquipped.getItem() instanceof ArmorItem itemarmor1) {
                 ArmorItem itemarmor = (ArmorItem) stack.getItem();
@@ -77,51 +78,24 @@ public class EntityAIItemPickup extends Goal {
                     return itemarmor.getDefense() > itemarmor1.getDefense();
                 }
             }
-        } else if (stack.getItem() instanceof BowItem) {
-            if (currentEquipped.isEmpty())
-                return true;
-            if (currentEquipped.getItem() instanceof BowItem) {
-                int power = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER, stack);
-                int power2 = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER, currentEquipped);
-                return power > power2;
-            }
-        } else {
-            if (currentEquipped.isEmpty())
-                return true;
-            AttributeInstance m = new AttributeInstance(Attributes.ATTACK_DAMAGE, (inst) -> {
-            });
-            ItemAttributeModifiers stackMod = stack.get(DataComponents.ATTRIBUTE_MODIFIERS);
-            if (stackMod != null)
-                stackMod.forEach(EquipmentSlot.MAINHAND, (attr, mod) -> {
-                    if (attr.equals(Attributes.ATTACK_DAMAGE))
-                        m.addTransientModifier(mod);
-                });
-            double dmg = m.getValue();
-            int sharp = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SHARPNESS, stack);
-            if (sharp > 0)
-                dmg += sharp * 0.5 + 0.5;
-
-            AttributeInstance mEquip = new AttributeInstance(Attributes.ATTACK_DAMAGE, (inst) -> {
-            });
-            ItemAttributeModifiers currentMod = currentEquipped.get(DataComponents.ATTRIBUTE_MODIFIERS);
-            if (currentMod != null)
-                currentMod.forEach(EquipmentSlot.MAINHAND, (attr, mod) -> {
-                    if (attr.equals(Attributes.ATTACK_DAMAGE))
-                        m.addTransientModifier(mod);
-                });
-            double dmgEquip = mEquip.getValue();
-            int sharpEquip = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SHARPNESS, currentEquipped);
-            if (sharpEquip > 0)
-                dmgEquip += sharpEquip * 0.5 + 0.5;
-            return dmg > dmgEquip;
         }
-        return false;
+        if (currentEquipped.isEmpty())
+            return true;
+        DamageSource damageSource1 = this.entity.damageSources().mobAttack(this.entity);
+        DamageSource damageSource2 = damageSource1;
+        if (stack.getItem() instanceof BowItem)
+            damageSource1 = this.entity.damageSources().arrow(EntityType.ARROW.create(this.entity.level()), this.entity);
+        if (currentEquipped.getItem() instanceof BowItem)
+            damageSource2 = this.entity.damageSources().arrow(EntityType.ARROW.create(this.entity.level()), this.entity);
+        double d1 = EnchantmentHelper.modifyDamage((ServerLevel) this.entity.level(), stack, target, damageSource1, 1);
+        double d2 = EnchantmentHelper.modifyDamage((ServerLevel) this.entity.level(), currentEquipped, target, damageSource2, 1);
+        return d1 > d2;
     }
 
     protected void updateEquipmentIfNeeded(ItemEntity itemEntity) {
         ItemStack itemstack = itemEntity.getItem().copy();
         itemstack.setCount(1);
-        EquipmentSlot EquipmentSlotType = Mob.getEquipmentSlotForItem(itemstack);
+        EquipmentSlot EquipmentSlotType = this.entity.getEquipmentSlotForItem(itemstack);
         ItemStack itemstack1 = this.entity.getItemBySlot(EquipmentSlotType);
         if (this.isItemBetter(itemstack, itemstack1)) {
             this.entity.spawnAtLocation(itemstack1, 0.0F);

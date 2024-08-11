@@ -75,7 +75,7 @@ public class CrossPlatformStuffImpl implements CrossPlatformStuff {
 
     @Override
     public boolean canEquip(ItemStack stack, EquipmentSlot slot, LivingEntity living) {
-        return slot == Mob.getEquipmentSlotForItem(stack);
+        return slot == living.getEquipmentSlotForItem(stack);
     }
 
     @Override

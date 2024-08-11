@@ -7,10 +7,10 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class Config {
 
-    static final IConfigSpec<?> CLIENT_SPEC;
+    static final IConfigSpec CLIENT_SPEC;
     public static final ClientConfig CLIENT_CONF;
 
-    static final IConfigSpec<?> COMMON_SPEC;
+    static final IConfigSpec COMMON_SPEC;
     public static final ServerConfig COMMON_CONF;
 
     public static class ClientConfig {

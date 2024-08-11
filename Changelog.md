@@ -1,6 +1,7 @@
 Mob Battle 2.4.10
 ================
-- Update tenshilib compat
+- Update to 1.21.1  
+~~- Update tenshilib compat~~
 
 Mob Battle 2.4.9
 ================

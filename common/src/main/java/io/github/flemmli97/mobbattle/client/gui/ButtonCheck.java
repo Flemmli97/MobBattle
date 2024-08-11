@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ButtonCheck extends Button {
 
-    private static final ResourceLocation tex = new ResourceLocation(MobBattle.MODID, "textures/gui/effect.png");
+    private static final ResourceLocation TEX = MobBattle.of("textures/gui/effect.png");
     private boolean check;
 
     public ButtonCheck(int x, int y, OnPress press) {
@@ -17,7 +17,7 @@ public class ButtonCheck extends Button {
 
     @Override
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        graphics.blit(tex, this.getX(), this.getY(), 178, this.check ? 14 : 1, this.width, this.height);
+        graphics.blit(TEX, this.getX(), this.getY(), 178, this.check ? 14 : 1, this.width, this.height);
     }
 
     public void checkUncheck(boolean check) {

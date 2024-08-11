@@ -19,7 +19,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.Item;
@@ -79,7 +78,7 @@ public class ModItems {
     }
 
     private static Item registerItem(String name, Item item) {
-        Item registered = Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(MobBattle.MODID, name), item);
+        Item registered = Registry.register(BuiltInRegistries.ITEM, MobBattle.of(name), item);
         items.add(registered);
         return registered;
     }

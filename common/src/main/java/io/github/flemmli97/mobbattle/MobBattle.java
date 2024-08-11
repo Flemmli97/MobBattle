@@ -22,8 +22,8 @@ public class MobBattle {
     public static final EquipmentSlot[] SLOT = {EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND, EquipmentSlot.HEAD,
             EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 
-    public static TagKey<EntityType<?>> IGNORED = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(MobBattle.MODID, "ignored_mobs"));
-    public static TagKey<EntityType<?>> HURT_IGNORED = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(MobBattle.MODID, "hurt_ignored_mobs"));
+    public static TagKey<EntityType<?>> IGNORED = TagKey.create(Registries.ENTITY_TYPE, MobBattle.of("ignored_mobs"));
+    public static TagKey<EntityType<?>> HURT_IGNORED = TagKey.create(Registries.ENTITY_TYPE, MobBattle.of("hurt_ignored_mobs"));
 
     public static Supplier<CreativeModeTab> customTab;
 
@@ -50,5 +50,9 @@ public class MobBattle {
             }
         }
         throw new IllegalStateException("Couldn't create an instance of " + abstractClss);
+    }
+
+    public static ResourceLocation of(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }
 }

@@ -22,7 +22,7 @@ public class ItemModels extends ItemModelProvider {
                 this.withExistingParent(reg.getId().toString(), ModelLocationUtils.decorateItemModelLocation("template_spawn_egg"));
             } else
                 this.withExistingParent(reg.getId().toString(), ModelLocationUtils.decorateItemModelLocation("handheld"))
-                        .texture("layer0", new ResourceLocation(reg.getId().getNamespace(), "item/" + reg.getId().getPath()));
+                        .texture("layer0", ResourceLocation.fromNamespaceAndPath(reg.getId().getNamespace(), "item/" + reg.getId().getPath()));
         }
     }
 }
