@@ -34,4 +34,8 @@ public class InventoryArmor extends SimpleContainer {
     public int getMaxStackSize() {
         return 64;
     }
+
+    public Mob getMob() {
+        return this.mob;
+    }
 }
