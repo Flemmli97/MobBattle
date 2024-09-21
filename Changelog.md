@@ -1,3 +1,9 @@
+Mob Battle 2.4.11
+================
+- Fix nullpointer crash with shifting items in armor ui
+- Override breeze ai target check allowing them to target other mobs.  
+  This only applies to the selected ones (e.g. via team or the stick) so it will not change for normal gameplay
+
 Mob Battle 2.4.10
 ================
 - Update to 1.21.1  

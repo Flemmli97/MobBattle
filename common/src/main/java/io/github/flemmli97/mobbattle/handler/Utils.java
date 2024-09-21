@@ -155,5 +155,7 @@ public class Utils {
             warden.increaseAngerAt(target, AngerLevel.ANGRY.getMinimumAnger() + 20, false);
             warden.setAttackTarget(target);
         }
+        if (entity instanceof SetActiveTargetMob act)
+            act.setTargeting(true);
     }
 }

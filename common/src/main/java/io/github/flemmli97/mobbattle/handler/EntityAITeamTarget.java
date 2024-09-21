@@ -25,15 +25,6 @@ public class EntityAITeamTarget extends NearestAttackableTargetGoal<LivingEntity
     @Override
     public void start() {
         Utils.setAttackTarget(this.mob, this.target, false);
-        if (this.mob instanceof WardenActiveTarget act)
-            act.setTargeting(true);
         super.start();
-    }
-
-    @Override
-    public void stop() {
-        super.stop();
-        if (this.mob instanceof WardenActiveTarget act)
-            ;//act.setTargeting(false);
     }
 }

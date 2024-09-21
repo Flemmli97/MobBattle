@@ -4,6 +4,7 @@
   "package": "io.github.flemmli97.mobbattle.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
+    "BreezeMixin",
     "SlimeMixin",
     "WardenMixin"
   ],
