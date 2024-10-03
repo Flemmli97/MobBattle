@@ -17,8 +17,11 @@ import net.minecraft.world.entity.monster.warden.AngerLevel;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.ScoreAccess;
+import net.minecraft.world.scores.ScoreHolder;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.Team.CollisionRule;
+import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import org.joml.Vector3f;
 
 import java.util.HashMap;
@@ -157,5 +160,13 @@ public class Utils {
         }
         if (entity instanceof SetActiveTargetMob act)
             act.setTargeting(true);
+    }
+
+    public static void handleTeamKill(Scoreboard scoreboard, ScoreHolder scoreHolder, ScoreHolder teamMember, ObjectiveCriteria[] crtieria) {
+        int i;
+        PlayerTeam playerTeam = scoreboard.getPlayersTeam(teamMember.getScoreboardName());
+        if (playerTeam != null && (i = playerTeam.getColor().getId()) >= 0 && i < crtieria.length) {
+            scoreboard.forAllObjectives(crtieria[i], scoreHolder, ScoreAccess::increment);
+        }
     }
 }
