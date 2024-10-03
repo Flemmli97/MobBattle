@@ -1,3 +1,9 @@
+Mob Battle 2.4.12
+================
+- Increase range of items by 3
+- Hook into vanilla team kill scoreboard to track team kills.  
+  The team of the mob needs to have a color assigned!
+
 Mob Battle 2.4.9
 ================
 - Fix tooltip for effect giver
