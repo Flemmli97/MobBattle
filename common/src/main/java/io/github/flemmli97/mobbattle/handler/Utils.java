@@ -16,8 +16,10 @@ import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.Score;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.Team.CollisionRule;
+import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -147,6 +149,14 @@ public class Utils {
             ((Mob) target).setTarget(entity);
             target.getBrain().setMemoryWithExpiry(MemoryModuleType.ANGRY_AT, entity.getUUID(), 600);
             target.getBrain().setMemoryWithExpiry(MemoryModuleType.ATTACK_TARGET, entity, 600);
+        }
+    }
+
+    public static void handleTeamKill(Scoreboard scoreboard, String name, String team, ObjectiveCriteria[] criteria) {
+        int i;
+        PlayerTeam playerTeam = scoreboard.getPlayersTeam(team);
+        if (playerTeam != null && (i = playerTeam.getColor().getId()) >= 0 && i < criteria.length) {
+            scoreboard.forAllObjectives(criteria[i], name, Score::increment);
         }
     }
 }
