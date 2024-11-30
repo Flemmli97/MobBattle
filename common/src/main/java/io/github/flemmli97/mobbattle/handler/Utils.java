@@ -17,8 +17,10 @@ import net.minecraft.world.entity.monster.warden.AngerLevel;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.Score;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.Team.CollisionRule;
+import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import org.joml.Vector3f;
 
 import java.util.HashMap;
@@ -154,6 +156,14 @@ public class Utils {
         if (entity instanceof Warden warden) {
             warden.increaseAngerAt(target, AngerLevel.ANGRY.getMinimumAnger() + 20, false);
             warden.setAttackTarget(target);
+        }
+    }
+
+    public static void handleTeamKill(Scoreboard scoreboard, String scoreHolder, String teamMember, ObjectiveCriteria[] crtieria) {
+        int i;
+        PlayerTeam playerTeam = scoreboard.getPlayersTeam(teamMember);
+        if (playerTeam != null && (i = playerTeam.getColor().getId()) >= 0 && i < crtieria.length) {
+            scoreboard.forAllObjectives(crtieria[i], scoreHolder, Score::increment);
         }
     }
 }
