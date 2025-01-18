@@ -1,3 +1,7 @@
+Mob Battle 2.4.12.b
+================
+- Fix mixin error on fabric
+
 Mob Battle 2.4.12
 ================
 - Hook into vanilla team kill scoreboard to track team kills.  
