@@ -52,7 +52,7 @@ public class MobArmy extends Item implements LeftClickInteractItem {
                 comp = comp.withFirst(ctx.getClickedPos());
                 update = true;
             } else if (!ctx.getClickedPos().equals(comp.first())) {
-                comp.withSecond(ctx.getClickedPos());
+                comp = comp.withSecond(ctx.getClickedPos());
                 update = true;
             }
             if (update)
