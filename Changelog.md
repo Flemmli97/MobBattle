@@ -1,3 +1,7 @@
+Mob Battle 2.4.13
+================
+- Mobs targeting now have their range increased
+
 Mob Battle 2.4.12.b
 ================
 - Fix mixin error on fabric
