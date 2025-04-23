@@ -1,3 +1,8 @@
+Mob Battle 2.4.13
+================
+- Mobs targeting now have their range increased
+- Fix mob army aabb not working
+
 Mob Battle 2.4.12
 ================
 - Hook into vanilla team kill scoreboard to track team kills.  
