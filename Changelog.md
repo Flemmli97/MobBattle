@@ -1,3 +1,7 @@
+Mob Battle 2.4.13
+================
+- Mobs targeting now have their range increased
+
 Mob Battle 2.4.12
 ================
 - Backport 1.21.1: Hook into vanilla team kill scoreboard to track team kills.  
