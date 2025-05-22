@@ -46,6 +46,11 @@ public class Lang implements DataProvider {
         this.add("conf.mobbattle.particle", "Show Team Particles");
         this.add("conf.mobbattle.addai", "Auto add team-target-ai");
 
+        this.add("mobbattle.gui.potion", "Potion");
+        this.add("mobbattle.gui.duration", "Duration");
+        this.add("mobbattle.gui.amplifier", "Amplifier");
+        this.add("mobbattle.gui.particle", "Particle");
+
         this.add("tooltip.spawnegg", "Left click an entity to save it. Shift while doing saves nbt too.");
         this.add("tooltip.spawnegg.spawn", "Spawns %s");
         this.add("tooltip.spawnegg.save", "Saved Entity %s");

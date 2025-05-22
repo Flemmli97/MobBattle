@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ButtonCheck extends Button {
 
-    private static final ResourceLocation tex = new ResourceLocation(MobBattle.MODID, "textures/gui/effect.png");
+    private static final ResourceLocation TEX = new ResourceLocation(MobBattle.MODID, "textures/gui/effect.png");
     private boolean check;
 
     public ButtonCheck(int x, int y, OnPress press) {
@@ -19,12 +19,12 @@ public class ButtonCheck extends Button {
 
     @Override
     public void renderButton(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-        RenderSystem.setShaderTexture(0, tex);
+        RenderSystem.setShaderTexture(0, TEX);
         RenderSystem.enableBlend();
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
                 GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        this.blit(matrix, this.x, this.y, 178, this.check ? 14 : 1, this.width, this.height);
+        this.blit(matrix, this.x, this.y, 202, this.check ? 14 : 1, this.width, this.height);
     }
 
     public void checkUncheck(boolean check) {

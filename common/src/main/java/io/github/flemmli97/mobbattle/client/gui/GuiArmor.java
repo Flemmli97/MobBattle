@@ -11,8 +11,9 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class GuiArmor extends AbstractContainerScreen<ContainerArmor> {
 
+    private static final ResourceLocation ARMOR_GUI = new ResourceLocation(MobBattle.MODID, "textures/gui/armor.png");
+
     private final Component chatComponent;
-    private static final ResourceLocation armorGui = new ResourceLocation(MobBattle.MODID, "textures/gui/armor.png");
 
     public GuiArmor(ContainerArmor container, Inventory playerInv, Component title) {
         super(container, playerInv, title);
@@ -33,7 +34,7 @@ public class GuiArmor extends AbstractContainerScreen<ContainerArmor> {
 
     @Override
     protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.setShaderTexture(0, armorGui);
+        RenderSystem.setShaderTexture(0, ARMOR_GUI);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         this.blit(matrix, i, j, 0, 0, this.imageWidth, this.imageHeight);
