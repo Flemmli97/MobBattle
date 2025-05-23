@@ -46,15 +46,15 @@ public class MobGroup extends Item implements LeftClickInteractItem {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand hand) {
-        if (!player.isShiftKeyDown() && !player.level.isClientSide && stack.hasTag() && stack.getTag().contains(LibTags.savedEntityList)) {
-            ListTag list = stack.getTag().getList(LibTags.savedEntityList, 8);
+        if (!player.isShiftKeyDown() && !player.level.isClientSide && stack.hasTag() && stack.getTag().contains(LibTags.SAVED_ENTITY_LIST)) {
+            ListTag list = stack.getTag().getList(LibTags.SAVED_ENTITY_LIST, 8);
             for (int i = 0; i < list.size(); i++) {
                 Mob e = Utils.fromUUID((ServerLevel) player.level, list.getString(i));
                 if (entity instanceof Mob living && entity != e) {
                     Utils.setAttackTarget(living, e, true);
                 }
             }
-            stack.getTag().remove(LibTags.savedEntityList);
+            stack.getTag().remove(LibTags.SAVED_ENTITY_LIST);
             player.setItemInHand(hand, stack);
         }
         return InteractionResult.SUCCESS;
@@ -63,14 +63,14 @@ public class MobGroup extends Item implements LeftClickInteractItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!player.level.isClientSide && stack.hasTag() && stack.getTag().contains(LibTags.savedEntityList)) {
-            if (!player.isShiftKeyDown() && stack.getTag().getList(LibTags.savedEntityList, 8).size() > 0) {
-                ListTag list = stack.getTag().getList(LibTags.savedEntityList, 8);
+        if (!player.level.isClientSide && stack.hasTag() && stack.getTag().contains(LibTags.SAVED_ENTITY_LIST)) {
+            if (!player.isShiftKeyDown() && stack.getTag().getList(LibTags.SAVED_ENTITY_LIST, 8).size() > 0) {
+                ListTag list = stack.getTag().getList(LibTags.SAVED_ENTITY_LIST, 8);
                 list.remove(list.size() - 1);
-                stack.getTag().put(LibTags.savedEntityList, list);
+                stack.getTag().put(LibTags.SAVED_ENTITY_LIST, list);
                 player.sendMessage(new TranslatableComponent("tooltip.group.remove").withStyle(ChatFormatting.RED), player.getUUID());
             } else {
-                stack.getTag().remove(LibTags.savedEntityList);
+                stack.getTag().remove(LibTags.SAVED_ENTITY_LIST);
                 player.sendMessage(new TranslatableComponent("tooltip.group.reset").withStyle(ChatFormatting.RED), player.getUUID());
             }
         }
@@ -85,17 +85,17 @@ public class MobGroup extends Item implements LeftClickInteractItem {
                 compound = stack.getTag();
             ArrayList<String> list = new ArrayList<>();
 
-            if (compound.contains(LibTags.savedEntityList)) {
-                for (int i = 0; i < compound.getList(LibTags.savedEntityList, 8).size(); i++) {
-                    list.add(compound.getList(LibTags.savedEntityList, 8).getString(i));
+            if (compound.contains(LibTags.SAVED_ENTITY_LIST)) {
+                for (int i = 0; i < compound.getList(LibTags.SAVED_ENTITY_LIST, 8).size(); i++) {
+                    list.add(compound.getList(LibTags.SAVED_ENTITY_LIST, 8).getString(i));
                 }
             }
             if (!list.contains(entity.getStringUUID())) {
                 ListTag nbttaglist = new ListTag();
-                if (compound.contains(LibTags.savedEntityList))
-                    nbttaglist = compound.getList(LibTags.savedEntityList, 8);
+                if (compound.contains(LibTags.SAVED_ENTITY_LIST))
+                    nbttaglist = compound.getList(LibTags.SAVED_ENTITY_LIST, 8);
                 nbttaglist.add(StringTag.valueOf(entity.getStringUUID()));
-                compound.put(LibTags.savedEntityList, nbttaglist);
+                compound.put(LibTags.SAVED_ENTITY_LIST, nbttaglist);
                 stack.setTag(compound);
                 player.sendMessage(new TranslatableComponent("tooltip.group.add").withStyle(ChatFormatting.GOLD), player.getUUID());
             }

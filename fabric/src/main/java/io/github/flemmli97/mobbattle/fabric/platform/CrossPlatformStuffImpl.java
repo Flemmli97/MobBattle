@@ -1,21 +1,19 @@
 package io.github.flemmli97.mobbattle.fabric.platform;
 
-import io.github.flemmli97.mobbattle.SimpleRegistryWrapper;
-import io.github.flemmli97.mobbattle.fabric.ModMenuType;
 import io.github.flemmli97.mobbattle.fabric.mixin.MobAccessor;
-import io.github.flemmli97.mobbattle.fabric.network.PacketID;
+import io.github.flemmli97.mobbattle.fabric.registry.ModMenuType;
 import io.github.flemmli97.mobbattle.inv.ContainerArmor;
+import io.github.flemmli97.mobbattle.network.Packet;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.core.Registry;
-import net.minecraft.nbt.CompoundTag;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -33,29 +31,6 @@ public class CrossPlatformStuffImpl implements CrossPlatformStuff {
     @Override
     public MenuType<ContainerArmor> getArmorMenuType() {
         return ModMenuType.armorMenu;
-    }
-
-    @Override
-    public SimpleRegistryWrapper<MobEffect> registryStatusEffects() {
-        return new FabricRegistryWrapper<>(Registry.MOB_EFFECT);
-    }
-
-    @Override
-    public SimpleRegistryWrapper<EntityType<?>> registryEntities() {
-        return new FabricRegistryWrapper<>(Registry.ENTITY_TYPE);
-    }
-
-    @Override
-    public void sendEquipMessage(ItemStack stack, int entityId, int slot) {
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        CompoundTag compound = new CompoundTag();
-        CompoundTag tag = new CompoundTag();
-        compound.putInt("EntityID", entityId);
-        if (!stack.isEmpty())
-            compound.put("Stack", stack.save(tag));
-        compound.putInt("Slot", slot);
-        buf.writeNbt(compound);
-        ClientPlayNetworking.send(PacketID.equipMessage, buf);
     }
 
     @Override
@@ -80,13 +55,6 @@ public class CrossPlatformStuffImpl implements CrossPlatformStuff {
     }
 
     @Override
-    public void itemStackUpdatePacket(CompoundTag tag) {
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        buf.writeNbt(tag);
-        ClientPlayNetworking.send(PacketID.effectMessage, buf);
-    }
-
-    @Override
     public boolean canEquip(ItemStack stack, EquipmentSlot slot, LivingEntity living) {
         return slot == Mob.getEquipmentSlotForItem(stack);
     }
@@ -95,5 +63,21 @@ public class CrossPlatformStuffImpl implements CrossPlatformStuff {
     public GoalSelector goalSelectorFrom(Mob mob, boolean target) {
         MobAccessor acc = (MobAccessor) mob;
         return target ? acc.getTargetSelector() : acc.getGoalSelector();
+    }
+
+    @Override
+    public void sendToClient(Packet packet, ServerPlayer player) {
+        FriendlyByteBuf buf = PacketByteBufs.create();
+        packet.write(buf);
+        ServerPlayNetworking.send(player, packet.getID(), buf);
+    }
+
+    @Override
+    public void sendToServer(Packet packet) {
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            FriendlyByteBuf buf = PacketByteBufs.create();
+            packet.write(buf);
+            ClientPlayNetworking.send(packet.getID(), buf);
+        }
     }
 }

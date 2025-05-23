@@ -1,7 +1,7 @@
 package io.github.flemmli97.mobbattle.forge.data;
 
 import io.github.flemmli97.mobbattle.MobBattle;
-import io.github.flemmli97.mobbattle.forge.ModItems;
+import io.github.flemmli97.mobbattle.forge.registry.ModItems;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.models.model.ModelLocationUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -19,7 +19,7 @@ public class ItemModels extends ItemModelProvider {
     @Override
     protected void registerModels() {
         for (RegistryObject<Item> reg : ModItems.ITEMS.getEntries()) {
-            if (reg == ModItems.spawner) {
+            if (reg == ModItems.SPAWNER) {
                 this.withExistingParent(reg.get().getRegistryName().toString(), ModelLocationUtils.decorateItemModelLocation("template_spawn_egg"));
             } else
                 this.withExistingParent(reg.get().getRegistryName().toString(), ModelLocationUtils.decorateItemModelLocation("handheld"))

@@ -1,4 +1,4 @@
-package io.github.flemmli97.mobbattle.fabric;
+package io.github.flemmli97.mobbattle.fabric.registry;
 
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.MobBattleTab;

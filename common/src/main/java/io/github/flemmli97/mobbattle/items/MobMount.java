@@ -41,7 +41,7 @@ public class MobMount extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        return stack.hasTag() && stack.getTag().contains(LibTags.savedEntity);
+        return stack.hasTag() && stack.getTag().contains(LibTags.SAVED_ENTITY);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class MobMount extends Item implements LeftClickInteractItem {
         ItemStack stack = player.getItemInHand(hand);
         if (!player.level.isClientSide)
             if (stack.hasTag()) {
-                stack.getTag().remove(LibTags.savedEntity);
+                stack.getTag().remove(LibTags.SAVED_ENTITY);
                 player.sendMessage(new TranslatableComponent("tooltip.mount.reset").withStyle(ChatFormatting.RED), player.getUUID());
             }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
@@ -58,17 +58,17 @@ public class MobMount extends Item implements LeftClickInteractItem {
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (entity instanceof Mob && !player.level.isClientSide) {
-            if (stack.hasTag() && stack.getTag().contains(LibTags.savedEntity)) {
-                Mob storedEntity = Utils.fromUUID((ServerLevel) player.level, stack.getTag().getString(LibTags.savedEntity));
+            if (stack.hasTag() && stack.getTag().contains(LibTags.SAVED_ENTITY)) {
+                Mob storedEntity = Utils.fromUUID((ServerLevel) player.level, stack.getTag().getString(LibTags.SAVED_ENTITY));
                 if (storedEntity != null && storedEntity != entity && !this.passengerContainsEntity(storedEntity, entity)) {
                     storedEntity.startRiding(entity);
-                    stack.getTag().remove(LibTags.savedEntity);
+                    stack.getTag().remove(LibTags.SAVED_ENTITY);
                 }
             } else {
                 CompoundTag compound = new CompoundTag();
                 if (stack.hasTag())
                     compound = stack.getTag();
-                compound.putString(LibTags.savedEntity, entity.getStringUUID());
+                compound.putString(LibTags.SAVED_ENTITY, entity.getStringUUID());
                 stack.setTag(compound);
             }
         }

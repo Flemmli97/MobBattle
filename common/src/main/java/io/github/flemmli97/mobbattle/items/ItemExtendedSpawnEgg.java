@@ -4,10 +4,10 @@ import com.google.common.base.Functions;
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.handler.LibTags;
 import io.github.flemmli97.mobbattle.handler.Utils;
-import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -50,7 +50,7 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
     public void appendHoverText(ItemStack stack, Level worldIn, List<Component> list, TooltipFlag flagIn) {
         list.add(new TranslatableComponent("tooltip.spawnegg").withStyle(ChatFormatting.AQUA));
         if (ItemExtendedSpawnEgg.hasSavedEntity(stack)) {
-            CompoundTag compound = stack.getTag().getCompound(LibTags.spawnEggTag);
+            CompoundTag compound = stack.getTag().getCompound(LibTags.SPAWN_EGG_TAG);
             String entity = EntityType.byString(compound.getString("id")).isPresent()
                     ? EntityType.byString(compound.getString("id")).get().getDescriptionId()
                     : "";
@@ -74,11 +74,11 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
                 this.removeMobSpecifigTags(tag);
                 nbt = true;
             } else {
-                String name = CrossPlatformStuff.INSTANCE.registryEntities().getIDFrom(e.getType()).toString();
+                String name = Registry.ENTITY_TYPE.getKey(e.getType()).toString();
                 if (name != null)
                     tag.putString("id", name);
             }
-            compound.put(LibTags.spawnEggTag, tag);
+            compound.put(LibTags.SPAWN_EGG_TAG, tag);
             stack.setTag(compound);
 
             if (!player.level.isClientSide) {
@@ -100,7 +100,7 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
         if (hasSavedEntity(itemstack)) {
             BlockEntity tile = ctx.getLevel().getBlockEntity(ctx.getClickedPos());
             if (tile instanceof SpawnerBlockEntity spawner) {
-                spawner.getSpawner().setNextSpawnData(ctx.getLevel(), ctx.getClickedPos(), new SpawnData(itemstack.getTag().getCompound(LibTags.spawnEggTag).copy(), Optional.empty()));
+                spawner.getSpawner().setNextSpawnData(ctx.getLevel(), ctx.getClickedPos(), new SpawnData(itemstack.getTag().getCompound(LibTags.SPAWN_EGG_TAG).copy(), Optional.empty()));
                 spawner.setChanged();
                 ctx.getLevel().sendBlockUpdated(ctx.getClickedPos(), iblockstate, iblockstate, 3);
                 return InteractionResult.SUCCESS;
@@ -152,31 +152,39 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
                 } else {
                     return new InteractionResultHolder<>(InteractionResult.PASS, itemstack);
                 }
+            } else {
+                return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
             }
         }
         return new InteractionResultHolder<>(InteractionResult.PASS, itemstack);
     }
 
-    public static Entity spawnEntity(ServerLevel world, ItemStack stack, double x, double y, double z) {
+    public static Entity spawnEntity(ServerLevel level, ItemStack stack, double x, double y, double z) {
+        Entity entity = getEntity(level, stack);
+        CompoundTag tag = stack.getTag().getCompound(LibTags.SPAWN_EGG_TAG);
+        if (entity instanceof Mob entityliving) {
+            entity.moveTo(x, y, z, Mth.wrapDegrees(level.random.nextFloat() * 360.0F), 0.0F);
+            entityliving.yHeadRot = entityliving.getYRot();
+            entityliving.yBodyRot = entityliving.getYRot();
+            if (tag.size() == 1)
+                entityliving.finalizeSpawn(level, level.getCurrentDifficultyAt(new BlockPos(entityliving.position())), MobSpawnType.SPAWN_EGG, null, null);
+            level.addFreshEntity(entity);
+            entityliving.playAmbientSound();
+        }
+        return entity;
+    }
+
+    public static Entity getEntity(Level level, ItemStack stack) {
         Entity entity = null;
         if (ItemExtendedSpawnEgg.hasSavedEntity(stack)) {
-            CompoundTag tag = stack.getTag().getCompound(LibTags.spawnEggTag);
-            entity = EntityType.loadEntityRecursive(tag, world, Functions.identity());
-            if (entity instanceof Mob entityliving) {
-                entity.moveTo(x, y, z, Mth.wrapDegrees(world.random.nextFloat() * 360.0F), 0.0F);
-                entityliving.yHeadRot = entityliving.getYRot();
-                entityliving.yBodyRot = entityliving.getYRot();
-                if (tag.size() == 1)
-                    entityliving.finalizeSpawn(world, world.getCurrentDifficultyAt(new BlockPos(entityliving.position())), MobSpawnType.SPAWN_EGG, null, null);
-                world.addFreshEntity(entity);
-                entityliving.playAmbientSound();
-            }
+            CompoundTag tag = stack.getTag().getCompound(LibTags.SPAWN_EGG_TAG);
+            entity = EntityType.loadEntityRecursive(tag, level, Functions.identity());
         }
         return entity;
     }
 
     private static boolean hasSavedEntity(ItemStack stack) {
-        return stack.hasTag() && stack.getTag().contains(LibTags.spawnEggTag) && stack.getTag().getCompound(LibTags.spawnEggTag).contains("id");
+        return stack.hasTag() && stack.getTag().contains(LibTags.SPAWN_EGG_TAG) && stack.getTag().getCompound(LibTags.SPAWN_EGG_TAG).contains("id");
     }
 
     private void removeMobSpecifigTags(CompoundTag compound) {
@@ -184,19 +192,17 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
         compound.remove("Motion");
         compound.remove("Rotation");
         compound.remove("UUID");
-        //Vanilla-fix incompability
-        compound.remove("VFAABB");
     }
 
     @Nullable
     public static ResourceLocation getNamedIdFrom(ItemStack stack) {
         if (ItemExtendedSpawnEgg.hasSavedEntity(stack)) {
-            String s = stack.getTag().getCompound(LibTags.spawnEggTag).getString("id");
+            String s = stack.getTag().getCompound(LibTags.SPAWN_EGG_TAG).getString("id");
 
             ResourceLocation resourcelocation = new ResourceLocation(s);
             //fixing missing prefix case
             if (!s.contains(":")) {
-                stack.getTag().getCompound(LibTags.spawnEggTag).putString("id", resourcelocation.toString());
+                stack.getTag().getCompound(LibTags.SPAWN_EGG_TAG).putString("id", resourcelocation.toString());
             }
             return resourcelocation;
         }

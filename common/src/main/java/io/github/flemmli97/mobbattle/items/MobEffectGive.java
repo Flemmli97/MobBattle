@@ -2,9 +2,9 @@ package io.github.flemmli97.mobbattle.items;
 
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.client.ClientHandler;
-import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -58,7 +58,7 @@ public class MobEffectGive extends Item implements LeftClickInteractItem {
                 int duration = compound.getInt(MobBattle.MODID + ":duration");
                 int amplifier = compound.getInt(MobBattle.MODID + ":amplifier");
                 boolean showEffect = compound.getBoolean(MobBattle.MODID + ":show");
-                MobEffect potion = CrossPlatformStuff.INSTANCE.registryStatusEffects().getFromId(new ResourceLocation(potionString));
+                MobEffect potion = Registry.MOB_EFFECT.get(new ResourceLocation(potionString));
                 if (potion != null) {
                     e.addEffect(new MobEffectInstance(potion, duration, amplifier, false, showEffect));
                     player.sendMessage(new TranslatableComponent("tooltip.effect.give.add", new TranslatableComponent(potion.getDescriptionId()), amplifier, duration).withStyle(ChatFormatting.GOLD), player.getUUID());
@@ -66,5 +66,27 @@ public class MobEffectGive extends Item implements LeftClickInteractItem {
             }
         }
         return true;
+    }
+
+    public void updateFrom(ItemStack stack, String potion, int duration, int amplifier, boolean particle) {
+        CompoundTag compound = stack.getTag();
+        if (compound == null)
+            compound = new CompoundTag();
+        compound.putString(MobBattle.MODID + ":potion", potion);
+        compound.putInt(MobBattle.MODID + ":duration", duration);
+        compound.putInt(MobBattle.MODID + ":amplifier", amplifier);
+        compound.putBoolean(MobBattle.MODID + ":show", particle);
+        stack.setTag(compound);
+    }
+
+    public EffectData getData(ItemStack stack) {
+        CompoundTag compound = stack.getTag();
+        if (compound == null)
+            compound = new CompoundTag();
+        return new EffectData(compound.getString(MobBattle.MODID + ":potion"), compound.getInt(MobBattle.MODID + ":duration"),
+                compound.getInt(MobBattle.MODID + ":amplifier"), compound.getBoolean(MobBattle.MODID + ":show"));
+    }
+
+    public record EffectData(String potion, int duration, int amplifier, boolean particle) {
     }
 }

@@ -35,8 +35,8 @@ public class MobStick extends Item implements LeftClickInteractItem {
 
     @Override
     public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag b) {
-        if (stack.hasTag() && stack.getTag().contains(LibTags.savedEntityName)) {
-            list.add(new TranslatableComponent("tooltip.stick.contains", stack.getTag().getString(LibTags.savedEntityName)).withStyle(ChatFormatting.GREEN));
+        if (stack.hasTag() && stack.getTag().contains(LibTags.SAVED_ENTITY_NAME)) {
+            list.add(new TranslatableComponent("tooltip.stick.contains", stack.getTag().getString(LibTags.SAVED_ENTITY_NAME)).withStyle(ChatFormatting.GREEN));
         }
         list.add(new TranslatableComponent("tooltip.stick.first").withStyle(ChatFormatting.AQUA));
         list.add(new TranslatableComponent("tooltip.stick.second").withStyle(ChatFormatting.AQUA));
@@ -47,8 +47,8 @@ public class MobStick extends Item implements LeftClickInteractItem {
         ItemStack stack = player.getItemInHand(hand);
         if (!player.level.isClientSide)
             if (stack.hasTag()) {
-                stack.getTag().remove(LibTags.savedEntity);
-                stack.getTag().remove(LibTags.savedEntityName);
+                stack.getTag().remove(LibTags.SAVED_ENTITY);
+                stack.getTag().remove(LibTags.SAVED_ENTITY_NAME);
                 player.sendMessage(new TranslatableComponent("tooltip.stick.reset").withStyle(ChatFormatting.RED), player.getUUID());
             }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
@@ -57,20 +57,20 @@ public class MobStick extends Item implements LeftClickInteractItem {
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (player.level instanceof ServerLevel)
-            if (stack.hasTag() && stack.getTag().contains(LibTags.savedEntity)) {
-                Mob storedEntity = Utils.fromUUID((ServerLevel) player.level, stack.getTag().getString(LibTags.savedEntity));
+            if (stack.hasTag() && stack.getTag().contains(LibTags.SAVED_ENTITY)) {
+                Mob storedEntity = Utils.fromUUID((ServerLevel) player.level, stack.getTag().getString(LibTags.SAVED_ENTITY));
                 if (entity instanceof Mob living && entity != storedEntity) {
                     Utils.setAttackTarget(living, storedEntity, true);
-                    stack.getTag().remove(LibTags.savedEntity);
-                    stack.getTag().remove(LibTags.savedEntityName);
+                    stack.getTag().remove(LibTags.SAVED_ENTITY);
+                    stack.getTag().remove(LibTags.SAVED_ENTITY_NAME);
                     return true;
                 }
             } else if (entity instanceof Mob) {
                 CompoundTag compound = new CompoundTag();
                 if (stack.hasTag())
                     compound = stack.getTag();
-                compound.putString(LibTags.savedEntity, entity.getStringUUID());
-                compound.putString(LibTags.savedEntityName, entity.getClass().getSimpleName());
+                compound.putString(LibTags.SAVED_ENTITY, entity.getStringUUID());
+                compound.putString(LibTags.SAVED_ENTITY_NAME, entity.getClass().getSimpleName());
                 stack.setTag(compound);
                 player.sendMessage(new TranslatableComponent("tooltip.stick.add").withStyle(ChatFormatting.GOLD), player.getUUID());
                 return true;

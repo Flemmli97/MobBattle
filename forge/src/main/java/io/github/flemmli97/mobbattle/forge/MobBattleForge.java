@@ -5,6 +5,8 @@ import io.github.flemmli97.mobbattle.MobBattleTab;
 import io.github.flemmli97.mobbattle.forge.client.ClientEvents;
 import io.github.flemmli97.mobbattle.forge.handler.EventHandler;
 import io.github.flemmli97.mobbattle.forge.network.PacketHandler;
+import io.github.flemmli97.mobbattle.forge.registry.ModItems;
+import io.github.flemmli97.mobbattle.forge.registry.ModMenuType;
 import io.github.flemmli97.mobbattle.handler.Utils;
 import io.github.flemmli97.mobbattle.items.ItemExtendedSpawnEgg;
 import net.minecraft.core.BlockPos;
@@ -42,7 +44,7 @@ public class MobBattleForge {
 
             @Override
             public ItemStack makeIcon() {
-                return new ItemStack(ModItems.mobStick.get());
+                return new ItemStack(ModItems.MOB_STICK.get());
             }
         };
         MobBattle.tenshiLib = ModList.get().isLoaded("tenshilib");
@@ -50,7 +52,7 @@ public class MobBattleForge {
 
     public static void preInit(FMLCommonSetupEvent e) {
         PacketHandler.register();
-        e.enqueueWork(() -> DispenserBlock.registerBehavior(ModItems.spawner.get(), (source, stack) -> {
+        e.enqueueWork(() -> DispenserBlock.registerBehavior(ModItems.SPAWNER.get(), (source, stack) -> {
             Direction enumfacing = source.getBlockState().getValue(DispenserBlock.FACING);
             double x = source.x() + enumfacing.getStepX();
             double y = source.getPos().getY() + enumfacing.getStepY() + 0.2;

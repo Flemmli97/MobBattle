@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.client.gui.GuiArmor;
 import io.github.flemmli97.mobbattle.client.gui.MultiItemColor;
-import io.github.flemmli97.mobbattle.forge.ModItems;
-import io.github.flemmli97.mobbattle.forge.ModMenuType;
+import io.github.flemmli97.mobbattle.forge.registry.ModItems;
+import io.github.flemmli97.mobbattle.forge.registry.ModMenuType;
 import io.github.flemmli97.mobbattle.handler.Utils;
 import io.github.flemmli97.mobbattle.items.MobArmy;
 import io.github.flemmli97.mobbattle.items.MobEquip;
@@ -47,13 +47,13 @@ public class ClientEvents {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         ItemStack heldItem = player.getMainHandItem();
-        if (heldItem.getItem() == ModItems.mobArmy.get()) {
+        if (heldItem.getItem() == ModItems.MOB_ARMY.get()) {
             MobArmy item = (MobArmy) heldItem.getItem();
             BlockPos pos = item.getSelPos(heldItem)[0];
             BlockPos pos2 = item.getSelPos(heldItem)[1];
             if (pos != null)
                 renderBlockOutline(event.getPoseStack(), Minecraft.getInstance().renderBuffers().crumblingBufferSource(), pos, pos2);
-        } else if (heldItem.getItem() == ModItems.mobEquip.get()) {
+        } else if (heldItem.getItem() == ModItems.MOB_EQUIP.get()) {
             MobEquip item = (MobEquip) heldItem.getItem();
             BlockPos pos = item.getSelPos(heldItem)[0];
             BlockPos pos2 = item.getSelPos(heldItem)[1];
@@ -75,10 +75,10 @@ public class ClientEvents {
     }
 
     public static void spawnEggColor(ColorHandlerEvent.Item e) {
-        e.getItemColors().register(new MultiItemColor(), ModItems.spawner.get());
+        e.getItemColors().register(new MultiItemColor(), ModItems.SPAWNER.get());
     }
 
     public static void clientSetup(FMLClientSetupEvent event) {
-        event.enqueueWork(() -> MenuScreens.register(ModMenuType.armorMenu.get(), GuiArmor::new));
+        event.enqueueWork(() -> MenuScreens.register(ModMenuType.ARMOR_MENU.get(), GuiArmor::new));
     }
 }
