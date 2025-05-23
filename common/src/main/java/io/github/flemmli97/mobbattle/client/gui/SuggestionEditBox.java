@@ -17,7 +17,7 @@ public class SuggestionEditBox extends EditBox {
 
     private final Font font;
     private final int limit, lineHeight;
-    private final Collection<ResourceLocation> allSuggestions;
+    private final Collection<SuggestionContent> allSuggestions;
     private final boolean top;
 
     private int offset;
@@ -30,7 +30,7 @@ public class SuggestionEditBox extends EditBox {
     private int paddingX = 4, paddingY = 2;
 
     public SuggestionEditBox(Font font, int x, int y, int width, int height, Component message,
-                             int maxLimit, boolean top, Collection<ResourceLocation> suggestions) {
+                             int maxLimit, boolean top, Collection<SuggestionContent> suggestions) {
         super(font, x, y, width, height, message);
         this.font = font;
         this.allSuggestions = suggestions;
@@ -41,6 +41,36 @@ public class SuggestionEditBox extends EditBox {
 
         this.select(0);
         this.setResponder(null);
+    }
+
+    public static Collection<SuggestionContent> ofString(Collection<String> strings) {
+        return strings.stream().<SuggestionContent>map(s -> new SuggestionContent() {
+
+            @Override
+            public boolean matches(String input) {
+                return s.startsWith(input);
+            }
+
+            @Override
+            public String asString() {
+                return s;
+            }
+        }).toList();
+    }
+
+    public static Collection<SuggestionContent> ofResourceLocation(Collection<ResourceLocation> strings) {
+        return strings.stream().<SuggestionContent>map(res -> new SuggestionContent() {
+
+            @Override
+            public boolean matches(String input) {
+                return res.getPath().startsWith(input) || res.toString().startsWith(input);
+            }
+
+            @Override
+            public String asString() {
+                return res.toString();
+            }
+        }).toList();
     }
 
     public SuggestionEditBox withPadding(int paddingX, int paddingY) {
@@ -150,8 +180,8 @@ public class SuggestionEditBox extends EditBox {
     }
 
     private void recalculateSuggestions(String input) {
-        this.suggestions = this.allSuggestions.stream().filter(res -> res.getPath().startsWith(input) || res.toString().startsWith(input))
-                .map(ResourceLocation::toString).toArray(String[]::new);
+        this.suggestions = this.allSuggestions.stream().filter(ctx -> ctx.matches(input))
+                .map(SuggestionContent::asString).toArray(String[]::new);
         int sizeY = Math.min(this.suggestions.length, this.limit) * this.lineHeight;
         int y = this.y + (this.top ? -sizeY - this.paddingY : this.getHeight() + this.paddingY);
         int width = this.width;
@@ -190,5 +220,12 @@ public class SuggestionEditBox extends EditBox {
         this.setCursorPosition(suggestion.length());
         this.setHighlightPos(suggestion.length());
         this.select(this.current);
+    }
+
+    public interface SuggestionContent {
+
+        boolean matches(String input);
+
+        String asString();
     }
 }

@@ -50,10 +50,15 @@ public class Lang implements DataProvider {
         this.add("mobbattle.gui.duration", "Duration");
         this.add("mobbattle.gui.amplifier", "Amplifier");
         this.add("mobbattle.gui.particle", "Particle");
+        this.add("mobbattle.gui.team", "Team");
+        this.add("mobbattle.gui.amount", "Amount");
+        this.add("mobbattle.gui.spacing", "Spacing");
+        this.add("mobbattle.gui.save", "Save");
 
         this.add("tooltip.spawnegg", "Left click an entity to save it. Shift while doing saves nbt too.");
         this.add("tooltip.spawnegg.spawn", "Spawns %s");
         this.add("tooltip.spawnegg.save", "Saved Entity %s");
+        this.add("tooltip.spawnegg.save.nbt", "Saved Entity %s with NBT");
         this.add("tooltip.spawnegg.creative", "Needs to be in creative mode to copy entity");
 
         this.add("tooltip.armor", "Right click an entity to edit their equipment");

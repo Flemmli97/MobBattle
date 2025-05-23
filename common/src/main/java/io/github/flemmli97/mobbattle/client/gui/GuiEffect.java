@@ -58,7 +58,8 @@ public class GuiEffect extends Screen {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
-        this.potionBox = new SuggestionEditBox(this.font, i + 30, j + 21, 140, 14, TextComponent.EMPTY, 5, false, Registry.MOB_EFFECT.keySet());
+        this.potionBox = new SuggestionEditBox(this.font, i + 30, j + 21, 140, 14, TextComponent.EMPTY, 5, false,
+                SuggestionEditBox.ofResourceLocation(Registry.MOB_EFFECT.keySet()));
         this.potionBox.setResponder(s -> {
             this.potion = s;
             try {

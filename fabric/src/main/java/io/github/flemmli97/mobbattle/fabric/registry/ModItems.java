@@ -2,7 +2,6 @@ package io.github.flemmli97.mobbattle.fabric.registry;
 
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.MobBattleTab;
-import io.github.flemmli97.mobbattle.handler.Utils;
 import io.github.flemmli97.mobbattle.items.ItemExtendedSpawnEgg;
 import io.github.flemmli97.mobbattle.items.MobArmor;
 import io.github.flemmli97.mobbattle.items.MobArmy;
@@ -18,8 +17,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.DispenserBlock;
 
@@ -50,18 +47,15 @@ public class ModItems {
         mobEffectGiver = registerItem("mob_effect_give", new MobEffectGive(new Item.Properties().stacksTo(1).tab(MobBattleTab.customTab)));
         spawner = registerItem("egg_ex", new ItemExtendedSpawnEgg(new Item.Properties().tab(MobBattleTab.customTab)));
         DispenserBlock.registerBehavior(ModItems.spawner, (source, stack) -> {
-            Direction enumfacing = source.getBlockState().getValue(DispenserBlock.FACING);
-            double x = source.x() + enumfacing.getStepX();
-            double y = source.getPos().getY() + enumfacing.getStepY() + 0.2;
-            double z = source.z() + enumfacing.getStepZ();
+            Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
+            double x = source.x() + direction.getStepX();
+            double y = source.getPos().getY() + direction.getStepY() + 0.2;
+            double z = source.z() + direction.getStepZ();
             BlockPos blockpos = new BlockPos(x, y, z);
-            Entity entity = ItemExtendedSpawnEgg.spawnEntity(source.getLevel(), stack, blockpos.getX() + 0.5D, blockpos.getY(),
-                    blockpos.getZ() + 0.5D);
-            if (entity != null) {
+            boolean spawned = ItemExtendedSpawnEgg.spawnEntity(source.getLevel(), stack, blockpos.getX() + 0.5D, blockpos.getY(),
+                    blockpos.getZ() + 0.5D, direction);
+            if (spawned) {
                 stack.shrink(1);
-                if (stack.hasCustomHoverName() && entity instanceof Mob) {
-                    Utils.updateEntity(stack.getHoverName().getContents(), (Mob) entity);
-                }
             }
             return stack;
         });
