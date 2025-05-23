@@ -1,4 +1,4 @@
-package io.github.flemmli97.mobbattle.forge.data;
+package io.github.flemmli97.mobbattle.neoforge.data;
 
 import io.github.flemmli97.mobbattle.MobBattle;
 import net.minecraft.core.HolderLookup;

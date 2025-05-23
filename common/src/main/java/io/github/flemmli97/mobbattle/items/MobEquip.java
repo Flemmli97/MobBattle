@@ -74,7 +74,7 @@ public class MobEquip extends Item implements LeftClickInteractItem {
                     AABB bb = Utils.getBoundingBoxPositions(comp.first(), comp.second());
                     List<Mob> list = player.level().getEntitiesOfClass(Mob.class, bb);
                     for (Mob living : list) {
-                        living.addTag(LibTags.entityPickup);
+                        living.addTag(LibTags.ENTITY_PICKUP);
                         CrossPlatformStuff.INSTANCE.goalSelectorFrom(living, false).addGoal(10, new EntityAIItemPickup(living));
                     }
                     player.sendSystemMessage(Component.translatable("tooltip.equip.add").withStyle(ChatFormatting.GOLD));
@@ -87,7 +87,7 @@ public class MobEquip extends Item implements LeftClickInteractItem {
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (entity instanceof Mob && !player.level().isClientSide) {
-            entity.addTag(LibTags.entityPickup);
+            entity.addTag(LibTags.ENTITY_PICKUP);
             CrossPlatformStuff.INSTANCE.goalSelectorFrom((Mob) entity, false).addGoal(10, new EntityAIItemPickup((Mob) entity));
             player.sendSystemMessage(Component.translatable("tooltip.equip.add").withStyle(ChatFormatting.GOLD));
         }

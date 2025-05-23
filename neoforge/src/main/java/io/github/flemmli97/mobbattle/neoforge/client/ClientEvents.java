@@ -1,14 +1,15 @@
-package io.github.flemmli97.mobbattle.forge.client;
+package io.github.flemmli97.mobbattle.neoforge.client;
 
 import io.github.flemmli97.mobbattle.client.ClientHandler;
 import io.github.flemmli97.mobbattle.client.gui.GuiArmor;
 import io.github.flemmli97.mobbattle.client.gui.MultiItemColor;
 import io.github.flemmli97.mobbattle.components.AreaPositionComponent;
-import io.github.flemmli97.mobbattle.forge.registry.ModItems;
-import io.github.flemmli97.mobbattle.forge.registry.ModMenuType;
+import io.github.flemmli97.mobbattle.neoforge.registry.ModItems;
+import io.github.flemmli97.mobbattle.neoforge.registry.ModMenuType;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -45,5 +46,9 @@ public class ClientEvents {
 
     public static void menuRegister(RegisterMenuScreensEvent event) {
         event.register(ModMenuType.ARMOR_MENU.get(), GuiArmor::new);
+    }
+
+    public static void sendPacketServer(CustomPacketPayload packet) {
+        Minecraft.getInstance().getConnection().send(packet);
     }
 }

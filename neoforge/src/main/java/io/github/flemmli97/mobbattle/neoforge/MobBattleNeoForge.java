@@ -1,16 +1,14 @@
-package io.github.flemmli97.mobbattle.forge;
+package io.github.flemmli97.mobbattle.neoforge;
 
 import io.github.flemmli97.mobbattle.MobBattle;
-import io.github.flemmli97.mobbattle.forge.client.ClientEvents;
-import io.github.flemmli97.mobbattle.forge.handler.EventHandler;
-import io.github.flemmli97.mobbattle.forge.network.PayloadHandlers;
-import io.github.flemmli97.mobbattle.forge.registry.ModComponents;
-import io.github.flemmli97.mobbattle.forge.registry.ModItems;
-import io.github.flemmli97.mobbattle.forge.registry.ModMenuType;
 import io.github.flemmli97.mobbattle.handler.Utils;
 import io.github.flemmli97.mobbattle.items.ItemExtendedSpawnEgg;
-import io.github.flemmli97.mobbattle.network.EffectGiveUpdate;
-import io.github.flemmli97.mobbattle.network.EquipMessage;
+import io.github.flemmli97.mobbattle.neoforge.client.ClientEvents;
+import io.github.flemmli97.mobbattle.neoforge.handler.EventHandler;
+import io.github.flemmli97.mobbattle.neoforge.registry.ModComponents;
+import io.github.flemmli97.mobbattle.neoforge.registry.ModItems;
+import io.github.flemmli97.mobbattle.neoforge.registry.ModMenuType;
+import io.github.flemmli97.mobbattle.network.C2SEffectStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -36,17 +34,17 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 @Mod(value = MobBattle.MODID)
-public class MobBattleForge {
+public class MobBattleNeoForge {
 
     private static final DeferredRegister<CreativeModeTab> TAB_REGISTER = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MobBattle.MODID);
 
-    public MobBattleForge(IEventBus modBus) {
+    public MobBattleNeoForge(IEventBus modBus) {
         ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_SPEC, MobBattle.MODID + "-client.toml");
         ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, Config.COMMON_SPEC, MobBattle.MODID + ".toml");
         NeoForge.EVENT_BUS.register(new EventHandler());
-        modBus.addListener(MobBattleForge::preInit);
-        modBus.addListener(MobBattleForge::creativeTabContents);
-        modBus.addListener(MobBattleForge::registerPackets);
+        modBus.addListener(MobBattleNeoForge::preInit);
+        modBus.addListener(MobBattleNeoForge::creativeTabContents);
+        modBus.addListener(MobBattleNeoForge::registerPackets);
         ModItems.ITEMS.register(modBus);
         ModMenuType.MENU_TYPE.register(modBus);
         ModComponents.COMPONENTS.register(modBus);
@@ -86,7 +84,8 @@ public class MobBattleForge {
 
     public static void registerPackets(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar(MobBattle.MODID);
-        registrar.playToServer(EffectGiveUpdate.TYPE, EffectGiveUpdate.STREAM_CODEC, PayloadHandlers::effectMsgHandler);
-        registrar.playToServer(EquipMessage.TYPE, EquipMessage.STREAM_CODEC, PayloadHandlers::equipMsgHandler);
+        registrar.playToServer(C2SEffectStack.TYPE, C2SEffectStack.STREAM_CODEC, (pkt, ctx) -> {
+            ctx.enqueueWork(() -> C2SEffectStack.handle(pkt, ctx.player(), ModItems.MOB_EFFECT_GIVE.get()));
+        });
     }
 }

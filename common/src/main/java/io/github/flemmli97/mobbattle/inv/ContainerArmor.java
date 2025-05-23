@@ -13,7 +13,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 public class ContainerArmor extends AbstractContainerMenu {
 
@@ -30,14 +29,14 @@ public class ContainerArmor extends AbstractContainerMenu {
         this.inv = new InventoryArmor(living);
         this.inv.startOpen(playerInv.player);
         this.addSlot(new Slot(this.inv, 0, 80, 17) {
-            @Nullable
+
             @Override
             public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
                 return Pair.of(InventoryMenu.BLOCK_ATLAS, MobBattle.of("item/armor_slot_sword"));
             }
         });
         this.addSlot(new Slot(this.inv, 1, 80, 35) {
-            @Nullable
+
             @Override
             public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
                 return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD);
@@ -50,7 +49,6 @@ public class ContainerArmor extends AbstractContainerMenu {
                 return 1;
             }
 
-            @Nullable
             @Override
             public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
                 return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_HELMET);
@@ -65,10 +63,9 @@ public class ContainerArmor extends AbstractContainerMenu {
 
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return CrossPlatformStuff.INSTANCE.canEquip(stack, MobBattle.SLOT[3], living);
+                return ContainerArmor.this.inv.canPlaceItem(this.index, stack);
             }
 
-            @Nullable
             @Override
             public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
                 return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE);
@@ -83,10 +80,9 @@ public class ContainerArmor extends AbstractContainerMenu {
 
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return CrossPlatformStuff.INSTANCE.canEquip(stack, MobBattle.SLOT[4], living);
+                return ContainerArmor.this.inv.canPlaceItem(this.index, stack);
             }
 
-            @Nullable
             @Override
             public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
                 return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS);
@@ -101,10 +97,9 @@ public class ContainerArmor extends AbstractContainerMenu {
 
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return CrossPlatformStuff.INSTANCE.canEquip(stack, MobBattle.SLOT[5], living);
+                return ContainerArmor.this.inv.canPlaceItem(this.index, stack);
             }
 
-            @Nullable
             @Override
             public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
                 return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS);
@@ -132,44 +127,13 @@ public class ContainerArmor extends AbstractContainerMenu {
         Slot slot = this.slots.get(index);
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
-            int size = itemstack1.getCount();
             itemstack = itemstack1.copy();
             if (index < 6) {
                 if (!this.moveItemStackTo(itemstack1, 6, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.slots.get(2).hasItem() && CrossPlatformStuff.INSTANCE.canEquip(itemstack1, MobBattle.SLOT[2], this.inv.getMob())) {
-                Slot slot1 = (this.slots.get(2));
-                slot1.set(itemstack);
-                slot1.setChanged();
-                size--;
-                itemstack1.setCount(size);
+            } else if (!this.moveItemStackTo(itemstack1, 0, 6, true)) {
                 return ItemStack.EMPTY;
-            } else if (!this.slots.get(3).hasItem() && CrossPlatformStuff.INSTANCE.canEquip(itemstack1, MobBattle.SLOT[3], this.inv.getMob())) {
-                Slot slot1 = (this.slots.get(3));
-                slot1.set(itemstack);
-                slot1.setChanged();
-                size--;
-                itemstack1.setCount(size);
-                return ItemStack.EMPTY;
-            } else if (!this.slots.get(4).hasItem() && CrossPlatformStuff.INSTANCE.canEquip(itemstack1, MobBattle.SLOT[4], this.inv.getMob())) {
-                Slot slot1 = (this.slots.get(4));
-                slot1.set(itemstack);
-                slot1.setChanged();
-                size--;
-                itemstack1.setCount(size);
-                return ItemStack.EMPTY;
-            } else if (!this.slots.get(5).hasItem() && CrossPlatformStuff.INSTANCE.canEquip(itemstack1, MobBattle.SLOT[5], this.inv.getMob())) {
-                Slot slot1 = (this.slots.get(5));
-                slot1.set(itemstack);
-                slot1.setChanged();
-                size--;
-                itemstack1.setCount(size);
-                return ItemStack.EMPTY;
-            } else {
-                if (!this.moveItemStackTo(itemstack1, 0, 2, true)) {
-                    return ItemStack.EMPTY;
-                }
             }
             if (itemstack1.isEmpty()) {
                 slot.set(ItemStack.EMPTY);

@@ -4,7 +4,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.CreativeModeTab;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,9 +17,6 @@ public class MobBattle {
     public static final String MODID = "mobbattle";
     public static boolean tenshiLib;
     public static final Logger LOGGER = LogManager.getLogger(MobBattle.MODID);
-
-    public static final EquipmentSlot[] SLOT = {EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND, EquipmentSlot.HEAD,
-            EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 
     public static TagKey<EntityType<?>> IGNORED = TagKey.create(Registries.ENTITY_TYPE, MobBattle.of("ignored_mobs"));
     public static TagKey<EntityType<?>> HURT_IGNORED = TagKey.create(Registries.ENTITY_TYPE, MobBattle.of("hurt_ignored_mobs"));
@@ -36,7 +32,7 @@ public class MobBattle {
             try {
                 clss = Class.forName(fabricImpl);
             } catch (ClassNotFoundException ex) {
-                MobBattle.LOGGER.fatal("No Implementation of " + abstractClss + " found with given paths " + forgeImpl + " and " + fabricImpl);
+                MobBattle.LOGGER.fatal("No Implementation of {} found with given paths {} and {}", abstractClss, forgeImpl, fabricImpl);
             }
         }
         if (clss != null && abstractClss.isAssignableFrom(clss)) {
@@ -44,9 +40,9 @@ public class MobBattle {
                 Constructor<T> constructor = (Constructor<T>) clss.getDeclaredConstructor();
                 return constructor.newInstance();
             } catch (NoSuchMethodException e) {
-                MobBattle.LOGGER.fatal("Implementation of " + clss + " needs to provide an no arg constructor");
+                MobBattle.LOGGER.fatal("Implementation of {} needs to provide an no arg constructor", clss);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+                MobBattle.LOGGER.error(e);
             }
         }
         throw new IllegalStateException("Couldn't create an instance of " + abstractClss);

@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
@@ -29,5 +30,9 @@ public class ClientHandler {
         LevelRenderer.renderLineBox(stack, buffer.getBuffer(RenderType.lines()), aabb, 1, 0.5F, 0.5F, 1);
         buffer.endBatch(RenderType.LINES);
         stack.popPose();
+    }
+
+    public static void openSpawneggGui(InteractionHand hand) {
+
     }
 }

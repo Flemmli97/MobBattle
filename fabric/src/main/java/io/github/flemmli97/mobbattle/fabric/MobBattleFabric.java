@@ -2,7 +2,7 @@ package io.github.flemmli97.mobbattle.fabric;
 
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.fabric.handler.EventHandler;
-import io.github.flemmli97.mobbattle.fabric.network.ServerPacketHandler;
+import io.github.flemmli97.mobbattle.fabric.network.PacketHandler;
 import io.github.flemmli97.mobbattle.fabric.registry.ModComponents;
 import io.github.flemmli97.mobbattle.fabric.registry.ModItems;
 import io.github.flemmli97.mobbattle.fabric.registry.ModMenuType;
@@ -28,7 +28,7 @@ public class MobBattleFabric implements ModInitializer {
         ModMenuType.register();
         ModComponents.register();
         AttackEntityCallback.EVENT.register(EventHandler::attackCallback);
-        ServerPacketHandler.register();
+        PacketHandler.register();
         Config.initConfig();
         MobBattle.tenshiLib = FabricLoader.getInstance().isModLoaded("tenshilib");
         ResourceLocation tab = MobBattle.of("tab");

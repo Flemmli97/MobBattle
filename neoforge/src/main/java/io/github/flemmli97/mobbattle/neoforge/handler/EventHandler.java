@@ -1,9 +1,9 @@
-package io.github.flemmli97.mobbattle.forge.handler;
+package io.github.flemmli97.mobbattle.neoforge.handler;
 
-import io.github.flemmli97.mobbattle.forge.Config;
 import io.github.flemmli97.mobbattle.handler.EntityAIItemPickup;
 import io.github.flemmli97.mobbattle.handler.LibTags;
 import io.github.flemmli97.mobbattle.handler.Utils;
+import io.github.flemmli97.mobbattle.neoforge.Config;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -27,7 +27,7 @@ public class EventHandler {
             }
             if (event.getEntity().getTeam() != null)
                 Utils.updateEntity(event.getEntity().getTeam().getName(), (Mob) event.getEntity());
-            if (event.getEntity().getTags().contains(LibTags.entityPickup))
+            if (event.getEntity().getTags().contains(LibTags.ENTITY_PICKUP))
                 ((Mob) event.getEntity()).goalSelector.addGoal(10, new EntityAIItemPickup((Mob) event.getEntity()));
         }
     }
@@ -57,7 +57,7 @@ public class EventHandler {
                     DustParticleOptions color = Utils.teamColor.get(e.getTeam().getColor());
                     if (color != null)
                         e.level().addParticle(color, e.getX(), e.getY() + e.getBbHeight() + 0.5, e.getZ(), 0, 0, 0);
-                } else if (Config.COMMON_CONF.autoAddAI.get() && !e.getTags().contains(LibTags.entityAIAdded)) {
+                } else if (Config.COMMON_CONF.autoAddAI.get() && !e.getTags().contains(LibTags.ENTITY_AI_ADDED)) {
                     Utils.updateEntity(e.getTeam().getName(), e);
                 }
             }

@@ -1,4 +1,4 @@
-package io.github.flemmli97.mobbattle.forge.registry;
+package io.github.flemmli97.mobbattle.neoforge.registry;
 
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.components.AreaPositionComponent;

@@ -9,9 +9,14 @@ import io.github.flemmli97.mobbattle.fabric.registry.ModComponents;
 import io.github.flemmli97.mobbattle.fabric.registry.ModMenuType;
 import io.github.flemmli97.mobbattle.inv.ContainerArmor;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -82,5 +87,17 @@ public class CrossPlatformStuffImpl implements CrossPlatformStuff {
     public GoalSelector goalSelectorFrom(Mob mob, boolean target) {
         MobAccessor acc = (MobAccessor) mob;
         return target ? acc.getTargetSelector() : acc.getGoalSelector();
+    }
+
+    @Override
+    public void sendToClient(CustomPacketPayload packet, ServerPlayer player) {
+        ServerPlayNetworking.send(player, packet);
+    }
+
+    @Override
+    public void sendToServer(CustomPacketPayload packet) {
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            ClientPlayNetworking.send(packet);
+        }
     }
 }

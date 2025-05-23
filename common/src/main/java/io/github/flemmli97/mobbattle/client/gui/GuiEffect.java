@@ -2,6 +2,7 @@ package io.github.flemmli97.mobbattle.client.gui;
 
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.components.EffectComponent;
+import io.github.flemmli97.mobbattle.network.C2SEffectStack;
 import io.github.flemmli97.mobbattle.platform.ClientPlatform;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.client.Minecraft;
@@ -12,17 +13,25 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.Optional;
 
 public class GuiEffect extends Screen {
 
-    private static final ResourceLocation TEX = MobBattle.of("textures/gui/effect.png");
-    private final int xSize = 176;
-    private final int ySize = 80;
-    private EditBox potion;
-    private EditBox duration;
-    private EditBox amplifier;
-    private ButtonCheck button;
+    private static final ResourceLocation TEX = ResourceLocation.fromNamespaceAndPath(MobBattle.MODID, "textures/gui/effect.png");
+    private final int xSize = 200;
+    private final int ySize = 100;
+    private EditBox potionBox;
+    private EditBox durationBox;
+    private EditBox amplifierBox;
+    private ButtonCheck particleButton;
+
+    private final Component durationTxt = Component.translatable("mobbattle.gui.duration");
+    private final Component amplifierTxt = Component.translatable("mobbattle.gui.amplifier");
+    private final Component particleTxt = Component.translatable("mobbattle.gui.particle");
+
     private EffectComponent effect;
 
     public GuiEffect() {
@@ -41,24 +50,27 @@ public class GuiEffect extends Screen {
         super.init();
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
-        this.potion = new EditBox(this.font, i + 29, j + 20, 110, 16, Component.empty()) {
-            @Override
-            public boolean charTyped(char typedChar, int keyCode) {
-                if (super.charTyped(typedChar, keyCode)) {
-                    BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.parse(this.getValue()))
-                            .ifPresent(eff -> GuiEffect.this.effect = GuiEffect.this.effect.withEffect(eff));
-                    return true;
+        this.potionBox = new SuggestionEditBox(this.font, i + 29, j + 20, 110, 16, Component.empty(), 5, false,
+                SuggestionEditBox.ofResourceLocation(BuiltInRegistries.MOB_EFFECT.keySet()));
+        this.potionBox.setResponder(s -> {
+            try {
+                Optional<Holder.Reference<MobEffect>> effect = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.parse(s));
+                if (effect.isPresent()) {
+                    this.potionBox.setTextColor(0xE0E0E0);
+                    GuiEffect.this.effect = GuiEffect.this.effect.withEffect(effect.get());
+                } else {
+                    this.potionBox.setTextColor(0xFF0000);
                 }
-                return false;
+            } catch (Exception e) {
+                this.potionBox.setTextColor(0xFF0000);
             }
-        };
-        this.potion.setMaxLength(35);
-        this.potion.setEditable(true);
-        this.potion.setValue(this.effect.effect().map(Holder::getRegisteredName).orElse(""));
-        this.addWidget(this.potion);
+        });
+        this.potionBox.setMaxLength(35);
+        this.potionBox.setEditable(true);
+        this.potionBox.setValue(this.effect.effect().map(Holder::getRegisteredName).orElse(""));
+        this.addWidget(this.potionBox);
 
-        this.duration = new EditBox(this.font, i + 17, j + 48, 36, 12, Component.empty()) {
-
+        this.durationBox = new EditBox(this.font, i + 30, j + 62, 52, 10, Component.empty()) {
             @Override
             public boolean charTyped(char typedChar, int keyCode) {
                 if (Character.isDigit(typedChar) || GuiEffect.this.isHelperKey(keyCode)) {
@@ -74,12 +86,12 @@ public class GuiEffect extends Screen {
                 return false;
             }
         };
-        this.duration.setMaxLength(6);
-        this.duration.setEditable(true);
-        this.duration.setValue(this.effect.duration() > 0 ? "" + this.effect.duration() : "");
-        this.addWidget(this.duration);
+        this.durationBox.setMaxLength(7);
+        this.durationBox.setEditable(true);
+        this.durationBox.setValue(this.effect.duration() > 0 ? "" + this.effect.duration() : "");
+        this.addRenderableWidget(this.durationBox);
 
-        this.amplifier = new EditBox(this.font, i + 71, j + 48, 26, 12, Component.empty()) {
+        this.amplifierBox = new EditBox(this.font, i + 108, j + 62, 23, 10, Component.empty()) {
 
             @Override
             public boolean charTyped(char typedChar, int keyCode) {
@@ -99,26 +111,26 @@ public class GuiEffect extends Screen {
                 return false;
             }
         };
-        this.amplifier.setMaxLength(3);
-        this.amplifier.setEditable(true);
-        this.amplifier.setValue(this.effect.amplifier() > 0 ? "" + this.effect.amplifier() : "");
-        this.addWidget(this.amplifier);
+        this.amplifierBox.setMaxLength(3);
+        this.amplifierBox.setEditable(true);
+        this.amplifierBox.setValue(this.effect.amplifier() > 0 ? "" + this.effect.amplifier() : "");
+        this.addRenderableWidget(this.amplifierBox);
 
-        this.button = new ButtonCheck(i + 140, j + 49, (button) -> {
+        this.particleButton = new ButtonCheck(i + 160, j + 62, (button) -> {
             ButtonCheck check = (ButtonCheck) button;
             check.checkUncheck(!check.isChecked());
             GuiEffect.this.effect = GuiEffect.this.effect.withParticles(((ButtonCheck) button).isChecked());
         });
-        this.addRenderableWidget(this.button);
-        this.button.checkUncheck(this.effect.particles());
+        this.addRenderableWidget(this.particleButton);
+        this.particleButton.checkUncheck(this.effect.particles());
     }
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int p_keyPressed_3_) {
-        boolean texFocused = this.potion.isFocused() || this.amplifier.isFocused() || this.duration.isFocused();
+        boolean texFocused = this.potionBox.isFocused() || this.amplifierBox.isFocused() || this.durationBox.isFocused();
         if ((keyCode == 256 && this.shouldCloseOnEsc()) || (!texFocused && ClientPlatform.INSTANCE.keyMatches(this.minecraft.options.keyInventory, keyCode, scanCode))) {
             if (!this.effect.equals(EffectComponent.DEFAULT))
-                ClientPlatform.INSTANCE.itemStackUpdatePacket(this.effect);
+                CrossPlatformStuff.INSTANCE.sendToServer(new C2SEffectStack(this.effect));
             this.onClose();
             return true;
         } else
@@ -130,10 +142,18 @@ public class GuiEffect extends Screen {
     }
 
     @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        if (this.potionBox.canConsumeInput() && this.potionBox.mouseScrolled(mouseX, mouseY, scrollX, scrollY)) {
+            return true;
+        }
+        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+    }
+
+    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        this.potion.mouseClicked(mouseX, mouseY, mouseButton);
-        this.duration.mouseClicked(mouseX, mouseY, mouseButton);
-        this.amplifier.mouseClicked(mouseX, mouseY, mouseButton);
+        if (this.potionBox.canConsumeInput() && this.potionBox.mouseClicked(mouseX, mouseY, mouseButton)) {
+            return true;
+        }
         return super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
@@ -143,12 +163,15 @@ public class GuiEffect extends Screen {
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
         graphics.blit(TEX, i, j, 0, 0, this.xSize, this.ySize);
-        this.potion.render(graphics, mouseX, mouseY, partialTicks);
-        this.duration.render(graphics, mouseX, mouseY, partialTicks);
-        this.amplifier.render(graphics, mouseX, mouseY, partialTicks);
-        graphics.drawString(this.font, "Potion:", i + 30, j + 10, 1, false);
-        graphics.drawString(this.font, "Duration:", i + 18, j + 39, 1, false);
-        graphics.drawString(this.font, "Amplifier:", i + 70, j + 39, 1, false);
-        graphics.drawString(this.font, "Particle:", i + 130, j + 39, 1, false);
+        graphics.drawString(this.font, this.getTitle(), this.potionBox.getX(), j + 10, 1);
+        int y = j + 62 - 14;
+        graphics.drawString(this.font, this.durationTxt, this.durationBox.getX(), y, 1);
+        float txtX = this.amplifierBox.getX() + this.amplifierBox.getWidth() * 0.5f;
+        float partLen = this.font.width(this.amplifierTxt) * 0.5f;
+        graphics.drawString(this.font, this.amplifierTxt, (int) (txtX - partLen), y, 1);
+        txtX = this.particleButton.getX() + this.particleButton.getWidth() * 0.5f;
+        partLen = this.font.width(this.particleTxt) * 0.5f;
+        graphics.drawString(this.font, this.particleTxt, (int) (txtX - partLen), y, 1);
+        super.render(graphics, mouseX, mouseY, partialTicks);
     }
 }

@@ -4,12 +4,7 @@ import io.github.flemmli97.mobbattle.MobBattle;
 
 public class LibTags {
 
-    public static final String savedEntityList = MobBattle.MODID + ":EntityList";
-
-    public static final String savedPos1 = MobBattle.MODID + ":Position1";
-    public static final String savedPos2 = MobBattle.MODID + ":Position2";
-
-    public static final String entityPickup = MobBattle.MODID + ":PickUp";
-    public static final String entityAIAdded = MobBattle.MODID + ":AddedAI";
+    public static final String ENTITY_PICKUP = MobBattle.MODID + ":PickUp";
+    public static final String ENTITY_AI_ADDED = MobBattle.MODID + ":AddedAI";
 
 }

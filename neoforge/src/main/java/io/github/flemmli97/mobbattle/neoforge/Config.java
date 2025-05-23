@@ -1,4 +1,4 @@
-package io.github.flemmli97.mobbattle.forge;
+package io.github.flemmli97.mobbattle.neoforge;
 
 
 import net.neoforged.fml.config.IConfigSpec;

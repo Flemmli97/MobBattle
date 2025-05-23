@@ -1,7 +1,7 @@
-package io.github.flemmli97.mobbattle.forge.data;
+package io.github.flemmli97.mobbattle.neoforge.data;
 
 import io.github.flemmli97.mobbattle.MobBattle;
-import io.github.flemmli97.mobbattle.forge.registry.ModItems;
+import io.github.flemmli97.mobbattle.neoforge.registry.ModItems;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.models.model.ModelLocationUtils;
 import net.minecraft.resources.ResourceLocation;

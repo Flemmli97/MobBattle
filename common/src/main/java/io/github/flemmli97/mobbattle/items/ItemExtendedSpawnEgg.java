@@ -162,25 +162,33 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
                 } else {
                     return new InteractionResultHolder<>(InteractionResult.PASS, stack);
                 }
+            } else {
+                return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
             }
         }
         return new InteractionResultHolder<>(InteractionResult.PASS, stack);
     }
 
-    public static Entity spawnEntity(ServerLevel world, ItemStack stack, double x, double y, double z) {
+    public static Entity spawnEntity(ServerLevel level, ItemStack stack, double x, double y, double z) {
+        Entity entity = getEntity(level, stack);
+        if (entity instanceof Mob entityliving) {
+            CompoundTag tag = stack.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY).copyTag();
+            entity.moveTo(x, y, z, Mth.wrapDegrees(level.random.nextFloat() * 360.0F), 0.0F);
+            entityliving.yHeadRot = entityliving.getYRot();
+            entityliving.yBodyRot = entityliving.getYRot();
+            if (tag.size() == 1)
+                entityliving.finalizeSpawn(level, level.getCurrentDifficultyAt(BlockPos.containing(entityliving.position())), MobSpawnType.SPAWN_EGG, null);
+            level.addFreshEntity(entity);
+            entityliving.playAmbientSound();
+        }
+        return entity;
+    }
+
+    public static Entity getEntity(Level level, ItemStack stack) {
         Entity entity = null;
         if (ItemExtendedSpawnEgg.hasSavedEntity(stack)) {
             CompoundTag tag = stack.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY).copyTag();
-            entity = EntityType.loadEntityRecursive(tag, world, Functions.identity());
-            if (entity instanceof Mob mob) {
-                entity.moveTo(x, y, z, Mth.wrapDegrees(world.random.nextFloat() * 360.0F), 0.0F);
-                mob.yHeadRot = mob.getYRot();
-                mob.yBodyRot = mob.getYRot();
-                if (tag.size() == 1)
-                    mob.finalizeSpawn(world, world.getCurrentDifficultyAt(BlockPos.containing(mob.position())), MobSpawnType.SPAWN_EGG, null);
-                world.addFreshEntity(entity);
-                mob.playAmbientSound();
-            }
+            entity = EntityType.loadEntityRecursive(tag, level, Functions.identity());
         }
         return entity;
     }
