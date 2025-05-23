@@ -46,11 +46,11 @@ public class MobEquip extends Item implements LeftClickInteractItem {
         if (stack.hasTag()) {
             CompoundTag compound = stack.getTag();
             BlockPos pos1 = null;
-            if (compound.contains(LibTags.savedPos1) && compound.getIntArray(LibTags.savedPos1).length == 3)
-                pos1 = new BlockPos(compound.getIntArray(LibTags.savedPos1)[0], compound.getIntArray(LibTags.savedPos1)[1], compound.getIntArray(LibTags.savedPos1)[2]);
+            if (compound.contains(LibTags.SAVED_POS_1) && compound.getIntArray(LibTags.SAVED_POS_1).length == 3)
+                pos1 = new BlockPos(compound.getIntArray(LibTags.SAVED_POS_1)[0], compound.getIntArray(LibTags.SAVED_POS_1)[1], compound.getIntArray(LibTags.SAVED_POS_1)[2]);
             BlockPos pos2 = null;
-            if (compound.contains(LibTags.savedPos2) && compound.getIntArray(LibTags.savedPos2).length == 3)
-                pos2 = new BlockPos(compound.getIntArray(LibTags.savedPos2)[0], compound.getIntArray(LibTags.savedPos2)[1], compound.getIntArray(LibTags.savedPos2)[2]);
+            if (compound.contains(LibTags.SAVED_POS_2) && compound.getIntArray(LibTags.SAVED_POS_2).length == 3)
+                pos2 = new BlockPos(compound.getIntArray(LibTags.SAVED_POS_2)[0], compound.getIntArray(LibTags.SAVED_POS_2)[1], compound.getIntArray(LibTags.SAVED_POS_2)[2]);
             return new BlockPos[]{pos1, pos2};
         }
         return new BlockPos[]{null, null};
@@ -63,11 +63,11 @@ public class MobEquip extends Item implements LeftClickInteractItem {
             CompoundTag compound = stack.getTag();
             if (compound == null)
                 compound = new CompoundTag();
-            if (!compound.contains(LibTags.savedPos1) || compound.getIntArray(LibTags.savedPos1).length != 3) {
-                compound.putIntArray(LibTags.savedPos1, new int[]{ctx.getClickedPos().getX(), ctx.getClickedPos().getY(), ctx.getClickedPos().getZ()});
+            if (!compound.contains(LibTags.SAVED_POS_1) || compound.getIntArray(LibTags.SAVED_POS_1).length != 3) {
+                compound.putIntArray(LibTags.SAVED_POS_1, new int[]{ctx.getClickedPos().getX(), ctx.getClickedPos().getY(), ctx.getClickedPos().getZ()});
             } else if (!ctx.getClickedPos().equals(
-                    new BlockPos(compound.getIntArray(LibTags.savedPos1)[0], compound.getIntArray(LibTags.savedPos1)[1], compound.getIntArray(LibTags.savedPos1)[2]))) {
-                compound.putIntArray(LibTags.savedPos2, new int[]{ctx.getClickedPos().getX(), ctx.getClickedPos().getY(), ctx.getClickedPos().getZ()});
+                    new BlockPos(compound.getIntArray(LibTags.SAVED_POS_1)[0], compound.getIntArray(LibTags.SAVED_POS_1)[1], compound.getIntArray(LibTags.SAVED_POS_1)[2]))) {
+                compound.putIntArray(LibTags.SAVED_POS_2, new int[]{ctx.getClickedPos().getX(), ctx.getClickedPos().getY(), ctx.getClickedPos().getZ()});
             }
             stack.setTag(compound);
         }
@@ -79,18 +79,18 @@ public class MobEquip extends Item implements LeftClickInteractItem {
         ItemStack stack = player.getItemInHand(hand);
         if (!world.isClientSide && stack.hasTag())
             if (player.isShiftKeyDown()) {
-                stack.getTag().remove(LibTags.savedPos1);
-                stack.getTag().remove(LibTags.savedPos2);
+                stack.getTag().remove(LibTags.SAVED_POS_1);
+                stack.getTag().remove(LibTags.SAVED_POS_2);
                 player.sendSystemMessage(Component.translatable("tooltip.equip.reset").withStyle(ChatFormatting.RED));
-            } else if (stack.getTag().contains(LibTags.savedPos1) && stack.getTag().contains(LibTags.savedPos2)) {
-                BlockPos pos1 = new BlockPos(stack.getTag().getIntArray(LibTags.savedPos1)[0], stack.getTag().getIntArray(LibTags.savedPos1)[1],
-                        stack.getTag().getIntArray(LibTags.savedPos1)[2]);
-                BlockPos pos2 = new BlockPos(stack.getTag().getIntArray(LibTags.savedPos2)[0], stack.getTag().getIntArray(LibTags.savedPos2)[1],
-                        stack.getTag().getIntArray(LibTags.savedPos2)[2]);
+            } else if (stack.getTag().contains(LibTags.SAVED_POS_1) && stack.getTag().contains(LibTags.SAVED_POS_2)) {
+                BlockPos pos1 = new BlockPos(stack.getTag().getIntArray(LibTags.SAVED_POS_1)[0], stack.getTag().getIntArray(LibTags.SAVED_POS_1)[1],
+                        stack.getTag().getIntArray(LibTags.SAVED_POS_1)[2]);
+                BlockPos pos2 = new BlockPos(stack.getTag().getIntArray(LibTags.SAVED_POS_2)[0], stack.getTag().getIntArray(LibTags.SAVED_POS_2)[1],
+                        stack.getTag().getIntArray(LibTags.SAVED_POS_2)[2]);
                 AABB bb = Utils.getBoundingBoxPositions(pos1, pos2);
                 List<Mob> list = player.level().getEntitiesOfClass(Mob.class, bb);
                 for (Mob living : list) {
-                    living.addTag(LibTags.entityPickup);
+                    living.addTag(LibTags.ENTITY_PICKUP);
                     CrossPlatformStuff.INSTANCE.goalSelectorFrom(living, false).addGoal(10, new EntityAIItemPickup(living));
                 }
                 player.sendSystemMessage(Component.translatable("tooltip.equip.add").withStyle(ChatFormatting.GOLD));
@@ -101,7 +101,7 @@ public class MobEquip extends Item implements LeftClickInteractItem {
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (entity instanceof Mob && !player.level().isClientSide) {
-            entity.addTag(LibTags.entityPickup);
+            entity.addTag(LibTags.ENTITY_PICKUP);
             CrossPlatformStuff.INSTANCE.goalSelectorFrom((Mob) entity, false).addGoal(10, new EntityAIItemPickup((Mob) entity));
             player.sendSystemMessage(Component.translatable("tooltip.equip.add").withStyle(ChatFormatting.GOLD));
         }

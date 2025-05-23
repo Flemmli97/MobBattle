@@ -1,4 +1,4 @@
-package io.github.flemmli97.mobbattle.forge;
+package io.github.flemmli97.mobbattle.forge.registry;
 
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.inv.ContainerArmor;
@@ -12,5 +12,5 @@ public class ModMenuType {
 
     public static final DeferredRegister<MenuType<?>> MENU_TYPE = DeferredRegister.create(ForgeRegistries.MENU_TYPES, MobBattle.MODID);
 
-    public static final RegistryObject<MenuType<ContainerArmor>> armorMenu = MENU_TYPE.register("armor_menu", () -> IForgeMenuType.create(ContainerArmor::new));
+    public static final RegistryObject<MenuType<ContainerArmor>> ARMOR_MENU = MENU_TYPE.register("armor_menu", () -> IForgeMenuType.create(ContainerArmor::new));
 }

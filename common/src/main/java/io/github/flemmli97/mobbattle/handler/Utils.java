@@ -94,7 +94,7 @@ public class Utils {
     public static void updateEntity(String team, Mob e) {
         addEntityToTeam(e, team);
         e.setTarget(null);
-        e.addTag(LibTags.entityAIAdded);
+        e.addTag(LibTags.ENTITY_AI_ADDED);
         if (e.getType().is(MobBattle.IGNORED))
             return;
         removeGoal(CrossPlatformStuff.INSTANCE.goalSelectorFrom(e, true), targetGoal);

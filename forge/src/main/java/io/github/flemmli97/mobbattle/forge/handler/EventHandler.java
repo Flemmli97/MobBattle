@@ -27,7 +27,7 @@ public class EventHandler {
             }
             if (event.getEntity().getTeam() != null)
                 Utils.updateEntity(event.getEntity().getTeam().getName(), (Mob) event.getEntity());
-            if (event.getEntity().getTags().contains(LibTags.entityPickup))
+            if (event.getEntity().getTags().contains(LibTags.ENTITY_PICKUP))
                 ((Mob) event.getEntity()).goalSelector.addGoal(10, new EntityAIItemPickup((Mob) event.getEntity()));
         }
     }
@@ -57,7 +57,7 @@ public class EventHandler {
                     DustParticleOptions color = Utils.teamColor.get(e.getTeam().getColor());
                     if (color != null)
                         e.level().addParticle(color, e.getX(), e.getY() + e.getBbHeight() + 0.5, e.getZ(), 0, 0, 0);
-                } else if (Config.commonConf.autoAddAI.get() && !e.getTags().contains(LibTags.entityAIAdded)) {
+                } else if (Config.commonConf.autoAddAI.get() && !e.getTags().contains(LibTags.ENTITY_AI_ADDED)) {
                     Utils.updateEntity(e.getTeam().getName(), e);
                 }
             }

@@ -1,7 +1,7 @@
 package io.github.flemmli97.mobbattle.fabric.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import io.github.flemmli97.mobbattle.fabric.ModItems;
+import io.github.flemmli97.mobbattle.fabric.registry.ModItems;
 import io.github.flemmli97.mobbattle.handler.Utils;
 import io.github.flemmli97.mobbattle.items.MobArmy;
 import io.github.flemmli97.mobbattle.items.MobEquip;

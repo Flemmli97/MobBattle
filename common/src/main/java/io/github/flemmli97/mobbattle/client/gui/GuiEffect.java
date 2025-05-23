@@ -1,31 +1,47 @@
 package io.github.flemmli97.mobbattle.client.gui;
 
 import io.github.flemmli97.mobbattle.MobBattle;
+import io.github.flemmli97.mobbattle.items.MobEffectGive;
+import io.github.flemmli97.mobbattle.network.C2SEffectStack;
 import io.github.flemmli97.mobbattle.platform.ClientPlatform;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 public class GuiEffect extends Screen {
 
-    private static final ResourceLocation tex = new ResourceLocation(MobBattle.MODID, "textures/gui/effect.png");
-    private final int xSize = 176;
-    private final int ySize = 80;
-    private EditBox potion;
-    private EditBox duration;
-    private EditBox amplifier;
-    private ButtonCheck button;
-    private final ItemStack stack;
+    private static final ResourceLocation TEX = new ResourceLocation(MobBattle.MODID, "textures/gui/effect.png");
+    private final int xSize = 200;
+    private final int ySize = 100;
+    private EditBox potionBox;
+    private EditBox durationBox;
+    private EditBox amplifierBox;
+    private ButtonCheck particleButton;
+
+    private final Component durationTxt = Component.translatable("mobbattle.gui.duration");
+    private final Component amplifierTxt = Component.translatable("mobbattle.gui.amplifier");
+    private final Component particleTxt = Component.translatable("mobbattle.gui.particle");
+
+    private String potion;
+    private int duration, amplifier;
+    private boolean particle;
 
     public GuiEffect() {
         super(Component.translatable("mobbattle.gui.potions"));
-        this.stack = Minecraft.getInstance().player.getMainHandItem();
+        ItemStack stack = Minecraft.getInstance().player.getMainHandItem();
+        if (stack.getItem() instanceof MobEffectGive give) {
+            MobEffectGive.EffectData data = give.getData(stack);
+            this.potion = data.potion();
+            this.duration = data.duration();
+            this.amplifier = data.amplifier();
+            this.particle = data.particle();
+        }
     }
 
     @Override
@@ -38,35 +54,34 @@ public class GuiEffect extends Screen {
         super.init();
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
-        this.potion = new EditBox(this.font, i + 30, j + 21, 108, 14, Component.empty()) {
-            @Override
-            public boolean charTyped(char typedChar, int keyCode) {
-                if (super.charTyped(typedChar, keyCode)) {
-                    CompoundTag compound = GuiEffect.this.stack.hasTag() ? GuiEffect.this.stack.getTag() : new CompoundTag();
-                    compound.putString(MobBattle.MODID + ":potion", this.getValue());
-                    GuiEffect.this.stack.setTag(compound);
-                    return true;
+        this.potionBox = new SuggestionEditBox(this.font, i + 30, j + 21, 140, 14, Component.empty(), 5, false,
+                SuggestionEditBox.ofResourceLocation(BuiltInRegistries.MOB_EFFECT.keySet()));
+        this.potionBox.setResponder(s -> {
+            this.potion = s;
+            try {
+                ResourceLocation id = new ResourceLocation(s);
+                if (BuiltInRegistries.MOB_EFFECT.containsKey(id)) {
+                    this.potionBox.setTextColor(0xE0E0E0);
+                } else {
+                    this.potionBox.setTextColor(0xFF0000);
                 }
-                return false;
+            } catch (Exception e) {
+                this.potionBox.setTextColor(0xFF0000);
             }
-        };
-        this.potion.setMaxLength(35);
-        this.potion.setEditable(true);
-        this.potion.setValue(this.stack.hasTag() ? this.stack.getTag().getString(MobBattle.MODID + ":potion") : "");
-        this.addWidget(this.potion);
+        });
+        this.potionBox.setMaxLength(35);
+        this.potionBox.setEditable(true);
+        this.potionBox.setValue(this.potion);
 
-        this.duration = new EditBox(this.font, i + 18, j + 49, 34, 10, Component.empty()) {
-
+        this.durationBox = new EditBox(this.font, i + 30, j + 62, 52, 10, Component.empty()) {
             @Override
             public boolean charTyped(char typedChar, int keyCode) {
                 if (Character.isDigit(typedChar) || GuiEffect.this.isHelperKey(keyCode)) {
-                    CompoundTag compound = GuiEffect.this.stack.hasTag() ? GuiEffect.this.stack.getTag() : new CompoundTag();
                     if (super.charTyped(typedChar, keyCode) && !this.getValue().isEmpty()) {
                         try {
-                            compound.putInt(MobBattle.MODID + ":duration", Integer.parseInt(this.getValue()));
-                            GuiEffect.this.stack.setTag(compound);
+                            GuiEffect.this.duration = Integer.parseInt(this.getValue());
                         } catch (NumberFormatException e) {
-                            MobBattle.logger.error(this.getValue() + " not a number");
+                            MobBattle.LOGGER.error(this.getValue() + " not a number");
                         }
                         return true;
                     }
@@ -74,26 +89,24 @@ public class GuiEffect extends Screen {
                 return false;
             }
         };
-        this.duration.setMaxLength(6);
-        this.duration.setEditable(true);
-        this.duration.setValue(this.stack.hasTag() ? "" + this.stack.getTag().getInt(MobBattle.MODID + ":duration") : "");
-        this.addWidget(this.duration);
+        this.durationBox.setMaxLength(7);
+        this.durationBox.setEditable(true);
+        this.durationBox.setValue(this.duration + "");
+        this.addRenderableWidget(this.durationBox);
 
-        this.amplifier = new EditBox(this.font, i + 70, j + 49, 28, 10, Component.empty()) {
+        this.amplifierBox = new EditBox(this.font, i + 108, j + 62, 23, 10, Component.empty()) {
 
             @Override
             public boolean charTyped(char typedChar, int keyCode) {
                 if (Character.isDigit(typedChar) || GuiEffect.this.isHelperKey(keyCode)) {
-                    CompoundTag compound = GuiEffect.this.stack.hasTag() ? GuiEffect.this.stack.getTag() : new CompoundTag();
                     if (super.charTyped(typedChar, keyCode) && !this.getValue().isEmpty()) {
                         try {
                             int i = Integer.parseInt(this.getValue());
                             if (i > 255)
                                 this.setValue("" + 255);
-                            compound.putInt(MobBattle.MODID + ":amplifier", Integer.parseInt(this.getValue()));
-                            GuiEffect.this.stack.setTag(compound);
+                            GuiEffect.this.amplifier = i;
                         } catch (NumberFormatException e) {
-                            MobBattle.logger.error(this.getValue() + " not a number");
+                            MobBattle.LOGGER.error(this.getValue() + " not a number");
                         }
                         return true;
                     }
@@ -101,28 +114,24 @@ public class GuiEffect extends Screen {
                 return false;
             }
         };
-        this.amplifier.setMaxLength(3);
-        this.amplifier.setEditable(true);
-        this.amplifier.setValue(this.stack.hasTag() ? "" + this.stack.getTag().getInt(MobBattle.MODID + ":amplifier") : "");
-        this.addWidget(this.amplifier);
+        this.amplifierBox.setMaxLength(3);
+        this.amplifierBox.setEditable(true);
+        this.amplifierBox.setValue(this.amplifier + "");
+        this.addRenderableWidget(this.amplifierBox);
 
-        this.button = new ButtonCheck(i + 140, j + 49, (button) -> {
-            ButtonCheck check = (ButtonCheck) button;
-            check.checkUncheck(!check.isChecked());
-            CompoundTag compound = GuiEffect.this.stack.hasTag() ? GuiEffect.this.stack.getTag() : new CompoundTag();
-            compound.putBoolean(MobBattle.MODID + ":show", ((ButtonCheck) button).isChecked());
-            GuiEffect.this.stack.setTag(compound);
+        this.particleButton = new ButtonCheck(i + 160, j + 62, (button) -> {
+            GuiEffect.this.particle = ((ButtonCheck) button).isChecked();
         });
-        this.addRenderableWidget(this.button);
-        this.button.checkUncheck(this.stack.hasTag() && this.stack.getTag().getBoolean(MobBattle.MODID + ":show"));
+        this.addRenderableWidget(this.particleButton);
+        this.particleButton.checkUncheck(this.particle);
+        this.addRenderableWidget(this.potionBox);
     }
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int p_keyPressed_3_) {
-        boolean texFocused = this.potion.isFocused() || this.amplifier.isFocused() || this.duration.isFocused();
+        boolean texFocused = this.potionBox.isFocused() || this.amplifierBox.isFocused() || this.durationBox.isFocused();
         if ((keyCode == 256 && this.shouldCloseOnEsc()) || (!texFocused && ClientPlatform.INSTANCE.keyMatches(this.minecraft.options.keyInventory, keyCode, scanCode))) {
-            if (this.stack.hasTag())
-                CrossPlatformStuff.INSTANCE.itemStackUpdatePacket(this.stack.getTag());
+            CrossPlatformStuff.INSTANCE.sendToServer(new C2SEffectStack(this.potion, this.duration, this.amplifier, this.particle));
             this.onClose();
             return true;
         } else
@@ -134,10 +143,18 @@ public class GuiEffect extends Screen {
     }
 
     @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        if (this.potionBox.canConsumeInput() && this.potionBox.mouseScrolled(mouseX, mouseY, delta)) {
+            return true;
+        }
+        return super.mouseScrolled(mouseX, mouseY, delta);
+    }
+
+    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        this.potion.mouseClicked(mouseX, mouseY, mouseButton);
-        this.duration.mouseClicked(mouseX, mouseY, mouseButton);
-        this.amplifier.mouseClicked(mouseX, mouseY, mouseButton);
+        if (this.potionBox.canConsumeInput() && this.potionBox.mouseClicked(mouseX, mouseY, mouseButton)) {
+            return true;
+        }
         return super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
@@ -145,14 +162,16 @@ public class GuiEffect extends Screen {
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
-        graphics.blit(tex, i, j, 0, 0, this.xSize, this.ySize);
-        this.potion.render(graphics, mouseX, mouseY, partialTicks);
-        this.duration.render(graphics, mouseX, mouseY, partialTicks);
-        this.amplifier.render(graphics, mouseX, mouseY, partialTicks);
-        graphics.drawString(this.font, "Potion:", i + 30, j + 10, 1, false);
-        graphics.drawString(this.font, "Duration:", i + 18, j + 39, 1, false);
-        graphics.drawString(this.font, "Amplifier:", i + 70, j + 39, 1, false);
-        graphics.drawString(this.font, "Particle:", i + 130, j + 39, 1, false);
+        graphics.blit(TEX, i, j, 0, 0, this.xSize, this.ySize);
+        graphics.drawString(this.font, this.getTitle(), this.potionBox.getX(), j + 10, 1);
+        int y = j + 62 - 14;
+        graphics.drawString(this.font, this.durationTxt, this.durationBox.getX(), y, 1);
+        float txtX = this.amplifierBox.getX() + this.amplifierBox.getWidth() * 0.5f;
+        float partLen = this.font.width(this.amplifierTxt) * 0.5f;
+        graphics.drawString(this.font, this.amplifierTxt, (int) (txtX - partLen), y, 1);
+        txtX = this.particleButton.getX() + this.particleButton.getWidth() * 0.5f;
+        partLen = this.font.width(this.particleTxt) * 0.5f;
+        graphics.drawString(this.font, this.particleTxt, (int) (txtX - partLen), y, 1);
         super.render(graphics, mouseX, mouseY, partialTicks);
     }
 }

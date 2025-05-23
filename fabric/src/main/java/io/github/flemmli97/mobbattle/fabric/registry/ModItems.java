@@ -1,4 +1,4 @@
-package io.github.flemmli97.mobbattle.fabric;
+package io.github.flemmli97.mobbattle.fabric.registry;
 
 import com.google.common.collect.ImmutableList;
 import io.github.flemmli97.mobbattle.MobBattle;

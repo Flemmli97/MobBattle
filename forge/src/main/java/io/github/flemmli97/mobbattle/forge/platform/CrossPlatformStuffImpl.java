@@ -1,18 +1,13 @@
 package io.github.flemmli97.mobbattle.forge.platform;
 
-import io.github.flemmli97.mobbattle.SimpleRegistryWrapper;
-import io.github.flemmli97.mobbattle.forge.ModMenuType;
-import io.github.flemmli97.mobbattle.forge.network.EquipMessage;
-import io.github.flemmli97.mobbattle.forge.network.ItemStackUpdate;
 import io.github.flemmli97.mobbattle.forge.network.PacketHandler;
+import io.github.flemmli97.mobbattle.forge.registry.ModMenuType;
 import io.github.flemmli97.mobbattle.inv.ContainerArmor;
+import io.github.flemmli97.mobbattle.network.Packet;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -23,29 +18,13 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 public class CrossPlatformStuffImpl implements CrossPlatformStuff {
 
     @Override
     public MenuType<ContainerArmor> getArmorMenuType() {
-        return ModMenuType.armorMenu.get();
-    }
-
-    @Override
-    public SimpleRegistryWrapper<MobEffect> registryStatusEffects() {
-        return new ForgeRegistryWrapper<>(ForgeRegistries.MOB_EFFECTS);
-    }
-
-    @Override
-    public SimpleRegistryWrapper<EntityType<?>> registryEntities() {
-        return new ForgeRegistryWrapper<>(ForgeRegistries.ENTITY_TYPES);
-    }
-
-    @Override
-    public void sendEquipMessage(ItemStack stack, int entityId, int slot) {
-        PacketHandler.sendToServer(new EquipMessage(stack, entityId, slot));
+        return ModMenuType.ARMOR_MENU.get();
     }
 
     @Override
@@ -65,11 +44,6 @@ public class CrossPlatformStuffImpl implements CrossPlatformStuff {
     }
 
     @Override
-    public void itemStackUpdatePacket(CompoundTag tag) {
-        PacketHandler.sendToServer(new ItemStackUpdate(tag));
-    }
-
-    @Override
     public boolean canEquip(ItemStack stack, EquipmentSlot slot, LivingEntity living) {
         return stack.canEquip(slot, living);
     }
@@ -77,5 +51,15 @@ public class CrossPlatformStuffImpl implements CrossPlatformStuff {
     @Override
     public GoalSelector goalSelectorFrom(Mob mob, boolean target) {
         return target ? mob.targetSelector : mob.goalSelector;
+    }
+
+    @Override
+    public void sendToClient(Packet packet, ServerPlayer player) {
+        PacketHandler.sendToClient(packet, player);
+    }
+
+    @Override
+    public void sendToServer(Packet packet) {
+        PacketHandler.sendToServer(packet);
     }
 }
