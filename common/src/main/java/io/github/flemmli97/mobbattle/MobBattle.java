@@ -1,6 +1,5 @@
 package io.github.flemmli97.mobbattle;
 
-import io.github.flemmli97.tenshilib.TenshiLib;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -29,7 +28,7 @@ public class MobBattle {
             try {
                 clss = Class.forName(fabricImpl);
             } catch (ClassNotFoundException ex) {
-                TenshiLib.logger.fatal("No Implementation of " + abstractClss + " found with given paths " + forgeImpl + " and " + fabricImpl);
+                MobBattle.LOGGER.fatal("No Implementation of {} found with given paths {} and {}", abstractClss, forgeImpl, fabricImpl);
             }
         }
         if (clss != null && abstractClss.isAssignableFrom(clss)) {
@@ -37,9 +36,9 @@ public class MobBattle {
                 Constructor<T> constructor = (Constructor<T>) clss.getDeclaredConstructor();
                 return constructor.newInstance();
             } catch (NoSuchMethodException e) {
-                TenshiLib.logger.fatal("Implementation of " + clss + " needs to provide an no arg constructor");
+                MobBattle.LOGGER.fatal("Implementation of {} needs to provide an no arg constructor", clss);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+                MobBattle.LOGGER.error(e);
             }
         }
         throw new IllegalStateException("Couldn't create an instance of " + abstractClss);
