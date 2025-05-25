@@ -4,10 +4,15 @@ import com.google.common.base.Functions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import io.github.flemmli97.mobbattle.MobBattle;
+import io.github.flemmli97.mobbattle.components.SpawnEggOptions;
 import io.github.flemmli97.mobbattle.handler.Utils;
+import io.github.flemmli97.mobbattle.network.S2CSpawnEggScreen;
+import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -15,6 +20,7 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -69,21 +75,21 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (entity instanceof Mob e) {
+        if (entity instanceof Mob) {
             boolean nbt = false;
             CompoundTag tag = new CompoundTag();
             if (player.isShiftKeyDown()) {
-                e.save(tag);
+                entity.save(tag);
                 this.removeMobSpecificTags(tag);
                 nbt = true;
             } else {
-                String name = BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()).toString();
+                String name = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString();
                 tag.putString("id", name);
             }
             stack.set(DataComponents.ENTITY_DATA, CustomData.of(tag));
 
             if (!player.level().isClientSide) {
-                player.sendSystemMessage(Component.translatable("tooltip.spawnegg.save", (nbt ? "+ nbt" : "")).withStyle(ChatFormatting.GOLD));
+                player.sendSystemMessage(Component.translatable("tooltip.spawnegg.save" + (nbt ? ".nbt" : ""), entity.getName()).withStyle(ChatFormatting.GOLD));
             }
             return true;
         }
@@ -121,15 +127,10 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
             blockpos = ctx.getClickedPos().relative(ctx.getClickedFace());
         }
 
-        Entity entity = ItemExtendedSpawnEgg.spawnEntity((ServerLevel) ctx.getLevel(), stack, blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D);
-
-        if (entity != null) {
-            if (!ctx.getPlayer().getAbilities().instabuild)
-                stack.shrink(1);
-            Component component = stack.get(DataComponents.CUSTOM_NAME);
-            if (component != null && entity instanceof Mob) {
-                Utils.updateEntity(component.getString(), (Mob) entity);
-            }
+        boolean spawned = ItemExtendedSpawnEgg.spawnEntity((ServerLevel) ctx.getLevel(), stack,
+                blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D, ctx.getHorizontalDirection());
+        if (spawned && !ctx.getPlayer().getAbilities().instabuild) {
+            stack.shrink(1);
         }
         return InteractionResult.SUCCESS;
     }
@@ -137,51 +138,60 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (world.isClientSide || !ItemExtendedSpawnEgg.hasSavedEntity(stack))
+        if (!ItemExtendedSpawnEgg.hasSavedEntity(stack))
             return new InteractionResultHolder<>(InteractionResult.PASS, stack);
-        else {
+        if (player instanceof ServerPlayer serverPlayer) {
             BlockHitResult raytraceresult = getPlayerPOVHitResult(world, player, ClipContext.Fluid.ANY);
-
             if (raytraceresult.getType() == HitResult.Type.BLOCK) {
                 BlockPos blockpos = raytraceresult.getBlockPos();
 
                 if (!(world.getBlockState(blockpos).getBlock() instanceof LiquidBlock)) {
                     return new InteractionResultHolder<>(InteractionResult.PASS, stack);
                 } else if (world.mayInteract(player, blockpos) && player.mayUseItemAt(blockpos, raytraceresult.getDirection(), stack)) {
-                    Entity entity = ItemExtendedSpawnEgg.spawnEntity((ServerLevel) world, stack, blockpos.getX() + 0.5D, blockpos.getY() + 0.5D,
-                            blockpos.getZ() + 0.5D);
-                    if (entity != null) {
-                        if (!player.getAbilities().instabuild)
-                            stack.shrink(1);
-                        Component component = stack.get(DataComponents.CUSTOM_NAME);
-                        if (component != null && entity instanceof Mob) {
-                            Utils.updateEntity(component.getString(), (Mob) entity);
-                        }
-                        return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+                    boolean spawned = ItemExtendedSpawnEgg.spawnEntity((ServerLevel) world, stack, blockpos.getX() + 0.5D, blockpos.getY() + 0.5D,
+                            blockpos.getZ() + 0.5D, player.getDirection());
+                    if (spawned && !player.getAbilities().instabuild) {
+                        stack.shrink(1);
                     }
-                } else {
-                    return new InteractionResultHolder<>(InteractionResult.PASS, stack);
                 }
             } else {
-                return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+                CrossPlatformStuff.INSTANCE.sendToClient(new S2CSpawnEggScreen(hand), serverPlayer);
             }
         }
-        return new InteractionResultHolder<>(InteractionResult.PASS, stack);
+        return InteractionResultHolder.sidedSuccess(stack, player.level().isClientSide);
     }
 
-    public static Entity spawnEntity(ServerLevel level, ItemStack stack, double x, double y, double z) {
-        Entity entity = getEntity(level, stack);
-        if (entity instanceof Mob entityliving) {
-            CompoundTag tag = stack.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY).copyTag();
-            entity.moveTo(x, y, z, Mth.wrapDegrees(level.random.nextFloat() * 360.0F), 0.0F);
-            entityliving.yHeadRot = entityliving.getYRot();
-            entityliving.yBodyRot = entityliving.getYRot();
-            if (tag.size() == 1)
-                entityliving.finalizeSpawn(level, level.getCurrentDifficultyAt(BlockPos.containing(entityliving.position())), MobSpawnType.SPAWN_EGG, null);
-            level.addFreshEntity(entity);
-            entityliving.playAmbientSound();
+    public static boolean spawnEntity(ServerLevel level, ItemStack stack, double x, double y, double z, Direction direction) {
+        SpawnEggOptions options = stack.getOrDefault(CrossPlatformStuff.INSTANCE.getComponentSpawnEggOptions(), SpawnEggOptions.DEFAULT);
+        boolean success = false;
+        int sqr = options.amount() > 1 ? (int) Math.ceil(Math.sqrt(options.amount())) : 0;
+        for (int i = 0; i < options.amount(); i++) {
+            Entity entity = getEntity(level, stack);
+            if (entity instanceof Mob mob) {
+                CompoundTag tag = stack.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY).copyTag();
+                if (options.amount() > 1 && options.spacing() > 0) {
+                    int dL = i / sqr;
+                    int dW = i % sqr - sqr / 2;
+                    Vec3i front = direction.getNormal().multiply(options.spacing());
+                    Vec3i side = new Vec3i(front.getZ(), front.getY(), -front.getX());
+                    entity.moveTo(x + side.getX() * dW + front.getX() * dL, y, z + side.getZ() * dW + front.getZ() * dL,
+                            Mth.wrapDegrees(direction.toYRot() - 180), 0.0F);
+                } else {
+                    entity.moveTo(x, y, z, Mth.wrapDegrees(level.random.nextFloat() * 360.0F), 0.0F);
+                }
+                mob.yHeadRot = mob.getYRot();
+                mob.yBodyRot = mob.getYRot();
+                if (tag.size() == 1)
+                    mob.finalizeSpawn(level, level.getCurrentDifficultyAt(BlockPos.containing(mob.position())), MobSpawnType.SPAWN_EGG, null);
+                level.addFreshEntity(entity);
+                mob.playAmbientSound();
+                if (options.team() != null && !options.team().isEmpty()) {
+                    Utils.updateEntity(options.team(), mob);
+                }
+                success = true;
+            }
         }
-        return entity;
+        return success;
     }
 
     public static Entity getEntity(Level level, ItemStack stack) {

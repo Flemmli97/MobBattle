@@ -2,6 +2,7 @@ package io.github.flemmli97.mobbattle.neoforge.platform;
 
 import io.github.flemmli97.mobbattle.components.AreaPositionComponent;
 import io.github.flemmli97.mobbattle.components.EffectComponent;
+import io.github.flemmli97.mobbattle.components.SpawnEggOptions;
 import io.github.flemmli97.mobbattle.components.UuidComponent;
 import io.github.flemmli97.mobbattle.components.UuidListComponent;
 import io.github.flemmli97.mobbattle.inv.ContainerArmor;
@@ -50,6 +51,11 @@ public class CrossPlatformStuffImpl implements CrossPlatformStuff {
     @Override
     public DataComponentType<AreaPositionComponent> getComponentAreaSelection() {
         return ModComponents.BOX.get();
+    }
+
+    @Override
+    public DataComponentType<SpawnEggOptions> getComponentSpawnEggOptions() {
+        return ModComponents.SPAWN_EGG_OPTIONS.get();
     }
 
     @Override

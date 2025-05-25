@@ -2,6 +2,7 @@ package io.github.flemmli97.mobbattle.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.flemmli97.mobbattle.client.gui.GuiEffect;
+import io.github.flemmli97.mobbattle.client.gui.SpawnEggScreen;
 import io.github.flemmli97.mobbattle.handler.Utils;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -33,6 +34,6 @@ public class ClientHandler {
     }
 
     public static void openSpawneggGui(InteractionHand hand) {
-
+        Minecraft.getInstance().setScreen(new SpawnEggScreen(hand));
     }
 }

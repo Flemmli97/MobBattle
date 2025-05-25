@@ -1,7 +1,6 @@
 package io.github.flemmli97.mobbattle.neoforge;
 
 import io.github.flemmli97.mobbattle.MobBattle;
-import io.github.flemmli97.mobbattle.handler.Utils;
 import io.github.flemmli97.mobbattle.items.ItemExtendedSpawnEgg;
 import io.github.flemmli97.mobbattle.neoforge.client.ClientEvents;
 import io.github.flemmli97.mobbattle.neoforge.handler.EventHandler;
@@ -9,13 +8,12 @@ import io.github.flemmli97.mobbattle.neoforge.registry.ModComponents;
 import io.github.flemmli97.mobbattle.neoforge.registry.ModItems;
 import io.github.flemmli97.mobbattle.neoforge.registry.ModMenuType;
 import io.github.flemmli97.mobbattle.network.C2SEffectStack;
+import io.github.flemmli97.mobbattle.network.C2SSpawnEgg;
+import io.github.flemmli97.mobbattle.network.S2CSpawnEggScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.DispenserBlock;
@@ -64,13 +62,10 @@ public class MobBattleNeoForge {
             double y = source.pos().getY() + direction.getStepY() + 0.2;
             double z = source.center().z() + direction.getStepZ();
             BlockPos blockpos = BlockPos.containing(x, y, z);
-            Entity entity = ItemExtendedSpawnEgg.spawnEntity(source.level(), stack, blockpos.getX() + 0.5D, blockpos.getY(),
-                    blockpos.getZ() + 0.5D);
-            if (entity != null) {
+            boolean spawned = ItemExtendedSpawnEgg.spawnEntity(source.level(), stack, blockpos.getX() + 0.5D, blockpos.getY(),
+                    blockpos.getZ() + 0.5D, direction);
+            if (spawned) {
                 stack.shrink(1);
-                if (stack.has(DataComponents.CUSTOM_NAME) && entity instanceof Mob) {
-                    Utils.updateEntity(stack.getHoverName().getString(), (Mob) entity);
-                }
             }
             return stack;
         }));
@@ -84,8 +79,8 @@ public class MobBattleNeoForge {
 
     public static void registerPackets(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar(MobBattle.MODID);
-        registrar.playToServer(C2SEffectStack.TYPE, C2SEffectStack.STREAM_CODEC, (pkt, ctx) -> {
-            ctx.enqueueWork(() -> C2SEffectStack.handle(pkt, ctx.player(), ModItems.MOB_EFFECT_GIVE.get()));
-        });
+        registrar.playToServer(C2SEffectStack.TYPE, C2SEffectStack.STREAM_CODEC, (pkt, ctx) -> ctx.enqueueWork(() -> C2SEffectStack.handle(pkt, ctx.player(), ModItems.MOB_EFFECT_GIVE.get())));
+        registrar.playToServer(C2SSpawnEgg.TYPE, C2SSpawnEgg.STREAM_CODEC, (pkt, ctx) -> ctx.enqueueWork(() -> C2SSpawnEgg.handle(pkt, ctx.player())));
+        registrar.playToClient(S2CSpawnEggScreen.TYPE, S2CSpawnEggScreen.STREAM_CODEC, (pkt, ctx) -> ctx.enqueueWork(() -> S2CSpawnEggScreen.handle(pkt)));
     }
 }

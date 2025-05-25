@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class C2SEffectStack implements CustomPacketPayload {
 
-    public static final Type<C2SEffectStack> TYPE = new Type<>(MobBattle.of("effect_stack_update"));
+    public static final Type<C2SEffectStack> TYPE = new Type<>(MobBattle.of("c2s_effect_stack_update"));
 
     public static final StreamCodec<FriendlyByteBuf, C2SEffectStack> STREAM_CODEC = new StreamCodec<>() {
         @Override

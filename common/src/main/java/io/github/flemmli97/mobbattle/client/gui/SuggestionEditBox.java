@@ -23,6 +23,7 @@ public class SuggestionEditBox extends EditBox {
     private int current, hovered;
     private String[] suggestions;
     private Rect2i rect;
+    private boolean hidden;
 
     private boolean init;
 
@@ -81,7 +82,7 @@ public class SuggestionEditBox extends EditBox {
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
-        if (!this.canConsumeInput() || this.suggestions.length == 0)
+        if (this.suggestionsHidden() || this.suggestions.length == 0)
             return;
         if (this.suggestions.length == 1 && this.getValue().equals(this.suggestions[0]))
             return;
@@ -89,6 +90,8 @@ public class SuggestionEditBox extends EditBox {
         if (idx >= 0 && idx < this.suggestions.length) {
             this.select(idx);
         }
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(0, 0, 1);
         guiGraphics.fill(this.rect.getX(), this.rect.getY(), this.rect.getX() + this.rect.getWidth(), this.rect.getY() + this.rect.getHeight(), 0xe0101010);
         int x = this.getX() + this.paddingX;
         int y = this.rect.getY() + this.paddingY;
@@ -99,14 +102,20 @@ public class SuggestionEditBox extends EditBox {
             String string = this.suggestions[idxx];
             guiGraphics.drawString(this.font, string, x, y + i * this.lineHeight, this.current == idxx ? 0xFFFF55 : 0xFFFFFF);
         }
+        guiGraphics.pose().popPose();
+    }
+
+    private boolean suggestionsHidden() {
+        return this.hidden || !this.canConsumeInput();
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (super.mouseClicked(mouseX, mouseY, button)) {
+            this.hidden = false;
             return true;
         }
-        if (!this.rect.contains((int) mouseX, (int) mouseY)) {
+        if (this.suggestionsHidden() || !this.rect.contains((int) mouseX, (int) mouseY)) {
             return false;
         }
         int i = this.indexFromMouse(mouseY);
@@ -189,6 +198,7 @@ public class SuggestionEditBox extends EditBox {
                 width = newWidth;
         }
         this.rect = new Rect2i(this.getX(), y, width, sizeY + this.paddingY);
+        this.hidden = false;
     }
 
     public void cycle(int change) {
@@ -218,6 +228,7 @@ public class SuggestionEditBox extends EditBox {
         this.setCursorPosition(suggestion.length());
         this.setHighlightPos(suggestion.length());
         this.select(this.current);
+        this.hidden = true;
     }
 
     public interface SuggestionContent {

@@ -2,7 +2,6 @@ package io.github.flemmli97.mobbattle.fabric.registry;
 
 import com.google.common.collect.ImmutableList;
 import io.github.flemmli97.mobbattle.MobBattle;
-import io.github.flemmli97.mobbattle.handler.Utils;
 import io.github.flemmli97.mobbattle.items.ItemExtendedSpawnEgg;
 import io.github.flemmli97.mobbattle.items.MobArmor;
 import io.github.flemmli97.mobbattle.items.MobArmy;
@@ -17,12 +16,9 @@ import io.github.flemmli97.mobbattle.items.MobStick;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlotGroup;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
@@ -66,13 +62,10 @@ public class ModItems {
             double y = source.pos().getY() + direction.getStepY() + 0.2;
             double z = source.center().z() + direction.getStepZ();
             BlockPos blockpos = BlockPos.containing(x, y, z);
-            Entity entity = ItemExtendedSpawnEgg.spawnEntity(source.level(), stack, blockpos.getX() + 0.5D, blockpos.getY(),
-                    blockpos.getZ() + 0.5D);
-            if (entity != null) {
+            boolean spawned = ItemExtendedSpawnEgg.spawnEntity(source.getLevel(), stack, blockpos.getX() + 0.5D, blockpos.getY(),
+                    blockpos.getZ() + 0.5D, direction);
+            if (spawned) {
                 stack.shrink(1);
-                if (stack.has(DataComponents.CUSTOM_NAME) && entity instanceof Mob) {
-                    Utils.updateEntity(stack.getHoverName().getString(), (Mob) entity);
-                }
             }
             return stack;
         });
