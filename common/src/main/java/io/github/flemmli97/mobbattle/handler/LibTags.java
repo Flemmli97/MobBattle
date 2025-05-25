@@ -5,6 +5,7 @@ import io.github.flemmli97.mobbattle.MobBattle;
 public class LibTags {
 
     public static final String SPAWN_EGG_TAG = MobBattle.MODID + ":Entity";
+    public static final String SPAWN_EGG_OPTIONS = MobBattle.MODID + ":EntityOptions";
     public static final String SAVED_ENTITY = MobBattle.MODID + ":StoredEntity";
     public static final String SAVED_ENTITY_NAME = MobBattle.MODID + ":StoredEntityName";
 

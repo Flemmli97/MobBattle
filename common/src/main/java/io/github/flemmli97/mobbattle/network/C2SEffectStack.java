@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class C2SEffectStack implements Packet {
 
-    public static final ResourceLocation ID = new ResourceLocation(MobBattle.MODID, "effect_stack_update");
+    public static final ResourceLocation ID = new ResourceLocation(MobBattle.MODID, "c2s_effect_stack_update");
 
     private final String potion;
     private final int duration, amplifier;

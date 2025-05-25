@@ -12,10 +12,12 @@ public class PacketRegistrar {
 
     public static int registerServerPackets(ServerPacketRegister register, int id) {
         register.registerMessage(id++, C2SEffectStack.ID, C2SEffectStack.class, C2SEffectStack::write, C2SEffectStack::read, C2SEffectStack::handle);
+        register.registerMessage(id++, C2SSpawnEgg.ID, C2SSpawnEgg.class, C2SSpawnEgg::write, C2SSpawnEgg::read, C2SSpawnEgg::handle);
         return id;
     }
 
     public static int registerClientPackets(ClientPacketRegister register, int id) {
+        register.registerMessage(id++, S2CSpawnEggScreen.ID, S2CSpawnEggScreen.class, S2CSpawnEggScreen::write, S2CSpawnEggScreen::read, S2CSpawnEggScreen::handle);
         return id;
     }
 
