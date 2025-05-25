@@ -4,6 +4,7 @@ import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.items.ItemExtendedSpawnEgg;
 import io.github.flemmli97.mobbattle.network.C2SSpawnEgg;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -68,13 +69,16 @@ public class SpawnEggScreen extends Screen {
         guiGraphics.fillGradient(this.leftPos, this.topPos, this.leftPos + this.sizeX, this.topPos + this.sizeY, 0xc0101010, 0xc0101010);
         int xPadding = 16;
         int yOff = xPadding;
+        int width = this.font.width(this.entity.getType().getDescription());
+        guiGraphics.drawString(this.font, this.entity.getType().getDescription(), (int) (this.leftPos + this.sizeX * 0.5f - width * 0.5f), this.topPos + yOff, ChatFormatting.GOLD.getColor());
+        yOff += 16;
         guiGraphics.drawString(this.font, Component.translatable("mobbattle.gui.team"), this.leftPos + xPadding, this.topPos + yOff, 0xffffff);
         yOff += 16 + 20 + 8;
         guiGraphics.drawString(this.font, Component.translatable("mobbattle.gui.amount"), this.leftPos + xPadding, this.topPos + yOff, 0xffffff);
         yOff += 16 + 20;
         guiGraphics.drawString(this.font, Component.translatable("mobbattle.gui.spacing"), this.leftPos + xPadding, this.topPos + yOff, 0xffffff);
         renderEntityMouseNoClip(guiGraphics,
-                this.leftPos + this.sizeX - xPadding - (3 * 30), this.topPos + xPadding, 30, 3f, 3,
+                this.leftPos + this.sizeX - xPadding - (3 * 30), this.topPos + xPadding + 16, 30, 3f, 3,
                 mouseX, mouseY, this.entity);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
     }
@@ -90,16 +94,16 @@ public class SpawnEggScreen extends Screen {
         if (entity.getBbHeight() > maxHeight) {
             scaleMult = Math.min(scaleMult, maxHeight / entity.getBbHeight());
         }
-        float xM = (x + x + sizeX) / 2.0f;
-        float yM = (y + y + sizeY) / 2.0f;
-        mouseX = xM - mouseX;
-        mouseY = yM - mouseY;
-        InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, (int) xM, (int) yM, (int) (scale * scaleMult), mouseX, mouseY, entity);
+        float xPos = (x + x + sizeX) / 2.0f;
+        float yPos = (y + y + sizeY) / 2.0f + entity.getBbHeight() * 0.5f * scaleMult * scale;
+        float eyePos = yPos - entity.getEyeHeight() * scaleMult * scale;
+        InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, (int) xPos, (int) yPos,
+                (int) (scale * scaleMult), xPos - mouseX, eyePos - mouseY, entity);
     }
 
     protected void buttons() {
         int padding = 16;
-        int yOff = padding + 12;
+        int yOff = padding + 12 + 16;
         this.teamBox = new SuggestionEditBox(this.font, this.leftPos + padding, this.topPos + yOff, 100, 14, Component.empty(), 5, false,
                 SuggestionEditBox.ofString(this.player.level().getScoreboard().getTeamNames()));
         this.teamBox.setResponder(s -> this.team = s);
