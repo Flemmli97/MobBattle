@@ -7,7 +7,6 @@ import io.github.flemmli97.mobbattle.handler.Utils;
 import io.github.flemmli97.mobbattle.network.S2CSpawnEggScreen;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -54,15 +53,11 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
     @Override
     public void appendHoverText(ItemStack stack, Level worldIn, List<Component> list, TooltipFlag flagIn) {
         list.add(new TranslatableComponent("tooltip.spawnegg").withStyle(ChatFormatting.AQUA));
-        if (ItemExtendedSpawnEgg.hasSavedEntity(stack)) {
+        ResourceLocation id = getNamedIdFrom(stack);
+        if (id != null) {
+            EntityType<?> type = Registry.ENTITY_TYPE.get(id);
             CompoundTag compound = stack.getTag().getCompound(LibTags.SPAWN_EGG_TAG);
-            String entity = EntityType.byString(compound.getString("id")).isPresent()
-                    ? EntityType.byString(compound.getString("id")).get().getDescriptionId()
-                    : "";
-            if (!entity.isEmpty()) {
-                String entityName = compound.contains("CustomName") ? compound.getString("CustomName") : I18n.get(entity);
-                list.add(new TranslatableComponent("tooltip.spawnegg.spawn", entityName + (compound.size() > 1 ? " (+NBT)" : "")).withStyle(ChatFormatting.GOLD));
-            }
+            list.add(new TranslatableComponent("tooltip.spawnegg.spawn" + (compound.size() > 1 ? ".nbt" : ""), type.getDescription()).withStyle(ChatFormatting.GOLD));
         }
     }
 
@@ -178,6 +173,9 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
                 mob.playAmbientSound();
                 if (options.team() != null && !options.team().isEmpty()) {
                     Utils.updateEntity(options.team(), mob);
+                }
+                if (stack.hasCustomHoverName()) {
+                    entity.setCustomName(stack.getHoverName());
                 }
                 success = true;
             }

@@ -5,6 +5,7 @@ import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.items.ItemExtendedSpawnEgg;
 import io.github.flemmli97.mobbattle.network.C2SSpawnEgg;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -69,13 +70,16 @@ public class SpawnEggScreen extends Screen {
         this.fillGradient(stack, this.leftPos, this.topPos, this.leftPos + this.sizeX, this.topPos + this.sizeY, 0xc0101010, 0xc0101010);
         int xPadding = 16;
         int yOff = xPadding;
+        int width = this.font.width(this.entity.getType().getDescription());
+        this.minecraft.font.draw(stack, this.entity.getType().getDescription(), this.leftPos + this.sizeX * 0.5f - width * 0.5f, this.topPos + yOff, ChatFormatting.GOLD.getColor());
+        yOff += 16;
         this.minecraft.font.draw(stack, new TranslatableComponent("mobbattle.gui.team"), this.leftPos + xPadding, this.topPos + yOff, 0xffffff);
         yOff += 16 + 20 + 8;
         this.minecraft.font.draw(stack, new TranslatableComponent("mobbattle.gui.amount"), this.leftPos + xPadding, this.topPos + yOff, 0xffffff);
         yOff += 16 + 20;
         this.minecraft.font.draw(stack, new TranslatableComponent("mobbattle.gui.spacing"), this.leftPos + xPadding, this.topPos + yOff, 0xffffff);
 
-        renderEntityGui(this.leftPos + this.sizeX - xPadding - (3 * 30), this.topPos + xPadding, 30, 3f, 3,
+        renderEntityGui(this.leftPos + this.sizeX - xPadding - (3 * 30), this.topPos + xPadding + 16, 30, 3f, 3,
                 mouseX, mouseY, this.entity);
         super.render(stack, mouseX, mouseY, partialTick);
     }
@@ -100,7 +104,7 @@ public class SpawnEggScreen extends Screen {
 
     protected void buttons() {
         int padding = 16;
-        int yOff = padding + 12;
+        int yOff = padding + 12 + 16;
         this.teamBox = new SuggestionEditBox(this.font, this.leftPos + padding, this.topPos + yOff, 100, 14, TextComponent.EMPTY, 5, false,
                 SuggestionEditBox.ofString(this.player.level.getScoreboard().getTeamNames()));
         this.teamBox.setResponder(s -> this.team = s);

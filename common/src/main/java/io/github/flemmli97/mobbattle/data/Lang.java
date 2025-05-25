@@ -57,6 +57,7 @@ public class Lang implements DataProvider {
 
         this.add("tooltip.spawnegg", "Left click an entity to save it. Shift while doing saves nbt too.");
         this.add("tooltip.spawnegg.spawn", "Spawns %s");
+        this.add("tooltip.spawnegg.spawn.nbt", "Spawns %s (+NBT)");
         this.add("tooltip.spawnegg.save", "Saved Entity %s");
         this.add("tooltip.spawnegg.save.nbt", "Saved Entity %s with NBT");
         this.add("tooltip.spawnegg.creative", "Needs to be in creative mode to copy entity");

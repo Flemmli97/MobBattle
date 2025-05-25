@@ -23,6 +23,7 @@
   "mobbattle.gui.save": "Save",
   "tooltip.spawnegg": "Left click an entity to save it. Shift while doing saves nbt too.",
   "tooltip.spawnegg.spawn": "Spawns %s",
+  "tooltip.spawnegg.spawn.nbt": "Spawns %s (+NBT)",
   "tooltip.spawnegg.save": "Saved Entity %s",
   "tooltip.spawnegg.save.nbt": "Saved Entity %s with NBT",
   "tooltip.spawnegg.creative": "Needs to be in creative mode to copy entity",
