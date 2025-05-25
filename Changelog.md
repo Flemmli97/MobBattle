@@ -1,3 +1,11 @@
+Mob Battle 2.5.0
+================
+- Refactored a lot of internals
+- Updated effect gui with id suggestions
+- Update spawn egg with a gui
+  - Allows to spawn multiple mobs at once now
+- Updated various hard coded strings in gui to use translations
+
 Mob Battle 2.4.13
 ================
 - Mobs targeting now have their range increased
