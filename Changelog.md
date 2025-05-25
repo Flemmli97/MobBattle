@@ -5,6 +5,8 @@ Mob Battle 2.5.0
 - Update spawn egg with a gui
   - Allows to spawn multiple mobs at once now
 - Updated various hard coded strings in gui to use translations
+- Add chinese translation
+- Change damage type of kill item to generic
 
 Mob Battle 2.4.13
 ================
