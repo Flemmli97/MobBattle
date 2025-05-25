@@ -1,7 +1,6 @@
 package io.github.flemmli97.mobbattle.items;
 
 import com.google.common.base.Functions;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.components.SpawnEggOptions;
@@ -9,7 +8,6 @@ import io.github.flemmli97.mobbattle.handler.Utils;
 import io.github.flemmli97.mobbattle.network.S2CSpawnEggScreen;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -53,7 +51,6 @@ import java.util.Optional;
 public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem {
 
     private static final MapCodec<ResourceLocation> ENTITY_TYPE_ID_CODEC = ResourceLocation.CODEC.fieldOf("id");
-    private static final MapCodec<String> NAME_GETTER_CODEC = Codec.STRING.fieldOf("CustomName");
 
     public ItemExtendedSpawnEgg(Item.Properties props) {
         super(props);
@@ -64,12 +61,10 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
         list.add(Component.translatable("tooltip.spawnegg").withStyle(ChatFormatting.AQUA));
         if (ItemExtendedSpawnEgg.hasSavedEntity(stack)) {
             CustomData data = stack.get(DataComponents.ENTITY_DATA);
-            Optional<EntityType<?>> type = BuiltInRegistries.ENTITY_TYPE.getOptional(data.read(ENTITY_TYPE_ID_CODEC).result().get());
-            String entity = type.map(EntityType::getDescriptionId).orElse("");
-            if (!entity.isEmpty()) {
-                String entityName = data.read(NAME_GETTER_CODEC).result().orElse(I18n.get(entity));
-                list.add(Component.translatable("tooltip.spawnegg.spawn", entityName + (data.size() > 1 ? " (+NBT)" : "")).withStyle(ChatFormatting.GOLD));
-            }
+            BuiltInRegistries.ENTITY_TYPE.getOptional(data.read(ENTITY_TYPE_ID_CODEC).result().get())
+                    .ifPresent(type -> {
+                        list.add(Component.translatable("tooltip.spawnegg.spawn" + (data.size() > 1 ? ".nbt" : ""), type.getDescription()).withStyle(ChatFormatting.GOLD));
+                    });
         }
     }
 
@@ -187,6 +182,9 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
                 mob.playAmbientSound();
                 if (options.team() != null && !options.team().isEmpty()) {
                     Utils.updateEntity(options.team(), mob);
+                }
+                if (stack.has(DataComponents.CUSTOM_NAME)) {
+                    entity.setCustomName(stack.getHoverName());
                 }
                 success = true;
             }

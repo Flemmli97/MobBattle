@@ -5,6 +5,7 @@ import io.github.flemmli97.mobbattle.components.SpawnEggOptions;
 import io.github.flemmli97.mobbattle.items.ItemExtendedSpawnEgg;
 import io.github.flemmli97.mobbattle.network.C2SSpawnEgg;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -71,6 +72,9 @@ public class SpawnEggScreen extends Screen {
         guiGraphics.fillGradient(this.leftPos, this.topPos, this.leftPos + this.sizeX, this.topPos + this.sizeY, 0xc0101010, 0xc0101010);
         int xPadding = 16;
         int yOff = xPadding;
+        int width = this.font.width(this.entity.getType().getDescription());
+        guiGraphics.drawString(this.font, this.entity.getType().getDescription(), (int) (this.leftPos + this.sizeX * 0.5f - width * 0.5f), this.topPos + yOff, ChatFormatting.GOLD.getColor());
+        yOff += 16;
         guiGraphics.drawString(this.font, Component.translatable("mobbattle.gui.team"), this.leftPos + xPadding, this.topPos + yOff, 0xffffff);
         yOff += 16 + 20 + 8;
         guiGraphics.drawString(this.font, Component.translatable("mobbattle.gui.amount"), this.leftPos + xPadding, this.topPos + yOff, 0xffffff);
@@ -78,7 +82,7 @@ public class SpawnEggScreen extends Screen {
         guiGraphics.drawString(this.font, Component.translatable("mobbattle.gui.spacing"), this.leftPos + xPadding, this.topPos + yOff, 0xffffff);
 
         renderEntityMouseNoClip(guiGraphics,
-                this.leftPos + this.sizeX - xPadding - (3 * 30), this.topPos + xPadding, 30, 3f, 3,
+                this.leftPos + this.sizeX - xPadding - (3 * 30), this.topPos + xPadding + 16, 30, 3f, 3,
                 0.0625f, mouseX, mouseY, this.entity);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
     }
@@ -134,7 +138,7 @@ public class SpawnEggScreen extends Screen {
 
     protected void buttons() {
         int padding = 16;
-        int yOff = padding + 12;
+        int yOff = padding + 12 + 16;
         this.teamBox = new SuggestionEditBox(this.font, this.leftPos + padding, this.topPos + yOff, 100, 14, Component.empty(), 5, false,
                 SuggestionEditBox.ofString(this.player.level().getScoreboard().getTeamNames()));
         this.teamBox.setResponder(s -> this.team = s);
