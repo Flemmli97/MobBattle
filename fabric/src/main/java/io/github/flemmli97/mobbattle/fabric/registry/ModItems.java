@@ -62,7 +62,7 @@ public class ModItems {
             double y = source.pos().getY() + direction.getStepY() + 0.2;
             double z = source.center().z() + direction.getStepZ();
             BlockPos blockpos = BlockPos.containing(x, y, z);
-            boolean spawned = ItemExtendedSpawnEgg.spawnEntity(source.getLevel(), stack, blockpos.getX() + 0.5D, blockpos.getY(),
+            boolean spawned = ItemExtendedSpawnEgg.spawnEntity(source.level(), stack, blockpos.getX() + 0.5D, blockpos.getY(),
                     blockpos.getZ() + 0.5D, direction);
             if (spawned) {
                 stack.shrink(1);
