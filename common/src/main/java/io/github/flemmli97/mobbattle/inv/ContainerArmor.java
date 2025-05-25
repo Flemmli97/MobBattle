@@ -6,7 +6,6 @@ import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -128,44 +127,13 @@ public class ContainerArmor extends AbstractContainerMenu {
         Slot slot = this.slots.get(index);
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
-            int size = itemstack1.getCount();
             itemstack = itemstack1.copy();
             if (index < 6) {
                 if (!this.moveItemStackTo(itemstack1, 6, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.slots.get(2).hasItem() && CrossPlatformStuff.INSTANCE.canEquip(itemstack1, EquipmentSlot.HEAD, null)) {
-                Slot slot1 = (this.slots.get(2));
-                slot1.set(itemstack);
-                slot1.setChanged();
-                size--;
-                itemstack1.setCount(size);
+            } else if (!this.moveItemStackTo(itemstack1, 0, 6, true)) {
                 return ItemStack.EMPTY;
-            } else if (!this.slots.get(3).hasItem() && CrossPlatformStuff.INSTANCE.canEquip(itemstack1, EquipmentSlot.CHEST, null)) {
-                Slot slot1 = (this.slots.get(3));
-                slot1.set(itemstack);
-                slot1.setChanged();
-                size--;
-                itemstack1.setCount(size);
-                return ItemStack.EMPTY;
-            } else if (!this.slots.get(4).hasItem() && CrossPlatformStuff.INSTANCE.canEquip(itemstack1, EquipmentSlot.LEGS, null)) {
-                Slot slot1 = (this.slots.get(4));
-                slot1.set(itemstack);
-                slot1.setChanged();
-                size--;
-                itemstack1.setCount(size);
-                return ItemStack.EMPTY;
-            } else if (!this.slots.get(5).hasItem() && CrossPlatformStuff.INSTANCE.canEquip(itemstack1, EquipmentSlot.FEET, null)) {
-                Slot slot1 = (this.slots.get(5));
-                slot1.set(itemstack);
-                slot1.setChanged();
-                size--;
-                itemstack1.setCount(size);
-                return ItemStack.EMPTY;
-            } else {
-                if (!this.moveItemStackTo(itemstack1, 0, 2, true)) {
-                    return ItemStack.EMPTY;
-                }
             }
             if (itemstack1.isEmpty()) {
                 slot.set(ItemStack.EMPTY);

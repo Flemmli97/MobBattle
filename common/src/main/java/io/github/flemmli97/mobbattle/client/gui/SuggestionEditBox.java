@@ -24,10 +24,12 @@ public class SuggestionEditBox extends EditBox {
     private int current, hovered;
     private String[] suggestions;
     private Rect2i rect;
+    private boolean hidden;
 
     private boolean init;
 
     private int paddingX = 4, paddingY = 2;
+    private boolean canLoseFocus = true;
 
     public SuggestionEditBox(Font font, int x, int y, int width, int height, Component message,
                              int maxLimit, boolean top, Collection<SuggestionContent> suggestions) {
@@ -82,7 +84,7 @@ public class SuggestionEditBox extends EditBox {
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         super.renderButton(poseStack, mouseX, mouseY, partialTick);
-        if (!this.canConsumeInput() || this.suggestions.length == 0)
+        if (this.suggestionsHidden() || this.suggestions.length == 0)
             return;
         if (this.suggestions.length == 1 && this.getValue().equals(this.suggestions[0]))
             return;
@@ -102,12 +104,22 @@ public class SuggestionEditBox extends EditBox {
         }
     }
 
+    private boolean suggestionsHidden() {
+        return this.hidden || !this.canConsumeInput();
+    }
+
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (super.mouseClicked(mouseX, mouseY, button)) {
+        boolean pre = this.canLoseFocus;
+        // Super only checks the bounds of the edit box and not suggestions
+        this.setCanLoseFocus(pre && !this.rect.contains((int) mouseX, (int) mouseY));
+        boolean superClicked = super.mouseClicked(mouseX, mouseY, button);
+        this.setCanLoseFocus(pre);
+        if (superClicked) {
+            this.hidden = false;
             return true;
         }
-        if (!this.rect.contains((int) mouseX, (int) mouseY)) {
+        if (this.suggestionsHidden() || !this.rect.contains((int) mouseX, (int) mouseY)) {
             return false;
         }
         int i = this.indexFromMouse(mouseY);
@@ -116,6 +128,12 @@ public class SuggestionEditBox extends EditBox {
             this.useSuggestion();
         }
         return true;
+    }
+
+    @Override
+    public void setCanLoseFocus(boolean canLoseFocus) {
+        this.canLoseFocus = canLoseFocus;
+        super.setCanLoseFocus(canLoseFocus);
     }
 
     private int indexFromMouse(double mouseY) {
@@ -191,6 +209,7 @@ public class SuggestionEditBox extends EditBox {
                 width = newWidth;
         }
         this.rect = new Rect2i(this.x, y, width, sizeY + this.paddingY);
+        this.hidden = false;
     }
 
     public void cycle(int change) {
@@ -220,6 +239,7 @@ public class SuggestionEditBox extends EditBox {
         this.setCursorPosition(suggestion.length());
         this.setHighlightPos(suggestion.length());
         this.select(this.current);
+        this.hidden = true;
     }
 
     public interface SuggestionContent {

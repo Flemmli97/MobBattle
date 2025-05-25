@@ -14,6 +14,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -30,6 +31,7 @@ public class SpawnEggScreen extends Screen {
 
     private String team;
     private int amount, spacing;
+    private EditBox teamBox;
 
     public SpawnEggScreen(InteractionHand hand) {
         super(new TextComponent(""));
@@ -72,22 +74,39 @@ public class SpawnEggScreen extends Screen {
         this.minecraft.font.draw(stack, new TranslatableComponent("mobbattle.gui.amount"), this.leftPos + xPadding, this.topPos + yOff, 0xffffff);
         yOff += 16 + 20;
         this.minecraft.font.draw(stack, new TranslatableComponent("mobbattle.gui.spacing"), this.leftPos + xPadding, this.topPos + yOff, 0xffffff);
-        int posX = 180;
-        int posY = 100;
-        InventoryScreen.renderEntityInInventory(this.leftPos + posX, this.topPos + posY, 32, this.leftPos + posX - mouseX, this.topPos + (posY - 35) - mouseY, this.entity);
+
+        renderEntityGui(this.leftPos + this.sizeX - xPadding - (3 * 30), this.topPos + xPadding, 30, 3f, 3,
+                mouseX, mouseY, this.entity);
         super.render(stack, mouseX, mouseY, partialTick);
+    }
+
+    public static void renderEntityGui(int x, int y, int scale, float maxWidth, float maxHeight,
+                                       float mouseX, float mouseY, LivingEntity entity) {
+        int sizeX = (int) (maxWidth * scale);
+        int sizeY = (int) (maxHeight * scale);
+        float scaleMult = 1;
+        if (entity.getBbWidth() > maxWidth) {
+            scaleMult = maxWidth / entity.getBbWidth();
+        }
+        if (entity.getBbHeight() > maxHeight) {
+            scaleMult = Math.min(scaleMult, maxHeight / entity.getBbHeight());
+        }
+        float xPos = (float)(x + x + sizeX) / 2.0f;
+        float yPos = (float)(y + y + sizeY) / 2.0f + entity.getBbHeight() * 0.5f * scaleMult * scale;
+        float eyePos = yPos - entity.getEyeHeight() * scaleMult * scale;
+        InventoryScreen.renderEntityInInventory((int) xPos, (int) yPos, (int) (scale * scaleMult),
+                xPos - mouseX, eyePos - mouseY, entity);
     }
 
     protected void buttons() {
         int padding = 16;
         int yOff = padding + 12;
-        SuggestionEditBox teamBox = new SuggestionEditBox(this.font, this.leftPos + padding, this.topPos + yOff, 100, 14, TextComponent.EMPTY, 5, false,
+        this.teamBox = new SuggestionEditBox(this.font, this.leftPos + padding, this.topPos + yOff, 100, 14, TextComponent.EMPTY, 5, false,
                 SuggestionEditBox.ofString(this.player.level.getScoreboard().getTeamNames()));
-        teamBox.setResponder(s -> this.team = s);
-        teamBox.setMaxLength(35);
-        teamBox.setEditable(true);
-        teamBox.setValue(this.team);
-        this.addRenderableWidget(teamBox);
+        this.teamBox.setResponder(s -> this.team = s);
+        this.teamBox.setMaxLength(35);
+        this.teamBox.setEditable(true);
+        this.teamBox.setValue(this.team);
 
         yOff += 16 + 20 + 8;
         EditBox amountBox = new EditBox(this.font, this.leftPos + padding, this.topPos + yOff, 27, 10, TextComponent.EMPTY) {
@@ -143,6 +162,8 @@ public class SpawnEggScreen extends Screen {
             CrossPlatformStuff.INSTANCE.sendToServer(new C2SSpawnEgg(this.hand, this.team, this.amount, this.spacing));
             this.minecraft.setScreen(null);
         }));
+        // Render order
+        this.addRenderableWidget(this.teamBox);
     }
 
     private boolean isHelperKey(int keyCode) {
@@ -156,7 +177,7 @@ public class SpawnEggScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (this.minecraft.options.keyInventory.matches(keyCode, scanCode)) {
+        if (!this.teamBox.canConsumeInput() && this.minecraft.options.keyInventory.matches(keyCode, scanCode)) {
             this.onClose();
             return true;
         }

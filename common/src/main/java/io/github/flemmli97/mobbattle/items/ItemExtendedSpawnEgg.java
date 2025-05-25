@@ -176,7 +176,7 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
                     mob.finalizeSpawn(level, level.getCurrentDifficultyAt(new BlockPos(mob.position())), MobSpawnType.SPAWN_EGG, null, null);
                 level.addFreshEntity(entity);
                 mob.playAmbientSound();
-                if (options.team() != null && options.team().isEmpty()) {
+                if (options.team() != null && !options.team().isEmpty()) {
                     Utils.updateEntity(options.team(), mob);
                 }
                 success = true;
