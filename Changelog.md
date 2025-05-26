@@ -1,3 +1,7 @@
+Mob Battle 2.5.1
+================
+- Fix crash with effect give item
+
 Mob Battle 2.5.0
 ================
 - Refactored a lot of internals
