@@ -7,7 +7,7 @@ public interface ClientPlatform {
 
     ClientPlatform INSTANCE = MobBattle.getPlatformInstance(ClientPlatform.class,
             "io.github.flemmli97.mobbattle.fabric.platform.ClientPlatformImpl",
-            "io.github.flemmli97.mobbattle.forge.platform.ClientPlatformImpl");
+            "io.github.flemmli97.mobbattle.neoforge.platform.ClientPlatformImpl");
 
     boolean keyMatches(KeyMapping mapping, int keyCode, int scanCode);
 

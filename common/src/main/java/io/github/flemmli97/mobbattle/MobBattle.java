@@ -24,15 +24,15 @@ public class MobBattle {
     public static Supplier<CreativeModeTab> customTab;
 
     @SuppressWarnings("unchecked")
-    public static <T> T getPlatformInstance(Class<T> abstractClss, String fabricImpl, String forgeImpl) {
+    public static <T> T getPlatformInstance(Class<T> abstractClss, String fabricImpl, String neoForgeImpl) {
         Class<?> clss = null;
         try {
-            clss = Class.forName(forgeImpl);
+            clss = Class.forName(neoForgeImpl);
         } catch (ClassNotFoundException e) {
             try {
                 clss = Class.forName(fabricImpl);
             } catch (ClassNotFoundException ex) {
-                MobBattle.LOGGER.fatal("No Implementation of {} found with given paths {} and {}", abstractClss, forgeImpl, fabricImpl);
+                MobBattle.LOGGER.fatal("No Implementation of {} found with given paths {} and {}", abstractClss, neoForgeImpl, fabricImpl);
             }
         }
         if (clss != null && abstractClss.isAssignableFrom(clss)) {
