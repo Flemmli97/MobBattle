@@ -24,6 +24,7 @@
   "tooltip.spawnegg": "手持時滑鼠左鍵實體以存進高級刷怪蛋，按住潛行還可保存該實體的NBT數據。",
   "tooltip.spawnegg.spawn": "生成%s",
   "tooltip.spawnegg.save": "已保存實體%s",
+  "tooltip.spawnegg.save.nbt": "已附帶NBT數據地保存了實體%s",
   "tooltip.spawnegg.creative": "僅在創造模式下可複製實體。",
   "tooltip.armor": "手持時滑鼠右鍵實體以編輯TA的盔甲和物品欄。",
   "tooltip.army.first": "滑鼠右鍵方塊設定框選的第一個對角線角落方塊，再次滑鼠右鍵其他方塊設定框選的第二個對角線角落方塊以完成框選(類似WorldEdit)",
