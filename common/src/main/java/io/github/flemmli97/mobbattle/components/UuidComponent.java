@@ -17,7 +17,7 @@ public record UuidComponent(Optional<UUID> uuid, Optional<Component> name) {
     public static final UuidComponent EMPTY = new UuidComponent(Optional.empty(), Optional.empty());
     public static final Codec<UuidComponent> CODEC = RecordCodecBuilder.create((instance) ->
             instance.group(UUIDUtil.CODEC.optionalFieldOf("uuids").forGetter(UuidComponent::uuid),
-                    ComponentSerialization.FLAT_CODEC.optionalFieldOf("name").forGetter(UuidComponent::name)
+                    ComponentSerialization.CODEC.optionalFieldOf("name").forGetter(UuidComponent::name)
             ).apply(instance, UuidComponent::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, UuidComponent> STREAM_CODEC = new StreamCodec<>() {

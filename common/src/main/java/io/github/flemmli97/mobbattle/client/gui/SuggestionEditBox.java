@@ -44,7 +44,7 @@ public class SuggestionEditBox extends EditBox {
     }
 
     public static Collection<SuggestionContent> ofString(Collection<String> strings) {
-        return strings.stream().<SuggestionContent>map(s -> new SuggestionContent() {
+        return strings.stream().sorted().<SuggestionContent>map(s -> new SuggestionContent() {
 
             @Override
             public boolean matches(String input) {
@@ -59,7 +59,14 @@ public class SuggestionEditBox extends EditBox {
     }
 
     public static Collection<SuggestionContent> ofResourceLocation(Collection<ResourceLocation> strings) {
-        return strings.stream().<SuggestionContent>map(res -> new SuggestionContent() {
+        return strings.stream().sorted((r1, r2) -> {
+            if (r1.getNamespace().equals("minecraft")) {
+                if (r2.getNamespace().equals("minecraft"))
+                    return r1.getPath().compareTo(r2.getPath());
+                return -1;
+            }
+            return r1.toString().compareTo(r2.toString());
+        }).<SuggestionContent>map(res -> new SuggestionContent() {
 
             @Override
             public boolean matches(String input) {
@@ -111,11 +118,12 @@ public class SuggestionEditBox extends EditBox {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (super.mouseClicked(mouseX, mouseY, button)) {
+        boolean suggestion = !this.suggestionsHidden() && this.rect.contains((int) mouseX, (int) mouseY);
+        if (!suggestion && super.mouseClicked(mouseX, mouseY, button)) {
             this.hidden = false;
             return true;
         }
-        if (this.suggestionsHidden() || !this.rect.contains((int) mouseX, (int) mouseY)) {
+        if (!suggestion) {
             return false;
         }
         int i = this.indexFromMouse(mouseY);

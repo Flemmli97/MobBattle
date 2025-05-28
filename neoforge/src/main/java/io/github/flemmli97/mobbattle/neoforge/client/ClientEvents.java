@@ -2,7 +2,6 @@ package io.github.flemmli97.mobbattle.neoforge.client;
 
 import io.github.flemmli97.mobbattle.client.ClientHandler;
 import io.github.flemmli97.mobbattle.client.gui.GuiArmor;
-import io.github.flemmli97.mobbattle.client.gui.MultiItemColor;
 import io.github.flemmli97.mobbattle.components.AreaPositionComponent;
 import io.github.flemmli97.mobbattle.neoforge.registry.ModItems;
 import io.github.flemmli97.mobbattle.neoforge.registry.ModMenuType;
@@ -13,7 +12,6 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -22,7 +20,6 @@ public class ClientEvents {
 
     public static void register(IEventBus modBus) {
         NeoForge.EVENT_BUS.register(new ClientEvents());
-        modBus.addListener(ClientEvents::spawnEggColor);
         modBus.addListener(ClientEvents::menuRegister);
     }
 
@@ -38,10 +35,6 @@ public class ClientEvents {
             if (comp != null && comp.first() != null && comp.second() != null)
                 ClientHandler.renderBlockOutline(event.getPoseStack(), Minecraft.getInstance().renderBuffers().crumblingBufferSource(), comp.first(), comp.second());
         }
-    }
-
-    public static void spawnEggColor(RegisterColorHandlersEvent.Item e) {
-        e.register(new MultiItemColor(), ModItems.EXTENDED_EGG.get());
     }
 
     public static void menuRegister(RegisterMenuScreensEvent event) {

@@ -7,6 +7,7 @@ import io.github.flemmli97.mobbattle.components.SpawnEggOptions;
 import io.github.flemmli97.mobbattle.handler.Utils;
 import io.github.flemmli97.mobbattle.network.S2CSpawnEggScreen;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
+import io.github.flemmli97.tenshilib.common.item.SpawnEgg;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,16 +23,17 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.ClipContext;
@@ -45,8 +47,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem {
 
@@ -57,13 +59,13 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag flag) {
-        list.add(Component.translatable("tooltip.spawnegg").withStyle(ChatFormatting.AQUA));
+    public void appendHoverText(ItemStack stack, Item.TooltipContext ctx, TooltipDisplay display, Consumer<Component> adder, TooltipFlag flag) {
+        adder.accept(Component.translatable("tooltip.spawnegg").withStyle(ChatFormatting.AQUA));
         if (ItemExtendedSpawnEgg.hasSavedEntity(stack)) {
             CustomData data = stack.get(DataComponents.ENTITY_DATA);
             BuiltInRegistries.ENTITY_TYPE.getOptional(data.read(ENTITY_TYPE_ID_CODEC).result().get())
                     .ifPresent(type -> {
-                        list.add(Component.translatable("tooltip.spawnegg.spawn" + (data.size() > 1 ? ".nbt" : ""), type.getDescription()).withStyle(ChatFormatting.GOLD));
+                        adder.accept(Component.translatable("tooltip.spawnegg.spawn" + (data.size() > 1 ? ".nbt" : ""), type.getDescription()).withStyle(ChatFormatting.GOLD));
                     });
         }
     }
@@ -71,20 +73,29 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (entity instanceof Mob) {
-            boolean nbt = false;
-            CompoundTag tag = new CompoundTag();
-            if (player.isShiftKeyDown()) {
-                entity.save(tag);
-                this.removeMobSpecificTags(tag);
-                nbt = true;
-            } else {
-                String name = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString();
-                tag.putString("id", name);
-            }
-            stack.set(DataComponents.ENTITY_DATA, CustomData.of(tag));
+            if (player instanceof ServerPlayer serverPlayer) {
+                boolean nbt = false;
+                CompoundTag tag = new CompoundTag();
+                if (player.isShiftKeyDown()) {
+                    entity.save(tag);
+                    this.removeMobSpecificTags(tag);
+                    nbt = true;
+                } else {
+                    String name = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString();
+                    tag.putString("id", name);
+                }
+                stack.set(DataComponents.ENTITY_DATA, CustomData.of(tag));
+                ResourceLocation model = null;
+                SpawnEggItem vanillaEgg = SpawnEggItem.byId(entity.getType());
+                if (vanillaEgg != null)
+                    model = BuiltInRegistries.ITEM.getKey(vanillaEgg);
+                else if (MobBattle.tenshiLib) {
+                    model = SpawnEgg.fromType(entity.getType()).map(BuiltInRegistries.ITEM::getKey).orElse(null);
+                }
+                if (model != null)
+                    stack.set(DataComponents.ITEM_MODEL, model);
 
-            if (!player.level().isClientSide) {
-                player.sendSystemMessage(Component.translatable("tooltip.spawnegg.save" + (nbt ? ".nbt" : ""), entity.getName()).withStyle(ChatFormatting.GOLD));
+                serverPlayer.sendSystemMessage(Component.translatable("tooltip.spawnegg.save" + (nbt ? ".nbt" : ""), entity.getName()).withStyle(ChatFormatting.GOLD));
             }
             return true;
         }
@@ -93,11 +104,11 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
 
     @Override
     public InteractionResult useOn(UseOnContext ctx) {
+        if (!ctx.getPlayer().mayUseItemAt(ctx.getClickedPos().relative(ctx.getClickedFace()), ctx.getClickedFace(), ctx.getItemInHand()))
+            return InteractionResult.PASS;
         if (ctx.getLevel().isClientSide)
-            return InteractionResult.PASS;
+            return InteractionResult.SUCCESS;
         ItemStack stack = ctx.getItemInHand();
-        if (!ctx.getPlayer().mayUseItemAt(ctx.getClickedPos().relative(ctx.getClickedFace()), ctx.getClickedFace(), stack))
-            return InteractionResult.PASS;
         BlockState iblockstate = ctx.getLevel().getBlockState(ctx.getClickedPos());
         if (hasSavedEntity(stack)) {
             BlockEntity tile = ctx.getLevel().getBlockEntity(ctx.getClickedPos());
@@ -131,17 +142,17 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResult use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (!ItemExtendedSpawnEgg.hasSavedEntity(stack))
-            return new InteractionResultHolder<>(InteractionResult.PASS, stack);
+            return InteractionResult.PASS;
         if (player instanceof ServerPlayer serverPlayer) {
             BlockHitResult raytraceresult = getPlayerPOVHitResult(world, player, ClipContext.Fluid.ANY);
             if (raytraceresult.getType() == HitResult.Type.BLOCK) {
                 BlockPos blockpos = raytraceresult.getBlockPos();
 
                 if (!(world.getBlockState(blockpos).getBlock() instanceof LiquidBlock)) {
-                    return new InteractionResultHolder<>(InteractionResult.PASS, stack);
+                    return InteractionResult.PASS;
                 } else if (world.mayInteract(player, blockpos) && player.mayUseItemAt(blockpos, raytraceresult.getDirection(), stack)) {
                     boolean spawned = ItemExtendedSpawnEgg.spawnEntity((ServerLevel) world, stack, blockpos.getX() + 0.5D, blockpos.getY() + 0.5D,
                             blockpos.getZ() + 0.5D, player.getDirection());
@@ -153,7 +164,7 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
                 CrossPlatformStuff.INSTANCE.sendToClient(new S2CSpawnEggScreen(hand), serverPlayer);
             }
         }
-        return InteractionResultHolder.sidedSuccess(stack, player.level().isClientSide);
+        return InteractionResult.SUCCESS;
     }
 
     public static boolean spawnEntity(ServerLevel level, ItemStack stack, double x, double y, double z, Direction direction) {
@@ -167,17 +178,17 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
                 if (options.amount() > 1 && options.spacing() > 0) {
                     int dL = i / sqr;
                     int dW = i % sqr - sqr / 2;
-                    Vec3i front = direction.getNormal().multiply(options.spacing());
+                    Vec3i front = direction.getUnitVec3i().multiply(options.spacing());
                     Vec3i side = new Vec3i(front.getZ(), front.getY(), -front.getX());
-                    entity.moveTo(x + side.getX() * dW + front.getX() * dL, y, z + side.getZ() * dW + front.getZ() * dL,
+                    entity.snapTo(x + side.getX() * dW + front.getX() * dL, y, z + side.getZ() * dW + front.getZ() * dL,
                             Mth.wrapDegrees(direction.toYRot() - 180), 0.0F);
                 } else {
-                    entity.moveTo(x, y, z, Mth.wrapDegrees(level.random.nextFloat() * 360.0F), 0.0F);
+                    entity.snapTo(x, y, z, Mth.wrapDegrees(level.random.nextFloat() * 360.0F), 0.0F);
                 }
                 mob.yHeadRot = mob.getYRot();
                 mob.yBodyRot = mob.getYRot();
                 if (tag.size() == 1)
-                    mob.finalizeSpawn(level, level.getCurrentDifficultyAt(BlockPos.containing(mob.position())), MobSpawnType.SPAWN_EGG, null);
+                    mob.finalizeSpawn(level, level.getCurrentDifficultyAt(BlockPos.containing(mob.position())), EntitySpawnReason.SPAWN_ITEM_USE, null);
                 level.addFreshEntity(entity);
                 mob.playAmbientSound();
                 if (options.team() != null && !options.team().isEmpty()) {
@@ -196,7 +207,7 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
         Entity entity = null;
         if (ItemExtendedSpawnEgg.hasSavedEntity(stack)) {
             CompoundTag tag = stack.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY).copyTag();
-            entity = EntityType.loadEntityRecursive(tag, level, Functions.identity());
+            entity = EntityType.loadEntityRecursive(tag, level, EntitySpawnReason.SPAWN_ITEM_USE, Functions.identity());
         }
         return entity;
     }

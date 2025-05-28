@@ -1,6 +1,7 @@
 package io.github.flemmli97.mobbattle.fabric.mixin;
 
 import io.github.flemmli97.mobbattle.fabric.handler.EventHandler;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -13,8 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
 
-    @Inject(method = "hurt", at = @At(value = "HEAD"), cancellable = true)
-    private void livingHurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> info) {
+    @Inject(method = "hurtServer", at = @At(value = "HEAD"), cancellable = true)
+    private void livingHurt(ServerLevel level, DamageSource source, float amount, CallbackInfoReturnable<Boolean> info) {
         if (!EventHandler.teamFriendlyFire((LivingEntity) (Object) this, source, amount)) {
             info.setReturnValue(false);
             info.cancel();
@@ -25,7 +26,7 @@ public class LivingEntityMixin {
      * Vanilla sets it in Mob#doHurtTarget but all mobs that override that method dont so...
      */
     @Inject(method = "actuallyHurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getDamageAfterArmorAbsorb(Lnet/minecraft/world/damagesource/DamageSource;F)F"))
-    private void mobSetHurt(DamageSource source, float amount, CallbackInfo info) {
+    private void mobSetHurt(ServerLevel level, DamageSource source, float amount, CallbackInfo info) {
         if (source.getEntity() instanceof Mob mob)
             mob.setLastHurtMob((LivingEntity) (Object) this);
     }

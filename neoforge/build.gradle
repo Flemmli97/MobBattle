@@ -3,7 +3,7 @@ apply from: "https://raw.githubusercontent.com/Flemmli97/GradleScripts/arch-loom
 loom {
     runs {
         data {
-            data()
+            clientData()
             programArgs "--all", "--mod", "mobbattle"
             programArgs "--output", project(":common").file("src/generated/resources").absolutePath
             programArgs "--existing", project(":common").file("src/main/resources").absolutePath

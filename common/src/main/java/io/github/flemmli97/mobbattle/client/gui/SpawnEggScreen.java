@@ -133,7 +133,7 @@ public class SpawnEggScreen extends Screen {
     }
 
     @Override
-    protected void renderBlurredBackground(float partialTick) {
+    protected void renderBlurredBackground() {
     }
 
     protected void buttons() {

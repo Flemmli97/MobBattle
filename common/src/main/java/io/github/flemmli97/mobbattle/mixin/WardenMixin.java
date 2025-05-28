@@ -19,7 +19,7 @@ public class WardenMixin implements SetActiveTargetMob {
     private boolean mobbattle_active_targeting;
 
     @Inject(method = "canTargetEntity", at = @At("HEAD"), cancellable = true)
-    private void targetWarden(@Nullable Entity entity, CallbackInfoReturnable<Boolean> info) {
+    private void attackTypeCheck(@Nullable Entity entity, CallbackInfoReturnable<Boolean> info) {
         if (this.mobbattle_active_targeting && entity instanceof LivingEntity living && living.getType() == EntityType.WARDEN)
             info.setReturnValue(true);
     }

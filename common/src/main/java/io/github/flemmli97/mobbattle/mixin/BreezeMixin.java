@@ -16,7 +16,7 @@ public class BreezeMixin implements SetActiveTargetMob {
     private boolean mobbattle_active_targeting;
 
     @Inject(method = "canAttackType", at = @At("HEAD"), cancellable = true)
-    private void targetWarden(EntityType<?> entityType, CallbackInfoReturnable<Boolean> info) {
+    private void attackTypeCheck(EntityType<?> entityType, CallbackInfoReturnable<Boolean> info) {
         if (this.mobbattle_active_targeting)
             info.setReturnValue(true);
     }

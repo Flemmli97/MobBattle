@@ -6,21 +6,22 @@ import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class MobStick extends Item implements LeftClickInteractItem {
 
@@ -29,39 +30,45 @@ public class MobStick extends Item implements LeftClickInteractItem {
     }
 
     @Override
-    public boolean canAttackBlock(BlockState state, Level worldIn, BlockPos pos, Player player) {
-        return !player.isCreative();
+    public boolean canDestroyBlock(ItemStack stack, BlockState state, Level level, BlockPos pos, LivingEntity entity) {
+        return !(entity instanceof Player player) || !player.getAbilities().instabuild;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag b) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext ctx, TooltipDisplay display, Consumer<Component> adder, TooltipFlag flag) {
         UuidComponent comp = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
         if (comp != null && comp.name().isPresent()) {
-            list.add(Component.translatable("tooltip.stick.contains", comp.name()).withStyle(ChatFormatting.GREEN));
+            adder.accept(Component.translatable("tooltip.stick.contains", comp.name()).withStyle(ChatFormatting.GREEN));
         }
-        list.add(Component.translatable("tooltip.stick.first").withStyle(ChatFormatting.AQUA));
-        list.add(Component.translatable("tooltip.stick.second").withStyle(ChatFormatting.AQUA));
+        adder.accept(Component.translatable("tooltip.stick.first").withStyle(ChatFormatting.AQUA));
+        adder.accept(Component.translatable("tooltip.stick.second").withStyle(ChatFormatting.AQUA));
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public boolean isFoil(ItemStack stack) {
+        UuidComponent comp = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
+        return comp != null && comp.uuid().isPresent();
+    }
+
+    @Override
+    public InteractionResult use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!player.level().isClientSide) {
+        if (player instanceof ServerPlayer serverPlayer) {
             UuidComponent comp = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
             if (comp != null) {
                 stack.remove(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
-                player.sendSystemMessage(Component.translatable("tooltip.stick.reset").withStyle(ChatFormatting.RED));
+                serverPlayer.sendSystemMessage(Component.translatable("tooltip.stick.reset").withStyle(ChatFormatting.RED));
             }
         }
-        return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+        return InteractionResult.SUCCESS;
     }
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (player.level() instanceof ServerLevel) {
+        if (player instanceof ServerPlayer serverPlayer) {
             UuidComponent comp = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
             if (comp != null && comp.uuid().isPresent()) {
-                Mob storedEntity = Utils.fromUUID((ServerLevel) player.level(), comp.uuid().get());
+                Mob storedEntity = Utils.fromUUID(serverPlayer.serverLevel(), comp.uuid().get());
                 if (entity instanceof Mob living && entity != storedEntity) {
                     Utils.setAttackTarget(living, storedEntity, true);
                     stack.remove(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
@@ -70,7 +77,7 @@ public class MobStick extends Item implements LeftClickInteractItem {
             } else if (entity instanceof Mob) {
                 stack.set(CrossPlatformStuff.INSTANCE.getComponentMobUuid(), new UuidComponent(Optional.of(entity.getUUID()),
                         Optional.ofNullable(entity.getCustomName())));
-                player.sendSystemMessage(Component.translatable("tooltip.stick.add").withStyle(ChatFormatting.GOLD));
+                serverPlayer.sendSystemMessage(Component.translatable("tooltip.stick.add").withStyle(ChatFormatting.GOLD));
                 return true;
             }
         }

@@ -14,10 +14,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class MobArmor extends Item implements LeftClickInteractItem {
 
@@ -26,13 +27,13 @@ public class MobArmor extends Item implements LeftClickInteractItem {
     }
 
     @Override
-    public boolean canAttackBlock(BlockState state, Level worldIn, BlockPos pos, Player player) {
-        return !player.isCreative();
+    public boolean canDestroyBlock(ItemStack stack, BlockState state, Level level, BlockPos pos, LivingEntity entity) {
+        return !(entity instanceof Player player) || !player.getAbilities().instabuild;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag flagIn) {
-        list.add(Component.translatable("tooltip.armor").withStyle(ChatFormatting.AQUA));
+    public void appendHoverText(ItemStack stack, Item.TooltipContext ctx, TooltipDisplay display, Consumer<Component> adder, TooltipFlag flag) {
+        adder.accept(Component.translatable("tooltip.armor").withStyle(ChatFormatting.AQUA));
     }
 
     @Override
@@ -42,10 +43,9 @@ public class MobArmor extends Item implements LeftClickInteractItem {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
-        if (target instanceof Mob && player instanceof ServerPlayer) {
-            CrossPlatformStuff.INSTANCE.openGuiArmor((ServerPlayer) player, (Mob) target);
-            return InteractionResult.SUCCESS;
+        if (target instanceof Mob mob && player instanceof ServerPlayer serverPlayer) {
+            CrossPlatformStuff.INSTANCE.openGuiArmor(serverPlayer, mob);
         }
-        return InteractionResult.PASS;
+        return InteractionResult.SUCCESS;
     }
 }

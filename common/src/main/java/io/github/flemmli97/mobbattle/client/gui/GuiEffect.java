@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -54,7 +55,7 @@ public class GuiEffect extends Screen {
                 SuggestionEditBox.ofResourceLocation(BuiltInRegistries.MOB_EFFECT.keySet()));
         this.potionBox.setResponder(s -> {
             try {
-                Optional<Holder.Reference<MobEffect>> effect = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.parse(s));
+                Optional<Holder.Reference<MobEffect>> effect = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.parse(s));
                 if (effect.isPresent()) {
                     this.potionBox.setTextColor(0xE0E0E0);
                     GuiEffect.this.effect = GuiEffect.this.effect.withEffect(effect.get());
@@ -116,7 +117,7 @@ public class GuiEffect extends Screen {
         this.amplifierBox.setValue(this.effect.amplifier() > 0 ? "" + this.effect.amplifier() : "");
         this.addRenderableWidget(this.amplifierBox);
 
-        this.particleButton = new ButtonCheck(i + 160, j + 62, (button) -> {
+        this.particleButton = new ButtonCheck(i + 159, j + 61, (button) -> {
             ButtonCheck check = (ButtonCheck) button;
             check.checkUncheck(!check.isChecked());
             GuiEffect.this.effect = GuiEffect.this.effect.withParticles(((ButtonCheck) button).isChecked());
@@ -162,7 +163,7 @@ public class GuiEffect extends Screen {
         super.renderBackground(graphics, mouseX, mouseY, partialTicks);
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
-        graphics.blit(TEX, i, j, 0, 0, this.xSize, this.ySize);
+        graphics.blit(RenderType::guiTextured, TEX, i, j, 0, 0, this.xSize, this.ySize, 256, 256);
         graphics.drawString(this.font, this.getTitle(), this.potionBox.getX(), j + 10, 1, false);
         int y = j + 62 - 14;
         graphics.drawString(this.font, this.durationTxt, this.durationBox.getX(), y, 1, false);

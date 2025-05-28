@@ -17,9 +17,9 @@ public class UuidListComponent {
     public static final UuidListComponent EMPTY = new UuidListComponent(List.of());
 
     public static final Codec<UuidListComponent> CODEC = UUIDUtil.CODEC.listOf().fieldOf("uuids")
-            .xmap((List<UUID> t) -> new UuidListComponent(t), UuidListComponent::uuids).codec();
+            .xmap(UuidListComponent::new, UuidListComponent::uuids).codec();
     public static final StreamCodec<ByteBuf, UuidListComponent> STREAM_CODEC = UUIDUtil.STREAM_CODEC.apply(ByteBufCodecs.list())
-            .map((List<UUID> t) -> new UuidListComponent(t), UuidListComponent::uuids);
+            .map(UuidListComponent::new, UuidListComponent::uuids);
 
     private final ImmutableList<UUID> uuids;
 

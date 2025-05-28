@@ -26,7 +26,7 @@ public record EffectComponent(Optional<Holder<MobEffect>> effect, int duration, 
     public static final StreamCodec<ByteBuf, EffectComponent> STREAM_CODEC = new StreamCodec<>() {
         @Override
         public EffectComponent decode(ByteBuf byteBuf) {
-            return new EffectComponent(byteBuf.readBoolean() ? BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.parse(Utf8String.read(byteBuf, 32767))).map(r -> r) : Optional.empty(),
+            return new EffectComponent(byteBuf.readBoolean() ? BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.parse(Utf8String.read(byteBuf, 32767))).map(r -> r) : Optional.empty(),
                     byteBuf.readInt(), byteBuf.readInt(), byteBuf.readBoolean());
         }
 

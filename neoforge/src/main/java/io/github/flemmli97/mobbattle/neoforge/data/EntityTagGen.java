@@ -6,15 +6,14 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
 import net.minecraft.world.entity.EntityType;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import java.util.concurrent.CompletableFuture;
 
 public class EntityTagGen extends IntrinsicHolderTagsProvider<EntityType<?>> {
 
     @SuppressWarnings("deprecation")
-    public EntityTagGen(PackOutput arg2, CompletableFuture<HolderLookup.Provider> completableFuture, ExistingFileHelper existingFileHelper) {
-        super(arg2, Registries.ENTITY_TYPE, completableFuture, (arg) -> arg.builtInRegistryHolder().key(), MobBattle.MODID, existingFileHelper);
+    public EntityTagGen(PackOutput arg2, CompletableFuture<HolderLookup.Provider> completableFuture) {
+        super(arg2, Registries.ENTITY_TYPE, completableFuture, (arg) -> arg.builtInRegistryHolder().key(), MobBattle.MODID);
     }
 
     @Override

@@ -17,6 +17,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -27,6 +29,7 @@ import net.minecraft.world.level.block.DispenserBlock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class ModItems {
 
@@ -45,17 +48,17 @@ public class ModItems {
     public static Item spawner;
 
     public static void registerItems() {
-        mobStick = registerItem("mob_stick", new MobStick(mainProp()));
-        mobKill = registerItem("mob_kill", new MobKill(mainProp()));
-        mobHeal = registerItem("mob_heal", new MobHeal(mainProp()));
-        mobEffect = registerItem("mob_effect", new MobEffect(mainProp()));
-        mobGroup = registerItem("mob_group", new MobGroup(mainProp()));
-        mobArmor = registerItem("mob_armor", new MobArmor(mainProp()));
-        mobMount = registerItem("mob_mount", new MobMount(mainProp()));
-        mobArmy = registerItem("mob_army", new MobArmy(mainProp()));
-        mobEquip = registerItem("mob_equip", new MobEquip(mainProp()));
-        mobEffectGiver = registerItem("mob_effect_give", new MobEffectGive(mainProp()));
-        spawner = registerItem("egg_ex", new ItemExtendedSpawnEgg(new Item.Properties()));
+        mobStick = registerItem("mob_stick", id -> new MobStick(mainProp(id)));
+        mobKill = registerItem("mob_kill", id -> new MobKill(mainProp(id)));
+        mobHeal = registerItem("mob_heal", id -> new MobHeal(mainProp(id)));
+        mobEffect = registerItem("mob_effect", id -> new MobEffect(mainProp(id)));
+        mobGroup = registerItem("mob_group", id -> new MobGroup(mainProp(id)));
+        mobArmor = registerItem("mob_armor", id -> new MobArmor(mainProp(id)));
+        mobMount = registerItem("mob_mount", id -> new MobMount(mainProp(id)));
+        mobArmy = registerItem("mob_army", id -> new MobArmy(mainProp(id)));
+        mobEquip = registerItem("mob_equip", id -> new MobEquip(mainProp(id)));
+        mobEffectGiver = registerItem("mob_effect_give", id -> new MobEffectGive(mainProp(id)));
+        spawner = registerItem("egg_ex", id -> new ItemExtendedSpawnEgg(new Item.Properties().setId(ResourceKey.create(Registries.ITEM, id))));
         DispenserBlock.registerBehavior(ModItems.spawner, (source, stack) -> {
             Direction direction = source.state().getValue(DispenserBlock.FACING);
             double x = source.center().x() + direction.getStepX();
@@ -75,16 +78,17 @@ public class ModItems {
         return ImmutableList.copyOf(items);
     }
 
-    private static Item.Properties mainProp() {
+    private static Item.Properties mainProp(ResourceLocation id) {
         return new Item.Properties().stacksTo(1)
                 .attributes(new ItemAttributeModifiers(List.of(
                         new ItemAttributeModifiers.Entry(Attributes.ENTITY_INTERACTION_RANGE,
                                 new AttributeModifier(ResourceLocation.fromNamespaceAndPath(MobBattle.MODID, "stick_mod"), 3, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
-                ), false));
+                ))).setId(ResourceKey.create(Registries.ITEM, id));
     }
 
-    private static Item registerItem(String name, Item item) {
-        Item registered = Registry.register(BuiltInRegistries.ITEM, MobBattle.of(name), item);
+    private static Item registerItem(String name, Function<ResourceLocation, Item> item) {
+        ResourceLocation id = MobBattle.of(name);
+        Item registered = Registry.register(BuiltInRegistries.ITEM, id, item.apply(id));
         items.add(registered);
         return registered;
     }

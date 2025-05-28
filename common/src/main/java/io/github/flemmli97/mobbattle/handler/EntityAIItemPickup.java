@@ -1,23 +1,32 @@
 package io.github.flemmli97.mobbattle.handler;
 
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 
+import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 public class EntityAIItemPickup extends Goal {
 
@@ -66,27 +75,50 @@ public class EntityAIItemPickup extends Goal {
 
     private boolean isItemBetter(ItemStack stack, ItemStack currentEquipped) {
         LivingEntity target = this.entity.getTarget() != null ? this.entity.getTarget() : this.entity;
-        if (stack.getItem() instanceof ArmorItem) {
-            if (!(currentEquipped.getItem() instanceof ArmorItem) || EnchantmentHelper.has(currentEquipped, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE))
+        if (stack.has(DataComponents.EQUIPPABLE)) {
+            ItemAttributeModifiers atts = stack.get(DataComponents.ATTRIBUTE_MODIFIERS);
+            ItemAttributeModifiers currentAtts = stack.get(DataComponents.ATTRIBUTE_MODIFIERS);
+            if (atts == null || EnchantmentHelper.has(currentEquipped, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE))
+                return false;
+            if (currentAtts == null)
                 return true;
-            else if (currentEquipped.getItem() instanceof ArmorItem itemarmor1) {
-                ArmorItem itemarmor = (ArmorItem) stack.getItem();
-
-                if (itemarmor.getDefense() == itemarmor1.getDefense()) {
-                    return stack.getDamageValue() > currentEquipped.getDamageValue() || stack.getComponentsPatch().isEmpty() && !currentEquipped.getComponentsPatch().isEmpty();
-                } else {
-                    return itemarmor.getDefense() > itemarmor1.getDefense();
-                }
-            }
+            double[] armorAtts = new double[]{0, 0, 0, 0};
+            atts.modifiers().stream().filter(e -> e.attribute().is(Attributes.ARMOR) || e.attribute().is(Attributes.ARMOR_TOUGHNESS))
+                    .sorted(Comparator.comparingInt(e -> e.modifier().operation().ordinal()))
+                    .forEach(e -> {
+                        int idx = e.attribute().is(Attributes.ARMOR) ? 0 : 1;
+                        armorAtts[idx] += switch (e.modifier().operation()) {
+                            case ADD_VALUE, ADD_MULTIPLIED_BASE -> e.modifier().amount();
+                            case ADD_MULTIPLIED_TOTAL -> e.modifier().amount() * armorAtts[idx];
+                        };
+                    });
+            currentAtts.modifiers().stream().filter(e -> e.attribute().is(Attributes.ARMOR) || e.attribute().is(Attributes.ARMOR_TOUGHNESS))
+                    .sorted(Comparator.comparingInt(e -> e.modifier().operation().ordinal()))
+                    .forEach(e -> {
+                        int idx = e.attribute().is(Attributes.ARMOR) ? 2 : 3;
+                        armorAtts[idx] += switch (e.modifier().operation()) {
+                            case ADD_VALUE, ADD_MULTIPLIED_BASE -> e.modifier().amount();
+                            case ADD_MULTIPLIED_TOTAL -> e.modifier().amount() * armorAtts[idx];
+                        };
+                    });
+            if (armorAtts[0] > armorAtts[2])
+                return true;
+            else if (armorAtts[0] < armorAtts[2])
+                return false;
+            if (armorAtts[1] > armorAtts[3])
+                return true;
+            Set<Object2IntMap.Entry<Holder<Enchantment>>> ench = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY).entrySet();
+            Set<Object2IntMap.Entry<Holder<Enchantment>>> currentEnch = currentEquipped.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY).entrySet();
+            return (armorAtts[1] == armorAtts[3] && ench.size() > currentEnch.size());
         }
         if (currentEquipped.isEmpty())
             return true;
         DamageSource damageSource1 = this.entity.damageSources().mobAttack(this.entity);
         DamageSource damageSource2 = damageSource1;
         if (stack.getItem() instanceof BowItem)
-            damageSource1 = this.entity.damageSources().arrow(EntityType.ARROW.create(this.entity.level()), this.entity);
+            damageSource1 = this.entity.damageSources().arrow(EntityType.ARROW.create(this.entity.level(), EntitySpawnReason.TRIGGERED), this.entity);
         if (currentEquipped.getItem() instanceof BowItem)
-            damageSource2 = this.entity.damageSources().arrow(EntityType.ARROW.create(this.entity.level()), this.entity);
+            damageSource2 = this.entity.damageSources().arrow(EntityType.ARROW.create(this.entity.level(), EntitySpawnReason.TRIGGERED), this.entity);
         double d1 = EnchantmentHelper.modifyDamage((ServerLevel) this.entity.level(), stack, target, damageSource1, 1);
         double d2 = EnchantmentHelper.modifyDamage((ServerLevel) this.entity.level(), currentEquipped, target, damageSource2, 1);
         return d1 > d2;
@@ -97,8 +129,8 @@ public class EntityAIItemPickup extends Goal {
         itemstack.setCount(1);
         EquipmentSlot EquipmentSlotType = this.entity.getEquipmentSlotForItem(itemstack);
         ItemStack itemstack1 = this.entity.getItemBySlot(EquipmentSlotType);
-        if (this.isItemBetter(itemstack, itemstack1)) {
-            this.entity.spawnAtLocation(itemstack1, 0.0F);
+        if (itemEntity.level() instanceof ServerLevel serverLevel && this.isItemBetter(itemstack, itemstack1)) {
+            this.entity.spawnAtLocation(serverLevel, itemstack1);
             this.entity.setItemSlot(EquipmentSlotType, itemstack);
             this.entity.setDropChance(EquipmentSlotType, 0);
             this.entity.setPersistenceRequired();
