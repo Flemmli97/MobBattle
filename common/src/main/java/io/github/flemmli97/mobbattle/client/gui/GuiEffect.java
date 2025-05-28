@@ -98,7 +98,7 @@ public class GuiEffect extends Screen {
         this.durationBox.setValue(this.duration + "");
         this.addRenderableWidget(this.durationBox);
 
-        this.amplifierBox = new EditBox(this.font, i + 108, j + 62, 23, 10, TextComponent.EMPTY) {
+        this.amplifierBox = new EditBox(this.font, i + 108, j + 62, 26, 10, TextComponent.EMPTY) {
 
             @Override
             public boolean charTyped(char typedChar, int keyCode) {
@@ -124,7 +124,9 @@ public class GuiEffect extends Screen {
         this.addRenderableWidget(this.amplifierBox);
 
         this.particleButton = new ButtonCheck(i + 160, j + 62, (button) -> {
-            GuiEffect.this.particle = ((ButtonCheck) button).isChecked();
+            ButtonCheck check = (ButtonCheck) button;
+            check.checkUncheck(!check.isChecked());
+            GuiEffect.this.particle = check.isChecked();
         });
         this.addRenderableWidget(this.particleButton);
         this.particleButton.checkUncheck(this.particle);
