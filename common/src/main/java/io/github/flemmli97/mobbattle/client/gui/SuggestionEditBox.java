@@ -142,7 +142,7 @@ public class SuggestionEditBox extends EditBox {
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        if (this.rect.contains((int) mouseX, (int) mouseY)) {
+        if (!this.suggestionsHidden() && this.rect.contains((int) mouseX, (int) mouseY)) {
             return true;
         }
         return super.isMouseOver(mouseX, mouseY);

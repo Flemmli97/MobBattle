@@ -94,7 +94,7 @@ public class GuiEffect extends Screen {
         this.durationBox.setValue(this.duration + "");
         this.addRenderableWidget(this.durationBox);
 
-        this.amplifierBox = new EditBox(this.font, i + 108, j + 62, 23, 10, Component.empty()) {
+        this.amplifierBox = new EditBox(this.font, i + 108, j + 62, 26, 10, Component.empty()) {
 
             @Override
             public boolean charTyped(char typedChar, int keyCode) {
@@ -120,7 +120,9 @@ public class GuiEffect extends Screen {
         this.addRenderableWidget(this.amplifierBox);
 
         this.particleButton = new ButtonCheck(i + 160, j + 62, (button) -> {
-            GuiEffect.this.particle = ((ButtonCheck) button).isChecked();
+            ButtonCheck check = (ButtonCheck) button;
+            check.checkUncheck(!check.isChecked());
+            GuiEffect.this.particle = check.isChecked();
         });
         this.addRenderableWidget(this.particleButton);
         this.particleButton.checkUncheck(this.particle);
@@ -152,10 +154,10 @@ public class GuiEffect extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (this.potionBox.canConsumeInput() && this.potionBox.mouseClicked(mouseX, mouseY, mouseButton)) {
-            return true;
-        }
-        return super.mouseClicked(mouseX, mouseY, mouseButton);
+        boolean click = super.mouseClicked(mouseX, mouseY, mouseButton);
+        if (!click)
+            this.setFocused(null);
+        return click;
     }
 
     @Override
@@ -163,15 +165,15 @@ public class GuiEffect extends Screen {
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
         graphics.blit(TEX, i, j, 0, 0, this.xSize, this.ySize);
-        graphics.drawString(this.font, this.getTitle(), this.potionBox.getX(), j + 10, 1);
+        graphics.drawString(this.font, this.getTitle(), this.potionBox.getX(), j + 10, 1, false);
         int y = j + 62 - 14;
-        graphics.drawString(this.font, this.durationTxt, this.durationBox.getX(), y, 1);
+        graphics.drawString(this.font, this.durationTxt, this.durationBox.getX(), y, 1, false);
         float txtX = this.amplifierBox.getX() + this.amplifierBox.getWidth() * 0.5f;
         float partLen = this.font.width(this.amplifierTxt) * 0.5f;
-        graphics.drawString(this.font, this.amplifierTxt, (int) (txtX - partLen), y, 1);
+        graphics.drawString(this.font, this.amplifierTxt, (int) (txtX - partLen), y, 1, false);
         txtX = this.particleButton.getX() + this.particleButton.getWidth() * 0.5f;
         partLen = this.font.width(this.particleTxt) * 0.5f;
-        graphics.drawString(this.font, this.particleTxt, (int) (txtX - partLen), y, 1);
+        graphics.drawString(this.font, this.particleTxt, (int) (txtX - partLen), y, 1, false);
         super.render(graphics, mouseX, mouseY, partialTicks);
     }
 }
