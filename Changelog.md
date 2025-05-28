@@ -1,3 +1,7 @@
+Mob Battle 2.5.2
+================
+- Fix effect gui screen
+
 Mob Battle 2.5.1
 ================
 - Fix crash with effect give item
