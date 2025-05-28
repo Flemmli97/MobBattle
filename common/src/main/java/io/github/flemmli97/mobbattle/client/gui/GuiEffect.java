@@ -50,7 +50,7 @@ public class GuiEffect extends Screen {
         super.init();
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
-        this.potionBox = new SuggestionEditBox(this.font, i + 29, j + 20, 110, 16, Component.empty(), 5, false,
+        this.potionBox = new SuggestionEditBox(this.font, i + 29, j + 20, 142, 16, Component.empty(), 5, false,
                 SuggestionEditBox.ofResourceLocation(BuiltInRegistries.MOB_EFFECT.keySet()));
         this.potionBox.setResponder(s -> {
             try {
@@ -68,9 +68,9 @@ public class GuiEffect extends Screen {
         this.potionBox.setMaxLength(35);
         this.potionBox.setEditable(true);
         this.potionBox.setValue(this.effect.effect().map(Holder::getRegisteredName).orElse(""));
-        this.addWidget(this.potionBox);
+        this.addRenderableWidget(this.potionBox);
 
-        this.durationBox = new EditBox(this.font, i + 30, j + 62, 52, 10, Component.empty()) {
+        this.durationBox = new EditBox(this.font, i + 29, j + 61, 54, 12, Component.empty()) {
             @Override
             public boolean charTyped(char typedChar, int keyCode) {
                 if (Character.isDigit(typedChar) || GuiEffect.this.isHelperKey(keyCode)) {
@@ -91,7 +91,7 @@ public class GuiEffect extends Screen {
         this.durationBox.setValue(this.effect.duration() > 0 ? "" + this.effect.duration() : "");
         this.addRenderableWidget(this.durationBox);
 
-        this.amplifierBox = new EditBox(this.font, i + 108, j + 62, 23, 10, Component.empty()) {
+        this.amplifierBox = new EditBox(this.font, i + 107, j + 61, 28, 12, Component.empty()) {
 
             @Override
             public boolean charTyped(char typedChar, int keyCode) {
@@ -151,10 +151,10 @@ public class GuiEffect extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (this.potionBox.canConsumeInput() && this.potionBox.mouseClicked(mouseX, mouseY, mouseButton)) {
-            return true;
-        }
-        return super.mouseClicked(mouseX, mouseY, mouseButton);
+        boolean click = super.mouseClicked(mouseX, mouseY, mouseButton);
+        if (!click)
+            this.setFocused(null);
+        return click;
     }
 
     @Override
@@ -163,15 +163,14 @@ public class GuiEffect extends Screen {
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
         graphics.blit(TEX, i, j, 0, 0, this.xSize, this.ySize);
-        graphics.drawString(this.font, this.getTitle(), this.potionBox.getX(), j + 10, 1);
+        graphics.drawString(this.font, this.getTitle(), this.potionBox.getX(), j + 10, 1, false);
         int y = j + 62 - 14;
-        graphics.drawString(this.font, this.durationTxt, this.durationBox.getX(), y, 1);
+        graphics.drawString(this.font, this.durationTxt, this.durationBox.getX(), y, 1, false);
         float txtX = this.amplifierBox.getX() + this.amplifierBox.getWidth() * 0.5f;
         float partLen = this.font.width(this.amplifierTxt) * 0.5f;
-        graphics.drawString(this.font, this.amplifierTxt, (int) (txtX - partLen), y, 1);
+        graphics.drawString(this.font, this.amplifierTxt, (int) (txtX - partLen), y, 1, false);
         txtX = this.particleButton.getX() + this.particleButton.getWidth() * 0.5f;
         partLen = this.font.width(this.particleTxt) * 0.5f;
-        graphics.drawString(this.font, this.particleTxt, (int) (txtX - partLen), y, 1);
-        super.render(graphics, mouseX, mouseY, partialTicks);
+        graphics.drawString(this.font, this.particleTxt, (int) (txtX - partLen), y, 1, false);
     }
 }
