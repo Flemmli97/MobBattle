@@ -27,7 +27,12 @@ public class EntityAIHurt extends TargetGoal {
         if (i == this.timestamp || livingEntity == null) {
             return false;
         }
-        return this.canAttack(livingEntity, this.targetConditions);
+        if (this.mob instanceof SetActiveTargetMob active)
+            active.setTargeting(true);
+        boolean res = this.canAttack(livingEntity, this.targetConditions);
+        if (this.mob instanceof SetActiveTargetMob active)
+            active.setTargeting(false);
+        return res;
     }
 
     @Override
