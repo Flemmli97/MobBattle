@@ -51,7 +51,7 @@ public class MobGroup extends Item implements LeftClickInteractItem {
             UuidListComponent ids = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid());
             for (UUID id : ids.uuids()) {
                 Mob source = Utils.fromUUID((ServerLevel) player.level(), id);
-                if (entity != source) {
+                if (living != source) {
                     Utils.setAttackTarget(mob, source, true);
                 }
             }
@@ -87,8 +87,8 @@ public class MobGroup extends Item implements LeftClickInteractItem {
             UuidListComponent ids = stack.getOrDefault(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid(), UuidListComponent.EMPTY);
             AtomicBoolean changed = new AtomicBoolean();
             ids = ids.update(list -> {
-                if (!list.contains(entity.getUUID())) {
-                    list.add(entity.getUUID());
+                if (!list.contains(living.getUUID())) {
+                    list.add(living.getUUID());
                     changed.set(true);
                 }
             });

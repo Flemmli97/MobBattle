@@ -39,7 +39,7 @@ public class MobKill extends Item implements LeftClickInteractItem {
         if (player instanceof ServerPlayer serverPlayer) {
             LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
             if (living instanceof Mob mob) {
-                mob.hurtServer(serverPlayer.serverLevel(), entity.damageSources().genericKill(), Float.MAX_VALUE);
+                mob.hurtServer(serverPlayer.serverLevel(), mob.damageSources().genericKill(), Float.MAX_VALUE);
                 if (mob.isAlive()) {
                     mob.kill(serverPlayer.serverLevel());
                 }

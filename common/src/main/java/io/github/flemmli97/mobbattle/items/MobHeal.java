@@ -38,7 +38,7 @@ public class MobHeal extends Item implements LeftClickInteractItem {
         LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
         if (living != null) {
             living.heal(living.getMaxHealth());
-            entity.level().addParticle(ParticleTypes.HEART, entity.getX(), entity.getY() + entity.getBbHeight() + 0.5, entity.getZ(), 0, 0.1, 0);
+            living.level().addParticle(ParticleTypes.HEART, living.getX(), living.getY() + living.getBbHeight() + 0.5, living.getZ(), 0, 0.1, 0);
         }
         return true;
 
