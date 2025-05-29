@@ -22,6 +22,16 @@ public class EntityAITeamTarget extends NearestAttackableTargetGoal<LivingEntity
     }
 
     @Override
+    public boolean canUse() {
+        if (this.mob instanceof SetActiveTargetMob active)
+            active.setTargeting(true);
+        boolean res = super.canUse();
+        if (this.mob instanceof SetActiveTargetMob active)
+            active.setTargeting(false);
+        return res;
+    }
+
+    @Override
     public void start() {
         Utils.setAttackTarget(this.mob, this.target, false);
         super.start();
