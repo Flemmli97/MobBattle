@@ -1,6 +1,6 @@
 package io.github.flemmli97.mobbattle.handler;
 
-public interface WardenActiveTarget {
+public interface SetActiveTargetMob {
 
     void setTargeting(boolean flag);
 }

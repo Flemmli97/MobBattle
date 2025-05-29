@@ -1,6 +1,6 @@
 package io.github.flemmli97.mobbattle.mixin;
 
-import io.github.flemmli97.mobbattle.handler.WardenActiveTarget;
+import io.github.flemmli97.mobbattle.handler.SetActiveTargetMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Warden.class)
-public class WardenMixin implements WardenActiveTarget {
+public class WardenMixin implements SetActiveTargetMob {
 
     @Unique
     private boolean mobbattle_active_targeting;
