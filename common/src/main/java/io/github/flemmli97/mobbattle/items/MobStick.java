@@ -44,6 +44,11 @@ public class MobStick extends Item implements LeftClickInteractItem {
     }
 
     @Override
+    public boolean isFoil(ItemStack stack) {
+        return stack.hasTag() && stack.getTag().contains(LibTags.SAVED_ENTITY);
+    }
+
+    @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (!player.level().isClientSide)
