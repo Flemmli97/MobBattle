@@ -48,7 +48,8 @@ public class MobEffectGive extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (entity instanceof LivingEntity living && player instanceof ServerPlayer serverPlayer) {
+        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+        if (living != null && player instanceof ServerPlayer serverPlayer) {
             if (stack.has(CrossPlatformStuff.INSTANCE.getComponentEffect())) {
                 EffectComponent effect = stack.get(CrossPlatformStuff.INSTANCE.getComponentEffect());
                 effect.effect().ifPresent(eff -> {

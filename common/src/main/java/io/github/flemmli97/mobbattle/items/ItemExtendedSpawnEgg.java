@@ -26,6 +26,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -72,30 +73,32 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (entity instanceof Mob) {
+        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+        if (living instanceof Mob) {
             if (player instanceof ServerPlayer serverPlayer) {
                 boolean nbt = false;
                 CompoundTag tag = new CompoundTag();
                 if (player.isShiftKeyDown()) {
-                    entity.save(tag);
+                    living.save(tag);
                     this.removeMobSpecificTags(tag);
                     nbt = true;
                 } else {
-                    String name = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString();
+                    String name = BuiltInRegistries.ENTITY_TYPE.getKey(living.getType()).toString();
                     tag.putString("id", name);
                 }
                 stack.set(DataComponents.ENTITY_DATA, CustomData.of(tag));
                 ResourceLocation model = null;
-                SpawnEggItem vanillaEgg = SpawnEggItem.byId(entity.getType());
+                SpawnEggItem vanillaEgg = SpawnEggItem.byId(living.getType());
                 if (vanillaEgg != null)
                     model = BuiltInRegistries.ITEM.getKey(vanillaEgg);
                 else if (MobBattle.tenshiLib) {
-                    model = SpawnEgg.fromType(entity.getType()).map(BuiltInRegistries.ITEM::getKey).orElse(null);
+                    model = SpawnEgg.fromType(living.getType()).map(BuiltInRegistries.ITEM::getKey).orElse(null);
                 }
-                if (model != null)
-                    stack.set(DataComponents.ITEM_MODEL, model);
+                if (model == null)
+                    model = BuiltInRegistries.ITEM.getKey(this);
+                stack.set(DataComponents.ITEM_MODEL, model);
 
-                serverPlayer.sendSystemMessage(Component.translatable("tooltip.spawnegg.save" + (nbt ? ".nbt" : ""), entity.getName()).withStyle(ChatFormatting.GOLD));
+                serverPlayer.sendSystemMessage(Component.translatable("tooltip.spawnegg.save" + (nbt ? ".nbt" : ""), living.getName()).withStyle(ChatFormatting.GOLD));
             }
             return true;
         }

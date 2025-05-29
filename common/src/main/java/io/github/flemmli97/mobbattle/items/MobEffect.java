@@ -1,5 +1,6 @@
 package io.github.flemmli97.mobbattle.items;
 
+import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -34,7 +35,8 @@ public class MobEffect extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (player instanceof ServerPlayer serverPlayer && entity instanceof LivingEntity living) {
+        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+        if (living != null && player instanceof ServerPlayer serverPlayer) {
             living.removeAllEffects();
             serverPlayer.sendSystemMessage(Component.translatable("tooltip.effect.remove.clear").withStyle(ChatFormatting.GOLD));
         }

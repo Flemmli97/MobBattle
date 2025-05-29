@@ -89,7 +89,8 @@ public class MobArmy extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (entity instanceof Mob mob && player instanceof ServerPlayer serverPlayer) {
+        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+        if (living instanceof Mob mob && player instanceof ServerPlayer serverPlayer) {
             String team = stack.has(DataComponents.CUSTOM_NAME) ? stack.getHoverName().getString() : "DEFAULT";
             Utils.updateEntity(team, mob);
             serverPlayer.sendSystemMessage(Component.translatable("tooltip.army.add", team).withStyle(ChatFormatting.GOLD));
