@@ -67,6 +67,10 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
         if (living instanceof Mob mob) {
+            if (!player.isCreative()) {
+                player.sendSystemMessage(Component.translatable("tooltip.spawnegg.creative").withStyle(ChatFormatting.GOLD));
+                return true;
+            }
             boolean nbt = false;
             CompoundTag compound = stack.getTag();
             if (compound == null)
