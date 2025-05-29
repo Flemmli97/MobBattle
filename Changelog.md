@@ -1,3 +1,10 @@
+Mob Battle 2.5.3
+================
+- Fix warden attack when in teams
+- Support for part entities using the items
+- Disable copy feature of spawnegg when not creative
+- Add indicator to enrager item when entity is selected
+
 Mob Battle 2.5.2
 ================
 - Fix effect gui screen
