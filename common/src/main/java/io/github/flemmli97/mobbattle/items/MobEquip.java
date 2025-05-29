@@ -12,6 +12,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -100,9 +101,10 @@ public class MobEquip extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (entity instanceof Mob && !player.level().isClientSide) {
-            entity.addTag(LibTags.ENTITY_PICKUP);
-            CrossPlatformStuff.INSTANCE.goalSelectorFrom((Mob) entity, false).addGoal(10, new EntityAIItemPickup((Mob) entity));
+        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+        if (living instanceof Mob mob && !player.level().isClientSide) {
+            mob.addTag(LibTags.ENTITY_PICKUP);
+            CrossPlatformStuff.INSTANCE.goalSelectorFrom(mob, false).addGoal(10, new EntityAIItemPickup(mob));
             player.sendSystemMessage(Component.translatable("tooltip.equip.add").withStyle(ChatFormatting.GOLD));
         }
         return true;

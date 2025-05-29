@@ -1,9 +1,13 @@
 package io.github.flemmli97.mobbattle.items;
 
+import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -26,7 +30,15 @@ public class MobKill extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        entity.hurt(entity.damageSources().genericKill(), Float.MAX_VALUE);
+        if (player instanceof ServerPlayer) {
+            LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+            if (living instanceof Mob mob) {
+                mob.hurt(entity.damageSources().genericKill(), Float.MAX_VALUE);
+                if (mob.isAlive()) {
+                    mob.kill();
+                }
+            }
+        }
         return true;
     }
 

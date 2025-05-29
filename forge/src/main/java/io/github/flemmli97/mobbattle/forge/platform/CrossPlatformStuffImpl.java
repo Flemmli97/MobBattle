@@ -8,6 +8,7 @@ import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -17,6 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.entity.PartEntity;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,6 +43,23 @@ public class CrossPlatformStuffImpl implements CrossPlatformStuff {
                 return new ContainerArmor(i, arg, living);
             }
         }, buf -> buf.writeInt(living.getId()));
+    }
+
+    @Override
+    public LivingEntity tryGetEntity(Entity entity) {
+        LivingEntity living = CrossPlatformStuff.super.tryGetEntity(entity);
+        if (living == null && entity.isMultipartEntity()) {
+            for (PartEntity<?> part : entity.getParts()) {
+                if (part != null) {
+                    Entity parent = part.getParent();
+                    if (parent instanceof LivingEntity e) {
+                        living = e;
+                        break;
+                    }
+                }
+            }
+        }
+        return living;
     }
 
     @Override

@@ -2,6 +2,7 @@ package io.github.flemmli97.mobbattle.items;
 
 import io.github.flemmli97.mobbattle.handler.LibTags;
 import io.github.flemmli97.mobbattle.handler.Utils;
+import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -10,6 +11,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -101,9 +103,10 @@ public class MobArmy extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (entity instanceof Mob && !player.level().isClientSide) {
+        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+        if (living instanceof Mob mob && !player.level().isClientSide) {
             String team = stack.hasCustomHoverName() ? stack.getHoverName().getString() : "DEFAULT";
-            Utils.updateEntity(team, (Mob) entity);
+            Utils.updateEntity(team, mob);
             player.sendSystemMessage(Component.translatable("tooltip.army.add", team).withStyle(ChatFormatting.GOLD));
         }
         return true;

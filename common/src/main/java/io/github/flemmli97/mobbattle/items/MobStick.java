@@ -2,6 +2,7 @@ package io.github.flemmli97.mobbattle.items;
 
 import io.github.flemmli97.mobbattle.handler.LibTags;
 import io.github.flemmli97.mobbattle.handler.Utils;
+import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -11,6 +12,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -55,25 +57,29 @@ public class MobStick extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (player.level() instanceof ServerLevel)
+        if (player.level() instanceof ServerLevel) {
+            LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+            if (!(living instanceof Mob target))
+                return true;
             if (stack.hasTag() && stack.getTag().contains(LibTags.SAVED_ENTITY)) {
                 Mob storedEntity = Utils.fromUUID((ServerLevel) player.level(), stack.getTag().getString(LibTags.SAVED_ENTITY));
-                if (entity instanceof Mob living && entity != storedEntity) {
-                    Utils.setAttackTarget(living, storedEntity, true);
+                if (target != storedEntity) {
+                    Utils.setAttackTarget(target, storedEntity, true);
                     stack.getTag().remove(LibTags.SAVED_ENTITY);
                     stack.getTag().remove(LibTags.SAVED_ENTITY_NAME);
                     return true;
                 }
-            } else if (entity instanceof Mob) {
+            } else {
                 CompoundTag compound = new CompoundTag();
                 if (stack.hasTag())
                     compound = stack.getTag();
-                compound.putString(LibTags.SAVED_ENTITY, entity.getStringUUID());
-                compound.putString(LibTags.SAVED_ENTITY_NAME, entity.getClass().getSimpleName());
+                compound.putString(LibTags.SAVED_ENTITY, target.getStringUUID());
+                compound.putString(LibTags.SAVED_ENTITY_NAME, target.getClass().getSimpleName());
                 stack.setTag(compound);
                 player.sendSystemMessage(Component.translatable("tooltip.stick.add").withStyle(ChatFormatting.GOLD));
                 return true;
             }
+        }
         return true;
     }
 }

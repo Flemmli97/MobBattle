@@ -2,6 +2,7 @@ package io.github.flemmli97.mobbattle.items;
 
 import io.github.flemmli97.mobbattle.handler.LibTags;
 import io.github.flemmli97.mobbattle.handler.Utils;
+import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -45,12 +46,13 @@ public class MobGroup extends Item implements LeftClickInteractItem {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand hand) {
-        if (!player.isShiftKeyDown() && !player.level().isClientSide && stack.hasTag() && stack.getTag().contains(LibTags.SAVED_ENTITY_LIST)) {
+        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+        if (living instanceof Mob mob && !player.isShiftKeyDown() && !player.level().isClientSide && stack.hasTag() && stack.getTag().contains(LibTags.SAVED_ENTITY_LIST)) {
             ListTag list = stack.getTag().getList(LibTags.SAVED_ENTITY_LIST, 8);
             for (int i = 0; i < list.size(); i++) {
                 Mob e = Utils.fromUUID((ServerLevel) player.level(), list.getString(i));
-                if (entity instanceof Mob living && entity != e) {
-                    Utils.setAttackTarget(living, e, true);
+                if (mob != e) {
+                    Utils.setAttackTarget(mob, e, true);
                 }
             }
             stack.getTag().remove(LibTags.SAVED_ENTITY_LIST);
@@ -78,7 +80,8 @@ public class MobGroup extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (entity instanceof Mob && !player.level().isClientSide) {
+        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+        if (living instanceof Mob && !player.level().isClientSide) {
             CompoundTag compound = new CompoundTag();
             if (stack.hasTag())
                 compound = stack.getTag();
@@ -89,11 +92,11 @@ public class MobGroup extends Item implements LeftClickInteractItem {
                     list.add(compound.getList(LibTags.SAVED_ENTITY_LIST, 8).getString(i));
                 }
             }
-            if (!list.contains(entity.getStringUUID())) {
+            if (!list.contains(living.getStringUUID())) {
                 ListTag nbttaglist = new ListTag();
                 if (compound.contains(LibTags.SAVED_ENTITY_LIST))
                     nbttaglist = compound.getList(LibTags.SAVED_ENTITY_LIST, 8);
-                nbttaglist.add(StringTag.valueOf(entity.getStringUUID()));
+                nbttaglist.add(StringTag.valueOf(living.getStringUUID()));
                 compound.put(LibTags.SAVED_ENTITY_LIST, nbttaglist);
                 stack.setTag(compound);
                 player.sendSystemMessage(Component.translatable("tooltip.group.add").withStyle(ChatFormatting.GOLD));

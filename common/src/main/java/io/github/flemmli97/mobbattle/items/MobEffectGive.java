@@ -2,6 +2,7 @@ package io.github.flemmli97.mobbattle.items;
 
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.client.ClientHandler;
+import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -50,7 +51,8 @@ public class MobEffectGive extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (entity instanceof LivingEntity e && !player.level().isClientSide) {
+        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+        if (living != null && !player.level().isClientSide) {
             if (stack.hasTag()) {
                 CompoundTag compound = stack.getTag();
                 String potionString = compound.getString(MobBattle.MODID + ":potion");
@@ -59,7 +61,7 @@ public class MobEffectGive extends Item implements LeftClickInteractItem {
                 boolean showEffect = compound.getBoolean(MobBattle.MODID + ":show");
                 MobEffect potion = BuiltInRegistries.MOB_EFFECT.get(new ResourceLocation(potionString));
                 if (potion != null) {
-                    e.addEffect(new MobEffectInstance(potion, duration, amplifier, false, showEffect));
+                    living.addEffect(new MobEffectInstance(potion, duration, amplifier, false, showEffect));
                     player.sendSystemMessage(Component.translatable("tooltip.effect.give.add", Component.translatable(potion.getDescriptionId()), amplifier, duration).withStyle(ChatFormatting.GOLD));
                 }
             }
