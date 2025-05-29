@@ -4,6 +4,7 @@ Mob Battle 2.5.3
 - Support for part entities using the items
 - Disable copy feature of spawnegg when not creative
 - Add indicator to enrager item when entity is selected
+- Update chinese translations [@Hanekmio](https://github.com/Hanekmio)
 
 Mob Battle 2.5.2
 ================
