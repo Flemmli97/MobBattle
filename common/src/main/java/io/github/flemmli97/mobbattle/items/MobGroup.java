@@ -44,12 +44,13 @@ public class MobGroup extends Item implements LeftClickInteractItem {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand hand) {
-        if (!player.isShiftKeyDown() && !player.level().isClientSide && stack.has(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid())) {
+        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+        if (living instanceof Mob mob && !player.isShiftKeyDown() && !player.level().isClientSide && stack.has(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid())) {
             UuidListComponent ids = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid());
             for (UUID id : ids.uuids()) {
                 Mob e = Utils.fromUUID((ServerLevel) player.level(), id);
-                if (entity instanceof Mob living && entity != e) {
-                    Utils.setAttackTarget(living, e, true);
+                if (mob != e) {
+                    Utils.setAttackTarget(mob, e, true);
                 }
             }
             stack.remove(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid());
@@ -79,12 +80,13 @@ public class MobGroup extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (entity instanceof Mob && !player.level().isClientSide) {
+        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+        if (living instanceof Mob && !player.level().isClientSide) {
             UuidListComponent ids = stack.getOrDefault(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid(), UuidListComponent.EMPTY);
             AtomicBoolean changed = new AtomicBoolean();
             ids = ids.update(list -> {
-                if (!list.contains(entity.getUUID())) {
-                    list.add(entity.getUUID());
+                if (!list.contains(living.getUUID())) {
+                    list.add(living.getUUID());
                     changed.set(true);
                 }
             });

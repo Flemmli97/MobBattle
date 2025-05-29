@@ -25,6 +25,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
@@ -70,21 +71,22 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (entity instanceof Mob) {
+        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+        if (living instanceof Mob) {
             boolean nbt = false;
             CompoundTag tag = new CompoundTag();
             if (player.isShiftKeyDown()) {
-                entity.save(tag);
+                living.save(tag);
                 this.removeMobSpecificTags(tag);
                 nbt = true;
             } else {
-                String name = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString();
+                String name = BuiltInRegistries.ENTITY_TYPE.getKey(living.getType()).toString();
                 tag.putString("id", name);
             }
             stack.set(DataComponents.ENTITY_DATA, CustomData.of(tag));
 
             if (!player.level().isClientSide) {
-                player.sendSystemMessage(Component.translatable("tooltip.spawnegg.save" + (nbt ? ".nbt" : ""), entity.getName()).withStyle(ChatFormatting.GOLD));
+                player.sendSystemMessage(Component.translatable("tooltip.spawnegg.save" + (nbt ? ".nbt" : ""), living.getName()).withStyle(ChatFormatting.GOLD));
             }
             return true;
         }

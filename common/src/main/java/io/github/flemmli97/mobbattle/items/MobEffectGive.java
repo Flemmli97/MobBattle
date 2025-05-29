@@ -47,11 +47,12 @@ public class MobEffectGive extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (entity instanceof LivingEntity e && !player.level().isClientSide) {
+        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+        if (living != null && !player.level().isClientSide) {
             if (stack.has(CrossPlatformStuff.INSTANCE.getComponentEffect())) {
                 EffectComponent effect = stack.get(CrossPlatformStuff.INSTANCE.getComponentEffect());
                 effect.effect().ifPresent(eff -> {
-                    e.addEffect(new MobEffectInstance(eff, effect.duration(), effect.amplifier(), false, effect.particles()));
+                    living.addEffect(new MobEffectInstance(eff, effect.duration(), effect.amplifier(), false, effect.particles()));
                     player.sendSystemMessage(Component.translatable("tooltip.effect.give.add", Component.translatable(eff.value().getDescriptionId()), effect.amplifier(), effect.duration()).withStyle(ChatFormatting.GOLD));
                 });
             }

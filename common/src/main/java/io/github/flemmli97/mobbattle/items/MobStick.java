@@ -11,6 +11,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -60,16 +61,19 @@ public class MobStick extends Item implements LeftClickInteractItem {
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (player.level() instanceof ServerLevel) {
             UuidComponent comp = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
+            LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+            if (!(living instanceof Mob target))
+                return true;
             if (comp != null && comp.uuid().isPresent()) {
                 Mob storedEntity = Utils.fromUUID((ServerLevel) player.level(), comp.uuid().get());
-                if (entity instanceof Mob living && entity != storedEntity) {
-                    Utils.setAttackTarget(living, storedEntity, true);
+                if (target != storedEntity) {
+                    Utils.setAttackTarget(target, storedEntity, true);
                     stack.remove(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
                     return true;
                 }
-            } else if (entity instanceof Mob) {
-                stack.set(CrossPlatformStuff.INSTANCE.getComponentMobUuid(), new UuidComponent(Optional.of(entity.getUUID()),
-                        Optional.ofNullable(entity.getCustomName())));
+            } else {
+                stack.set(CrossPlatformStuff.INSTANCE.getComponentMobUuid(), new UuidComponent(Optional.of(target.getUUID()),
+                        Optional.ofNullable(target.getCustomName())));
                 player.sendSystemMessage(Component.translatable("tooltip.stick.add").withStyle(ChatFormatting.GOLD));
                 return true;
             }
