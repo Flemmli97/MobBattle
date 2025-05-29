@@ -1,5 +1,6 @@
 Mob Battle 2.5.3
 ================
+- Update to 1.21.5
 - Fix warden attack when in teams
 - Support for part entities using the items
 - Disable copy feature of spawnegg when not creative
