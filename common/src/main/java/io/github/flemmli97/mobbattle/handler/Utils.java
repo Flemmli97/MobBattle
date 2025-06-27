@@ -166,8 +166,8 @@ public class Utils {
 
     private static void setTargetTo(Mob entity, LivingEntity target) {
         entity.setTarget(target);
-        entity.getBrain().setMemoryWithExpiry(MemoryModuleType.ANGRY_AT, target.getUUID(), 600);
-        entity.getBrain().setMemoryWithExpiry(MemoryModuleType.ATTACK_TARGET, target, 600);
+        entity.getBrain().setMemory(MemoryModuleType.ANGRY_AT, target.getUUID());
+        entity.getBrain().setMemory(MemoryModuleType.ATTACK_TARGET, target);
         if (entity instanceof Warden warden) {
             warden.increaseAngerAt(target, AngerLevel.ANGRY.getMinimumAnger() + 20, false);
             warden.setAttackTarget(target);
