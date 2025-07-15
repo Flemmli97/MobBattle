@@ -41,6 +41,5 @@ public class MobHeal extends Item implements LeftClickInteractItem {
             living.level().addParticle(ParticleTypes.HEART, living.getX(), living.getY() + living.getBbHeight() + 0.5, living.getZ(), 0, 0.1, 0);
         }
         return true;
-
     }
 }

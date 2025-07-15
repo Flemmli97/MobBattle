@@ -10,5 +10,4 @@ public interface ClientPlatform {
             "io.github.flemmli97.mobbattle.neoforge.platform.ClientPlatformImpl");
 
     boolean keyMatches(KeyMapping mapping, int keyCode, int scanCode);
-
 }

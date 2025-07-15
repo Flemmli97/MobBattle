@@ -1,6 +1,5 @@
 package io.github.flemmli97.mobbattle.fabric.registry;
 
-
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.common.inv.ContainerArmor;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;

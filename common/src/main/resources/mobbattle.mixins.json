@@ -10,7 +10,8 @@
     "SlimeMixin",
     "WardenMixin"
   ],
-  "server": [
+  "client": [
+    "MinecraftMixin"
   ],
   "injectors": {
     "defaultRequire": 1

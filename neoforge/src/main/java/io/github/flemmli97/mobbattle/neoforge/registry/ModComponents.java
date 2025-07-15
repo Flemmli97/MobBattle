@@ -25,5 +25,4 @@ public class ModComponents {
             () -> new DataComponentType.Builder<UuidListComponent>().persistent(UuidListComponent.CODEC).networkSynchronized(UuidListComponent.STREAM_CODEC).build());
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<SpawnEggOptions>> SPAWN_EGG_OPTIONS = COMPONENTS.register("spawnegg_options",
             () -> new DataComponentType.Builder<SpawnEggOptions>().persistent(SpawnEggOptions.CODEC).networkSynchronized(SpawnEggOptions.STREAM_CODEC).build());
-
 }
