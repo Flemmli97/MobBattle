@@ -1,6 +1,6 @@
 package io.github.flemmli97.mobbattle.fabric.mixin;
 
-import io.github.flemmli97.mobbattle.fabric.handler.EventHandler;
+import io.github.flemmli97.mobbattle.common.EventCalls;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,7 +16,7 @@ public class LivingEntityMixin {
 
     @Inject(method = "hurtServer", at = @At(value = "HEAD"), cancellable = true)
     private void livingHurt(ServerLevel level, DamageSource source, float amount, CallbackInfoReturnable<Boolean> info) {
-        if (!EventHandler.teamFriendlyFire((LivingEntity) (Object) this, source, amount)) {
+        if (!EventCalls.handleFriendlyFire((LivingEntity) (Object) this, source)) {
             info.setReturnValue(false);
             info.cancel();
         }
@@ -33,6 +33,6 @@ public class LivingEntityMixin {
 
     @Inject(method = "tick", at = @At(value = "HEAD"))
     private void livingTick(CallbackInfo info) {
-        EventHandler.livingTick((LivingEntity) (Object) this);
+        EventCalls.tick((LivingEntity) (Object) this);
     }
 }

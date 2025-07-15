@@ -3,7 +3,7 @@ package io.github.flemmli97.mobbattle.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.flemmli97.mobbattle.client.gui.GuiEffect;
 import io.github.flemmli97.mobbattle.client.gui.SpawnEggScreen;
-import io.github.flemmli97.mobbattle.handler.Utils;
+import io.github.flemmli97.mobbattle.common.utils.Utils;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;

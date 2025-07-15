@@ -4,8 +4,6 @@
   "package": "io.github.flemmli97.mobbattle.fabric.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "MobAccessor",
-    "ServerJoinWorldEventMixin",
     "LivingEntityMixin"
   ],
   "server": [

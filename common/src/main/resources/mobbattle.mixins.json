@@ -6,6 +6,7 @@
   "mixins": [
     "BreezeMixin",
     "LivingMixin",
+    "MobAccessor",
     "SlimeMixin",
     "WardenMixin"
   ],

@@ -2,7 +2,7 @@ package io.github.flemmli97.mobbattle.neoforge.client;
 
 import io.github.flemmli97.mobbattle.client.ClientHandler;
 import io.github.flemmli97.mobbattle.client.gui.GuiArmor;
-import io.github.flemmli97.mobbattle.components.AreaPositionComponent;
+import io.github.flemmli97.mobbattle.common.components.AreaPositionComponent;
 import io.github.flemmli97.mobbattle.neoforge.registry.ModItems;
 import io.github.flemmli97.mobbattle.neoforge.registry.ModMenuType;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;

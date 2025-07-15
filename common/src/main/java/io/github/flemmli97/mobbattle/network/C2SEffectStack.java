@@ -1,7 +1,7 @@
 package io.github.flemmli97.mobbattle.network;
 
 import io.github.flemmli97.mobbattle.MobBattle;
-import io.github.flemmli97.mobbattle.components.EffectComponent;
+import io.github.flemmli97.mobbattle.common.components.EffectComponent;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;

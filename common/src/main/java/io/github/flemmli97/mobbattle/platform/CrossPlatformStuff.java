@@ -1,12 +1,12 @@
 package io.github.flemmli97.mobbattle.platform;
 
 import io.github.flemmli97.mobbattle.MobBattle;
-import io.github.flemmli97.mobbattle.components.AreaPositionComponent;
-import io.github.flemmli97.mobbattle.components.EffectComponent;
-import io.github.flemmli97.mobbattle.components.SpawnEggOptions;
-import io.github.flemmli97.mobbattle.components.UuidComponent;
-import io.github.flemmli97.mobbattle.components.UuidListComponent;
-import io.github.flemmli97.mobbattle.inv.ContainerArmor;
+import io.github.flemmli97.mobbattle.common.components.AreaPositionComponent;
+import io.github.flemmli97.mobbattle.common.components.EffectComponent;
+import io.github.flemmli97.mobbattle.common.components.SpawnEggOptions;
+import io.github.flemmli97.mobbattle.common.components.UuidComponent;
+import io.github.flemmli97.mobbattle.common.components.UuidListComponent;
+import io.github.flemmli97.mobbattle.common.inv.ContainerArmor;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;

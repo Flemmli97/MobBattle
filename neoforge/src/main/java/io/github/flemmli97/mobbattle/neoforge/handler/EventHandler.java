@@ -1,13 +1,7 @@
 package io.github.flemmli97.mobbattle.neoforge.handler;
 
-import io.github.flemmli97.mobbattle.handler.EntityAIItemPickup;
-import io.github.flemmli97.mobbattle.handler.LibTags;
-import io.github.flemmli97.mobbattle.handler.Utils;
-import io.github.flemmli97.mobbattle.neoforge.Config;
-import net.minecraft.core.particles.DustParticleOptions;
-import net.minecraft.world.entity.LivingEntity;
+import io.github.flemmli97.mobbattle.common.EventCalls;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.monster.Vex;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -19,24 +13,13 @@ public class EventHandler {
 
     @SubscribeEvent
     public void addTeamTarget(EntityJoinLevelEvent event) {
-        if (!event.getLevel().isClientSide && event.getEntity() instanceof Mob) {
-            if (event.getEntity() instanceof Vex vex) {
-                if (vex.getOwner() != null && vex.getOwner().getTeam() != null) {
-                    Utils.addEntityToTeam(vex, vex.getOwner().getTeam().getName());
-                }
-            }
-            if (event.getEntity().getTeam() != null)
-                Utils.updateEntity(event.getEntity().getTeam().getName(), (Mob) event.getEntity());
-            if (event.getEntity().getTags().contains(LibTags.ENTITY_PICKUP))
-                ((Mob) event.getEntity()).goalSelector.addGoal(10, new EntityAIItemPickup((Mob) event.getEntity()));
-        }
+        EventCalls.handleJoinLevel(event.getEntity());
     }
 
     @SubscribeEvent
     public void teamFriendlyFire(LivingIncomingDamageEvent event) {
-        if (event.getSource().getEntity() instanceof LivingEntity attacker) {
-            if (Utils.isOnSameTeam(event.getEntity(), attacker) && !event.getEntity().getTeam().isAllowFriendlyFire())
-                event.setCanceled(true);
+        if (!EventCalls.handleFriendlyFire(event.getEntity(), event.getSource())) {
+            event.setCanceled(true);
         }
     }
 
@@ -51,16 +34,6 @@ public class EventHandler {
 
     @SubscribeEvent
     public void livingTick(EntityTickEvent.Post event) {
-        if (event.getEntity() instanceof Mob e) {
-            if (e.getTeam() != null) {
-                if (Config.CLIENT_CONF.showTeamParticleTypes.get() && e.level().isClientSide) {
-                    DustParticleOptions color = Utils.teamColor.get(e.getTeam().getColor());
-                    if (color != null)
-                        e.level().addParticle(color, e.getX(), e.getY() + e.getBbHeight() + 0.5, e.getZ(), 0, 0, 0);
-                } else if (Config.COMMON_CONF.autoAddAI.get() && !e.getTags().contains(LibTags.ENTITY_AI_ADDED)) {
-                    Utils.updateEntity(e.getTeam().getName(), e);
-                }
-            }
-        }
+        EventCalls.tick(event.getEntity());
     }
 }

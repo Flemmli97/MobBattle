@@ -1,7 +1,9 @@
 package io.github.flemmli97.mobbattle.client.gui;
 
 import io.github.flemmli97.mobbattle.MobBattle;
-import io.github.flemmli97.mobbattle.components.EffectComponent;
+import io.github.flemmli97.mobbattle.client.gui.widget.ButtonCheck;
+import io.github.flemmli97.mobbattle.client.gui.widget.SuggestionEditBox;
+import io.github.flemmli97.mobbattle.common.components.EffectComponent;
 import io.github.flemmli97.mobbattle.network.C2SEffectStack;
 import io.github.flemmli97.mobbattle.platform.ClientPlatform;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;

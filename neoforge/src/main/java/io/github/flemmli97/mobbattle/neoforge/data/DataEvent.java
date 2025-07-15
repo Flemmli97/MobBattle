@@ -1,7 +1,7 @@
 package io.github.flemmli97.mobbattle.neoforge.data;
 
 import io.github.flemmli97.mobbattle.MobBattle;
-import io.github.flemmli97.mobbattle.data.Lang;
+import io.github.flemmli97.mobbattle.common.data.Lang;
 import net.minecraft.data.DataGenerator;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;

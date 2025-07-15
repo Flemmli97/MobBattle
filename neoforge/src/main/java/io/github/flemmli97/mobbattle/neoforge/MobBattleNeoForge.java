@@ -1,7 +1,7 @@
 package io.github.flemmli97.mobbattle.neoforge;
 
 import io.github.flemmli97.mobbattle.MobBattle;
-import io.github.flemmli97.mobbattle.items.ItemExtendedSpawnEgg;
+import io.github.flemmli97.mobbattle.common.items.ItemExtendedSpawnEgg;
 import io.github.flemmli97.mobbattle.neoforge.client.ClientEvents;
 import io.github.flemmli97.mobbattle.neoforge.handler.EventHandler;
 import io.github.flemmli97.mobbattle.neoforge.registry.ModComponents;
@@ -23,6 +23,7 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
@@ -37,12 +38,14 @@ public class MobBattleNeoForge {
     private static final DeferredRegister<CreativeModeTab> TAB_REGISTER = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MobBattle.MODID);
 
     public MobBattleNeoForge(IEventBus modBus) {
-        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_SPEC, MobBattle.MODID + "-client.toml");
-        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, Config.COMMON_SPEC, MobBattle.MODID + ".toml");
+        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.CLIENT, ConfigLoader.CLIENT_SPEC, MobBattle.MODID + "-client.toml");
+        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, ConfigLoader.COMMON_SPEC, MobBattle.MODID + ".toml");
         NeoForge.EVENT_BUS.register(new EventHandler());
         modBus.addListener(MobBattleNeoForge::preInit);
         modBus.addListener(MobBattleNeoForge::creativeTabContents);
         modBus.addListener(MobBattleNeoForge::registerPackets);
+        modBus.addListener(MobBattleNeoForge::confLoad);
+        modBus.addListener(MobBattleNeoForge::confReload);
         ModItems.ITEMS.register(modBus);
         ModMenuType.MENU_TYPE.register(modBus);
         ModComponents.COMPONENTS.register(modBus);
@@ -55,8 +58,8 @@ public class MobBattleNeoForge {
         TAB_REGISTER.register(modBus);
     }
 
-    public static void preInit(FMLCommonSetupEvent e) {
-        e.enqueueWork(() -> DispenserBlock.registerBehavior(ModItems.EXTENDED_EGG.get(), (source, stack) -> {
+    public static void preInit(FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> DispenserBlock.registerBehavior(ModItems.EXTENDED_EGG.get(), (source, stack) -> {
             Direction direction = source.state().getValue(DispenserBlock.FACING);
             double x = source.center().x() + direction.getStepX();
             double y = source.pos().getY() + direction.getStepY() + 0.2;
@@ -82,5 +85,19 @@ public class MobBattleNeoForge {
         registrar.playToServer(C2SEffectStack.TYPE, C2SEffectStack.STREAM_CODEC, (pkt, ctx) -> ctx.enqueueWork(() -> C2SEffectStack.handle(pkt, ctx.player(), ModItems.MOB_EFFECT_GIVE.get())));
         registrar.playToServer(C2SSpawnEgg.TYPE, C2SSpawnEgg.STREAM_CODEC, (pkt, ctx) -> ctx.enqueueWork(() -> C2SSpawnEgg.handle(pkt, ctx.player())));
         registrar.playToClient(S2CSpawnEggScreen.TYPE, S2CSpawnEggScreen.STREAM_CODEC, (pkt, ctx) -> ctx.enqueueWork(() -> S2CSpawnEggScreen.handle(pkt)));
+    }
+
+    public static void confLoad(ModConfigEvent.Loading event) {
+        if (event.getConfig().getSpec() == ConfigLoader.CLIENT_SPEC)
+            ConfigLoader.CLIENT_CONF.reload();
+        if (event.getConfig().getSpec() == ConfigLoader.COMMON_SPEC)
+            ConfigLoader.COMMON_CONF.reload();
+    }
+
+    public static void confReload(ModConfigEvent.Reloading event) {
+        if (event.getConfig().getSpec() == ConfigLoader.CLIENT_SPEC)
+            ConfigLoader.CLIENT_CONF.reload();
+        if (event.getConfig().getSpec() == ConfigLoader.COMMON_SPEC)
+            ConfigLoader.COMMON_CONF.reload();
     }
 }

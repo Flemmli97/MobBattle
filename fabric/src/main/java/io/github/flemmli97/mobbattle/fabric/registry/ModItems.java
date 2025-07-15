@@ -2,17 +2,17 @@ package io.github.flemmli97.mobbattle.fabric.registry;
 
 import com.google.common.collect.ImmutableList;
 import io.github.flemmli97.mobbattle.MobBattle;
-import io.github.flemmli97.mobbattle.items.ItemExtendedSpawnEgg;
-import io.github.flemmli97.mobbattle.items.MobArmor;
-import io.github.flemmli97.mobbattle.items.MobArmy;
-import io.github.flemmli97.mobbattle.items.MobEffect;
-import io.github.flemmli97.mobbattle.items.MobEffectGive;
-import io.github.flemmli97.mobbattle.items.MobEquip;
-import io.github.flemmli97.mobbattle.items.MobGroup;
-import io.github.flemmli97.mobbattle.items.MobHeal;
-import io.github.flemmli97.mobbattle.items.MobKill;
-import io.github.flemmli97.mobbattle.items.MobMount;
-import io.github.flemmli97.mobbattle.items.MobStick;
+import io.github.flemmli97.mobbattle.common.items.ItemExtendedSpawnEgg;
+import io.github.flemmli97.mobbattle.common.items.MobArmor;
+import io.github.flemmli97.mobbattle.common.items.MobArmy;
+import io.github.flemmli97.mobbattle.common.items.MobEffect;
+import io.github.flemmli97.mobbattle.common.items.MobEffectGive;
+import io.github.flemmli97.mobbattle.common.items.MobEquip;
+import io.github.flemmli97.mobbattle.common.items.MobGroup;
+import io.github.flemmli97.mobbattle.common.items.MobHeal;
+import io.github.flemmli97.mobbattle.common.items.MobKill;
+import io.github.flemmli97.mobbattle.common.items.MobMount;
+import io.github.flemmli97.mobbattle.common.items.MobStick;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -33,7 +33,7 @@ import java.util.function.Function;
 
 public class ModItems {
 
-    private static final List<Item> items = new ArrayList<>();
+    private static final List<Item> ITEMS = new ArrayList<>();
 
     public static Item mobStick;
     public static Item mobKill;
@@ -75,7 +75,7 @@ public class ModItems {
     }
 
     public static List<Item> modItems() {
-        return ImmutableList.copyOf(items);
+        return ImmutableList.copyOf(ITEMS);
     }
 
     private static Item.Properties mainProp(ResourceLocation id) {
@@ -89,7 +89,7 @@ public class ModItems {
     private static Item registerItem(String name, Function<ResourceLocation, Item> item) {
         ResourceLocation id = MobBattle.of(name);
         Item registered = Registry.register(BuiltInRegistries.ITEM, id, item.apply(id));
-        items.add(registered);
+        ITEMS.add(registered);
         return registered;
     }
 }
