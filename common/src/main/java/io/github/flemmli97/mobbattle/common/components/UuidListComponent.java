@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class UuidListComponent {
+public record UuidListComponent(List<UUID> uuids) {
 
     public static final UuidListComponent EMPTY = new UuidListComponent(List.of());
 
@@ -20,8 +20,6 @@ public class UuidListComponent {
             .xmap(UuidListComponent::new, UuidListComponent::uuids).codec();
     public static final StreamCodec<ByteBuf, UuidListComponent> STREAM_CODEC = UUIDUtil.STREAM_CODEC.apply(ByteBufCodecs.list())
             .map(UuidListComponent::new, UuidListComponent::uuids);
-
-    private final ImmutableList<UUID> uuids;
 
     public UuidListComponent(List<UUID> uuids) {
         this.uuids = ImmutableList.copyOf(uuids);
@@ -31,9 +29,5 @@ public class UuidListComponent {
         List<UUID> list = new ArrayList<>(this.uuids);
         cons.accept(list);
         return new UuidListComponent(list);
-    }
-
-    public ImmutableList<UUID> uuids() {
-        return this.uuids;
     }
 }
