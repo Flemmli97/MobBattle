@@ -58,16 +58,8 @@ public class CrossPlatformStuffImpl implements CrossPlatformStuff {
     @Override
     public LivingEntity tryGetEntity(Entity entity) {
         LivingEntity living = CrossPlatformStuff.super.tryGetEntity(entity);
-        if (living == null && entity.isMultipartEntity()) {
-            for (PartEntity<?> part : entity.getParts()) {
-                if (part != null) {
-                    Entity parent = part.getParent();
-                    if (parent instanceof LivingEntity e) {
-                        living = e;
-                        break;
-                    }
-                }
-            }
+        if (living == null && entity instanceof PartEntity<?> part && part.getParent() instanceof LivingEntity parent) {
+            return parent;
         }
         return living;
     }

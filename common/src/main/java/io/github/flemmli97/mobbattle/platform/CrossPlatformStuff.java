@@ -8,18 +8,26 @@ import io.github.flemmli97.mobbattle.common.components.UuidComponent;
 import io.github.flemmli97.mobbattle.common.components.UuidListComponent;
 import io.github.flemmli97.mobbattle.common.inv.ContainerArmor;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.OwnableEntity;
+import net.minecraft.world.entity.TraceableEntity;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.boss.EnderDragonPart;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 
 public interface CrossPlatformStuff {
+
+    TagKey<EntityType<?>> MULTIPART_ENTITY = TagKey.create(BuiltInRegistries.ENTITY_TYPE.key(), ResourceLocation.fromNamespaceAndPath("c", "multipart_entity"));
 
     CrossPlatformStuff INSTANCE = MobBattle.getPlatformInstance(CrossPlatformStuff.class,
             "io.github.flemmli97.mobbattle.fabric.platform.CrossPlatformStuffImpl",
@@ -38,9 +46,12 @@ public interface CrossPlatformStuff {
     DataComponentType<SpawnEggOptions> getComponentSpawnEggOptions();
 
     default LivingEntity tryGetEntity(Entity entity) {
-        if (entity instanceof EnderDragonPart part) {
+        if (entity instanceof OwnableEntity ownable && entity.getType().is(MULTIPART_ENTITY))
+            return ownable.getOwner();
+        if (entity instanceof TraceableEntity traceableEntity && entity.getType().is(MULTIPART_ENTITY) && traceableEntity.getOwner() instanceof LivingEntity owner)
+            return owner;
+        if (entity instanceof EnderDragonPart part)
             return part.parentMob;
-        }
         return entity instanceof LivingEntity mob ? mob : null;
     }
 
