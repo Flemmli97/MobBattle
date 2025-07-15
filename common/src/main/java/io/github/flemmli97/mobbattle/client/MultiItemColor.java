@@ -1,0 +1,42 @@
+package io.github.flemmli97.mobbattle.client;
+
+import io.github.flemmli97.mobbattle.MobBattle;
+import io.github.flemmli97.mobbattle.common.items.ItemExtendedSpawnEgg;
+import io.github.flemmli97.tenshilib.common.item.SpawnEgg;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpawnEggItem;
+
+import java.util.Optional;
+
+public class MultiItemColor implements ItemColor {
+
+    @Override
+    public int getColor(ItemStack stack, int tintIndex) {
+        ResourceLocation id = ItemExtendedSpawnEgg.getNamedIdFrom(stack);
+        if (id != null) {
+            if (id.equals(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.WITHER))) {
+                return tintIndex == 0 ? 0xff161616 : 0xff424242;
+            }
+            if (id.equals(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.GIANT))) {
+                id = BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ZOMBIE);
+            }
+            if (id.equals(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ILLUSIONER))) {
+                return tintIndex == 0 ? 0xff135893 : 0xff848989;
+            }
+            SpawnEggItem vanillaEgg = SpawnEggItem.byId(BuiltInRegistries.ENTITY_TYPE.get(id));
+            if (vanillaEgg != null)
+                return FastColor.ABGR32.opaque(vanillaEgg.getColor(tintIndex));
+            if (MobBattle.tenshiLib) {
+                Optional<SpawnEgg> egg = SpawnEgg.fromID(id);
+                if (egg.isPresent())
+                    return FastColor.ABGR32.opaque(egg.get().getColor(stack, tintIndex));
+            }
+        }
+        return -1;
+    }
+}

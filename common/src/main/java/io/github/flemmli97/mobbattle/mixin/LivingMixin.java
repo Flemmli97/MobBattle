@@ -1,6 +1,6 @@
 package io.github.flemmli97.mobbattle.mixin;
 
-import io.github.flemmli97.mobbattle.handler.Utils;
+import io.github.flemmli97.mobbattle.common.utils.Utils;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;

@@ -1,8 +1,9 @@
 package io.github.flemmli97.mobbattle.client.gui;
 
 import io.github.flemmli97.mobbattle.MobBattle;
-import io.github.flemmli97.mobbattle.components.SpawnEggOptions;
-import io.github.flemmli97.mobbattle.items.ItemExtendedSpawnEgg;
+import io.github.flemmli97.mobbattle.client.gui.widget.SuggestionEditBox;
+import io.github.flemmli97.mobbattle.common.components.SpawnEggOptions;
+import io.github.flemmli97.mobbattle.common.items.ItemExtendedSpawnEgg;
 import io.github.flemmli97.mobbattle.network.C2SSpawnEgg;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;

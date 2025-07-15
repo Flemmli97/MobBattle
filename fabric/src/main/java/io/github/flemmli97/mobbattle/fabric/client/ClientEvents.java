@@ -1,7 +1,7 @@
 package io.github.flemmli97.mobbattle.fabric.client;
 
 import io.github.flemmli97.mobbattle.client.ClientHandler;
-import io.github.flemmli97.mobbattle.components.AreaPositionComponent;
+import io.github.flemmli97.mobbattle.common.components.AreaPositionComponent;
 import io.github.flemmli97.mobbattle.fabric.registry.ModItems;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;

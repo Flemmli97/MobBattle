@@ -1,14 +1,14 @@
 package io.github.flemmli97.mobbattle.fabric.platform;
 
-import io.github.flemmli97.mobbattle.components.AreaPositionComponent;
-import io.github.flemmli97.mobbattle.components.EffectComponent;
-import io.github.flemmli97.mobbattle.components.SpawnEggOptions;
-import io.github.flemmli97.mobbattle.components.UuidComponent;
-import io.github.flemmli97.mobbattle.components.UuidListComponent;
-import io.github.flemmli97.mobbattle.fabric.mixin.MobAccessor;
+import io.github.flemmli97.mobbattle.common.components.AreaPositionComponent;
+import io.github.flemmli97.mobbattle.common.components.EffectComponent;
+import io.github.flemmli97.mobbattle.common.components.SpawnEggOptions;
+import io.github.flemmli97.mobbattle.common.components.UuidComponent;
+import io.github.flemmli97.mobbattle.common.components.UuidListComponent;
+import io.github.flemmli97.mobbattle.common.inv.ContainerArmor;
 import io.github.flemmli97.mobbattle.fabric.registry.ModComponents;
 import io.github.flemmli97.mobbattle.fabric.registry.ModMenuType;
-import io.github.flemmli97.mobbattle.inv.ContainerArmor;
+import io.github.flemmli97.mobbattle.mixin.MobAccessor;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;

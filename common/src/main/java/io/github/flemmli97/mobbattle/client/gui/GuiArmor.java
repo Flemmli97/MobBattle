@@ -1,7 +1,7 @@
 package io.github.flemmli97.mobbattle.client.gui;
 
 import io.github.flemmli97.mobbattle.MobBattle;
-import io.github.flemmli97.mobbattle.inv.ContainerArmor;
+import io.github.flemmli97.mobbattle.common.inv.ContainerArmor;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;

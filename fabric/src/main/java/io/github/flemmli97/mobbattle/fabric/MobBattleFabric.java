@@ -1,6 +1,7 @@
 package io.github.flemmli97.mobbattle.fabric;
 
 import io.github.flemmli97.mobbattle.MobBattle;
+import io.github.flemmli97.mobbattle.common.EventCalls;
 import io.github.flemmli97.mobbattle.fabric.handler.EventHandler;
 import io.github.flemmli97.mobbattle.fabric.registry.ModComponents;
 import io.github.flemmli97.mobbattle.fabric.registry.ModItems;
@@ -11,6 +12,7 @@ import io.github.flemmli97.mobbattle.network.S2CSpawnEggScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -34,8 +36,9 @@ public class MobBattleFabric implements ModInitializer {
         ModMenuType.register();
         ModComponents.register();
         AttackEntityCallback.EVENT.register(EventHandler::attackCallback);
+        ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> EventCalls.handleJoinLevel(entity));
         registerPackets();
-        Config.initConfig();
+        ConfigLoader.initConfig();
         MobBattle.tenshiLib = FabricLoader.getInstance().isModLoaded("tenshilib");
         ResourceLocation tab = MobBattle.of("tab");
         CreativeModeTab creativeModeTab = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, tab, FabricItemGroup.builder()

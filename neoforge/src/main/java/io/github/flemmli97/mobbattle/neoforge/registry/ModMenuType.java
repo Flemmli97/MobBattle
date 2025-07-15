@@ -1,7 +1,7 @@
 package io.github.flemmli97.mobbattle.neoforge.registry;
 
 import io.github.flemmli97.mobbattle.MobBattle;
-import io.github.flemmli97.mobbattle.inv.ContainerArmor;
+import io.github.flemmli97.mobbattle.common.inv.ContainerArmor;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.inventory.MenuType;
