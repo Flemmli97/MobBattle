@@ -1,3 +1,11 @@
+Mob Battle 2.6.0
+================
+- Internal Refactoring
+- Add mob highlight to items to show selected mobs better
+- Allow entities in a mobbattle to damage wither and enderdragon always (vanilla is unchanged!)
+- Update multipart entity selection
+- Fix Multi item not working
+
 Mob Battle 2.5.3
 ================
 - Fix warden attack when in teams
