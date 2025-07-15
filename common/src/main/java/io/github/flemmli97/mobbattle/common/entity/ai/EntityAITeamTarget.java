@@ -1,6 +1,6 @@
 package io.github.flemmli97.mobbattle.common.entity.ai;
 
-import io.github.flemmli97.mobbattle.common.utils.SetActiveTargetMob;
+import io.github.flemmli97.mobbattle.common.utils.ActiveTargetMobbattle;
 import io.github.flemmli97.mobbattle.common.utils.Utils;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -26,11 +26,11 @@ public class EntityAITeamTarget extends NearestAttackableTargetGoal<LivingEntity
 
     @Override
     public boolean canUse() {
-        if (this.mob instanceof SetActiveTargetMob active)
-            active.setTargeting(true);
+        if (this.mob instanceof ActiveTargetMobbattle active)
+            active.mobbattle$setTargeting(true);
         boolean res = super.canUse();
-        if (this.mob instanceof SetActiveTargetMob active)
-            active.setTargeting(false);
+        if (this.mob instanceof ActiveTargetMobbattle active)
+            active.mobbattle$setTargeting(false);
         return res;
     }
 

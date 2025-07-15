@@ -4,11 +4,13 @@
   "package": "io.github.flemmli97.mobbattle.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "BreezeMixin",
+    "EnderDragonMixin",
+    "EntityCanAttackMixin",
     "LivingMixin",
     "MobAccessor",
     "SlimeMixin",
-    "WardenMixin"
+    "WardenMixin",
+    "WitherMixin"
   ],
   "client": [
     "MinecraftMixin"

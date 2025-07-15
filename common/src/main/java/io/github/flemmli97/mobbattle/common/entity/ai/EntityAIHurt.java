@@ -1,7 +1,7 @@
 package io.github.flemmli97.mobbattle.common.entity.ai;
 
 import io.github.flemmli97.mobbattle.MobBattle;
-import io.github.flemmli97.mobbattle.common.utils.SetActiveTargetMob;
+import io.github.flemmli97.mobbattle.common.utils.ActiveTargetMobbattle;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -28,11 +28,11 @@ public class EntityAIHurt extends TargetGoal {
         if (i == this.timestamp || livingEntity == null) {
             return false;
         }
-        if (this.mob instanceof SetActiveTargetMob active)
-            active.setTargeting(true);
+        if (this.mob instanceof ActiveTargetMobbattle active)
+            active.mobbattle$setTargeting(true);
         boolean res = this.canAttack(livingEntity, this.targetConditions);
-        if (this.mob instanceof SetActiveTargetMob active)
-            active.setTargeting(false);
+        if (this.mob instanceof ActiveTargetMobbattle active)
+            active.mobbattle$setTargeting(false);
         return res;
     }
 

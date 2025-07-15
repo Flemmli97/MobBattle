@@ -174,8 +174,8 @@ public class Utils {
             warden.increaseAngerAt(target, AngerLevel.ANGRY.getMinimumAnger() + 20, false);
             warden.setAttackTarget(target);
         }
-        if (entity instanceof SetActiveTargetMob act)
-            act.setTargeting(true);
+        if (entity instanceof ActiveTargetMobbattle act)
+            act.mobbattle$setTargeting(true);
     }
 
     public static void handleTeamKill(Scoreboard scoreboard, ScoreHolder scoreHolder, ScoreHolder teamMember, ObjectiveCriteria[] crtieria) {
