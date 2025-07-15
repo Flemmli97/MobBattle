@@ -21,8 +21,7 @@ public class EventCalls {
                 if (owner != null && owner.getTeam() != null) {
                     Utils.addEntityToTeam(entity, owner.getTeam().getName());
                 }
-            }
-            if (entity instanceof OwnableEntity ownable) {
+            } else if (entity instanceof OwnableEntity ownable) {
                 Entity owner = ownable.getOwner();
                 if (owner != null && owner.getTeam() != null) {
                     Utils.addEntityToTeam(entity, owner.getTeam().getName());

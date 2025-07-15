@@ -6,5 +6,4 @@ public class LibTags {
 
     public static final String ENTITY_PICKUP = MobBattle.MODID + ":PickUp";
     public static final String ENTITY_AI_ADDED = MobBattle.MODID + ":AddedAI";
-
 }

@@ -144,5 +144,4 @@ public class ContainerArmor extends AbstractContainerMenu {
 
         return itemstack;
     }
-
 }

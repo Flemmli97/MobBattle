@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class MobGroup extends Item implements LeftClickInteractItem {
+public class MobGroup extends Item implements LeftClickInteractItem, MobHighlightItem {
 
     public MobGroup(Item.Properties props) {
         super(props);

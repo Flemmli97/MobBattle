@@ -17,5 +17,4 @@ public class DataEvent {
         data.addProvider(event.includeClient(), new ItemModels(data.getPackOutput(), event.getExistingFileHelper()));
         data.addProvider(event.includeServer(), new EntityTagGen(data.getPackOutput(), event.getLookupProvider(), event.getExistingFileHelper()));
     }
-
 }

@@ -30,7 +30,6 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-
 public class CrossPlatformStuffImpl implements CrossPlatformStuff {
 
     @Override
