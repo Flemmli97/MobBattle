@@ -1,3 +1,7 @@
+Mob Battle 2.6.1
+================
+- Fix multipart entity highlight for items
+
 Mob Battle 2.6.0
 ================
 - Internal Refactoring

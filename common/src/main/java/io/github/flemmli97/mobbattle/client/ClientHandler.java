@@ -60,8 +60,7 @@ public class ClientHandler {
         if (stack.getItem() instanceof MobHighlightItem) {
             HitResult res = Minecraft.getInstance().hitResult;
             if (res != null && res.getType() == HitResult.Type.ENTITY) {
-                Entity hit = ((EntityHitResult) res).getEntity();
-                if (hit == entity)
+                if (entity == CrossPlatformStuff.INSTANCE.tryGetEntity(((EntityHitResult) res).getEntity()))
                     return true;
             }
             UuidComponent id = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
