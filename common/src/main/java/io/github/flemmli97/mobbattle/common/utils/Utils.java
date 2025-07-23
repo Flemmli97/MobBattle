@@ -96,6 +96,7 @@ public class Utils {
     private static final Predicate<Goal> targetGoal = (goal) -> true;
 
     public static void updateEntity(String team, Mob e) {
+        team = team.replace(" ", "");
         addEntityToTeam(e, team);
         e.setTarget(null);
         e.addTag(LibTags.ENTITY_AI_ADDED);
