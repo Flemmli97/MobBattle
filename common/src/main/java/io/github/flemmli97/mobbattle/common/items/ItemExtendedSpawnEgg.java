@@ -16,7 +16,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -51,7 +50,7 @@ import java.util.Optional;
 
 public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem {
 
-    private static final MapCodec<ResourceLocation> ENTITY_TYPE_ID_CODEC = ResourceLocation.CODEC.fieldOf("id");
+    private static final MapCodec<EntityType<?>> ENTITY_TYPE_ID_CODEC = BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("id");
 
     public ItemExtendedSpawnEgg(Item.Properties props) {
         super(props);
@@ -60,13 +59,11 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag flag) {
         list.add(Component.translatable("tooltip.spawnegg").withStyle(ChatFormatting.AQUA));
-        if (ItemExtendedSpawnEgg.hasSavedEntity(stack)) {
+        Optional<EntityType<?>> entityType = ItemExtendedSpawnEgg.getType(stack);
+        entityType.ifPresent(type -> {
             CustomData data = stack.get(DataComponents.ENTITY_DATA);
-            BuiltInRegistries.ENTITY_TYPE.getOptional(data.read(ENTITY_TYPE_ID_CODEC).result().get())
-                    .ifPresent(type -> {
-                        list.add(Component.translatable("tooltip.spawnegg.spawn" + (data.size() > 1 ? ".nbt" : ""), type.getDescription()).withStyle(ChatFormatting.GOLD));
-                    });
-        }
+            list.add(Component.translatable("tooltip.spawnegg.spawn" + (data.size() > 1 ? ".nbt" : ""), type.getDescription()).withStyle(ChatFormatting.GOLD));
+        });
     }
 
     @Override
@@ -100,76 +97,80 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
     @Override
     public InteractionResult useOn(UseOnContext ctx) {
         if (ctx.getLevel().isClientSide)
-            return InteractionResult.PASS;
+            return InteractionResult.SUCCESS;
         ItemStack stack = ctx.getItemInHand();
         if (!ctx.getPlayer().mayUseItemAt(ctx.getClickedPos().relative(ctx.getClickedFace()), ctx.getClickedFace(), stack))
             return InteractionResult.PASS;
-        BlockState iblockstate = ctx.getLevel().getBlockState(ctx.getClickedPos());
-        if (hasSavedEntity(stack)) {
-            BlockEntity tile = ctx.getLevel().getBlockEntity(ctx.getClickedPos());
-            if (tile instanceof SpawnerBlockEntity spawner) {
-                CompoundTag nbt = new CompoundTag();
-                spawner.getSpawner().save(nbt);
-                nbt.remove("SpawnPotentials");
-                nbt.remove(BaseSpawner.SPAWN_DATA_TAG);
-                SpawnData.CODEC.encodeStart(NbtOps.INSTANCE, new SpawnData(stack.get(DataComponents.ENTITY_DATA).copyTag(), Optional.empty(), Optional.empty()))
-                        .resultOrPartial(string -> MobBattle.LOGGER.warn("Invalid SpawnData: {}", string))
-                        .ifPresent(t -> nbt.put(BaseSpawner.SPAWN_DATA_TAG, t));
-                spawner.getSpawner().load(tile.getLevel(), tile.getBlockPos(), nbt);
-                spawner.setChanged();
-                ctx.getLevel().sendBlockUpdated(ctx.getClickedPos(), iblockstate, iblockstate, 3);
-                return InteractionResult.SUCCESS;
-            }
+        Optional<EntityType<?>> entityType = ItemExtendedSpawnEgg.getType(stack);
+        if (entityType.isEmpty())
+            return InteractionResult.PASS;
+        BlockState state = ctx.getLevel().getBlockState(ctx.getClickedPos());
+        BlockEntity blockEntity = ctx.getLevel().getBlockEntity(ctx.getClickedPos());
+        if (blockEntity instanceof SpawnerBlockEntity spawner) {
+            CompoundTag nbt = new CompoundTag();
+            spawner.getSpawner().save(nbt);
+            nbt.remove("SpawnPotentials");
+            nbt.remove(BaseSpawner.SPAWN_DATA_TAG);
+            SpawnData.CODEC.encodeStart(NbtOps.INSTANCE, new SpawnData(stack.get(DataComponents.ENTITY_DATA).copyTag(), Optional.empty(), Optional.empty()))
+                    .resultOrPartial(string -> MobBattle.LOGGER.warn("Invalid SpawnData: {}", string))
+                    .ifPresent(t -> nbt.put(BaseSpawner.SPAWN_DATA_TAG, t));
+            spawner.getSpawner().load(blockEntity.getLevel(), blockEntity.getBlockPos(), nbt);
+            spawner.setChanged();
+            ctx.getLevel().sendBlockUpdated(ctx.getClickedPos(), state, state, 3);
+            return InteractionResult.CONSUME;
         }
         BlockPos blockpos;
-        if (iblockstate.getCollisionShape(ctx.getLevel(), ctx.getClickedPos()).isEmpty()) {
+        if (state.getCollisionShape(ctx.getLevel(), ctx.getClickedPos()).isEmpty()) {
             blockpos = ctx.getClickedPos();
         } else {
             blockpos = ctx.getClickedPos().relative(ctx.getClickedFace());
         }
-
-        boolean spawned = ItemExtendedSpawnEgg.spawnEntity((ServerLevel) ctx.getLevel(), stack,
+        boolean spawned = ItemExtendedSpawnEgg.spawnEntity((ServerLevel) ctx.getLevel(), entityType.get(), stack,
                 blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D, ctx.getHorizontalDirection());
         if (spawned && !ctx.getPlayer().getAbilities().instabuild) {
             stack.shrink(1);
         }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.CONSUME;
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!ItemExtendedSpawnEgg.hasSavedEntity(stack))
-            return new InteractionResultHolder<>(InteractionResult.PASS, stack);
-        if (player instanceof ServerPlayer serverPlayer) {
-            BlockHitResult raytraceresult = getPlayerPOVHitResult(world, player, ClipContext.Fluid.ANY);
-            if (raytraceresult.getType() == HitResult.Type.BLOCK) {
-                BlockPos blockpos = raytraceresult.getBlockPos();
-
-                if (!(world.getBlockState(blockpos).getBlock() instanceof LiquidBlock)) {
-                    return new InteractionResultHolder<>(InteractionResult.PASS, stack);
-                } else if (world.mayInteract(player, blockpos) && player.mayUseItemAt(blockpos, raytraceresult.getDirection(), stack)) {
-                    boolean spawned = ItemExtendedSpawnEgg.spawnEntity((ServerLevel) world, stack, blockpos.getX() + 0.5D, blockpos.getY() + 0.5D,
-                            blockpos.getZ() + 0.5D, player.getDirection());
-                    if (spawned && !player.getAbilities().instabuild) {
-                        stack.shrink(1);
-                    }
+        if (!(player instanceof ServerPlayer serverPlayer))
+            return InteractionResultHolder.success(stack);
+        Optional<EntityType<?>> entityType = ItemExtendedSpawnEgg.getType(stack);
+        if (entityType.isEmpty())
+            return InteractionResultHolder.pass(stack);
+        BlockHitResult raytraceresult = getPlayerPOVHitResult(world, player, ClipContext.Fluid.ANY);
+        if (raytraceresult.getType() == HitResult.Type.BLOCK) {
+            BlockPos blockpos = raytraceresult.getBlockPos();
+            if (!(world.getBlockState(blockpos).getBlock() instanceof LiquidBlock)) {
+                return InteractionResultHolder.pass(stack);
+            } else if (world.mayInteract(player, blockpos) && player.mayUseItemAt(blockpos, raytraceresult.getDirection(), stack)) {
+                boolean spawned = ItemExtendedSpawnEgg.spawnEntity((ServerLevel) world, entityType.get(), stack, blockpos.getX() + 0.5D, blockpos.getY() + 0.5D,
+                        blockpos.getZ() + 0.5D, player.getDirection());
+                if (spawned && !player.getAbilities().instabuild) {
+                    stack.shrink(1);
                 }
-            } else {
-                CrossPlatformStuff.INSTANCE.sendToClient(new S2CSpawnEggScreen(hand), serverPlayer);
             }
+        } else {
+            CrossPlatformStuff.INSTANCE.sendToClient(new S2CSpawnEggScreen(hand), serverPlayer);
         }
-        return InteractionResultHolder.sidedSuccess(stack, player.level().isClientSide);
+        return InteractionResultHolder.consume(stack);
     }
 
     public static boolean spawnEntity(ServerLevel level, ItemStack stack, double x, double y, double z, Direction direction) {
+        return getType(stack).map(type -> spawnEntity(level, type, stack, x, y, z, direction)).orElse(false);
+    }
+
+    private static boolean spawnEntity(ServerLevel level, EntityType<?> type, ItemStack stack, double x, double y, double z, Direction direction) {
         SpawnEggOptions options = stack.getOrDefault(CrossPlatformStuff.INSTANCE.getComponentSpawnEggOptions(), SpawnEggOptions.DEFAULT);
         boolean success = false;
         int sqr = options.amount() > 1 ? (int) Math.ceil(Math.sqrt(options.amount())) : 0;
+        BlockPos origin = BlockPos.containing(x, y, z);
         for (int i = 0; i < options.amount(); i++) {
-            Entity entity = getEntity(level, stack);
+            Entity entity = getEntity(level, type, stack, origin);
             if (entity instanceof Mob mob) {
-                CompoundTag tag = stack.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY).copyTag();
                 if (options.amount() > 1 && options.spacing() > 0) {
                     int dL = i / sqr;
                     int dW = i % sqr - sqr / 2;
@@ -182,8 +183,6 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
                 }
                 mob.yHeadRot = mob.getYRot();
                 mob.yBodyRot = mob.getYRot();
-                if (tag.size() == 1)
-                    mob.finalizeSpawn(level, level.getCurrentDifficultyAt(BlockPos.containing(mob.position())), MobSpawnType.SPAWN_EGG, null);
                 level.addFreshEntity(entity);
                 mob.playAmbientSound();
                 if (options.team() != null && !options.team().isEmpty()) {
@@ -199,16 +198,24 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
     }
 
     public static Entity getEntity(Level level, ItemStack stack) {
-        Entity entity = null;
-        if (ItemExtendedSpawnEgg.hasSavedEntity(stack)) {
-            CompoundTag tag = stack.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY).copyTag();
-            entity = EntityType.loadEntityRecursive(tag, level, Functions.identity());
-        }
-        return entity;
+        return getType(stack).map(type -> getEntity(level, type, stack, null)).orElse(null);
     }
 
-    private static boolean hasSavedEntity(ItemStack stack) {
-        return stack.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY).read(ENTITY_TYPE_ID_CODEC).result().isPresent();
+    private static Entity getEntity(Level level, EntityType<?> type, ItemStack stack, @Nullable BlockPos pos) {
+        if (level instanceof ServerLevel serverLevel) {
+            return type.create(serverLevel, entity -> {
+                        CompoundTag tag = stack.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY).copyTag();
+                        if (tag.size() > 1)
+                            entity.load(tag);
+                    },
+                    pos == null ? BlockPos.ZERO : pos, MobSpawnType.SPAWN_EGG, false, false);
+        }
+        CompoundTag tag = stack.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY).copyTag();
+        return EntityType.loadEntityRecursive(tag, level, Functions.identity());
+    }
+
+    public static Optional<EntityType<?>> getType(ItemStack stack) {
+        return stack.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY).read(ENTITY_TYPE_ID_CODEC).result();
     }
 
     private void removeMobSpecificTags(CompoundTag compound) {
@@ -218,13 +225,8 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
         compound.remove("UUID");
     }
 
-    @Nullable
-    public static ResourceLocation getNamedIdFrom(ItemStack stack) {
-        return stack.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY).read(ENTITY_TYPE_ID_CODEC).result().orElse(null);
-    }
-
     @Override
     public boolean isFoil(ItemStack stack) {
-        return ItemExtendedSpawnEgg.hasSavedEntity(stack);
+        return ItemExtendedSpawnEgg.getType(stack).isPresent();
     }
 }
