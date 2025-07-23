@@ -1,3 +1,9 @@
+Mob Battle 2.6.2
+================
+- Prevent spaces in team names
+- Redo mob spawning from egg with nbt
+- Fix spawnegg spawning twice when e.g. targeting water
+
 Mob Battle 2.6.1
 ================
 - Fix multipart entity highlight for items
