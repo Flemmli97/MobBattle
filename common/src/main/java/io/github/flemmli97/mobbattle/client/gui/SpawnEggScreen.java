@@ -22,6 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFW;
 
 public class SpawnEggScreen extends Screen {
 
@@ -141,7 +142,14 @@ public class SpawnEggScreen extends Screen {
         int padding = 16;
         int yOff = padding + 12 + 16;
         this.teamBox = new SuggestionEditBox(this.font, this.leftPos + padding, this.topPos + yOff, 100, 14, Component.empty(), 5, false,
-                SuggestionEditBox.ofString(this.player.level().getScoreboard().getTeamNames()));
+                SuggestionEditBox.ofString(this.player.level().getScoreboard().getTeamNames())) {
+            @Override
+            public boolean charTyped(char codePoint, int modifiers) {
+                if (codePoint == GLFW.GLFW_KEY_SPACE)
+                    return false;
+                return super.charTyped(codePoint, modifiers);
+            }
+        };
         this.teamBox.setResponder(s -> this.team = s);
         this.teamBox.setMaxLength(35);
         this.teamBox.setEditable(true);
