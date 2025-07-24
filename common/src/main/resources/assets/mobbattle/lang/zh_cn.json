@@ -14,7 +14,7 @@
   "conf.mobbattle.particle": "显示队伍粒子效果",
   "conf.mobbattle.addai": "自动添加队伍目标AI",
   "mobbattle.gui.potion": "状态效果",
-  "mobbattle.gui.duration": "持续时间",
+  "mobbattle.gui.duration": "持续刻(每20tick=1s)",
   "mobbattle.gui.amplifier": "等级",
   "mobbattle.gui.particle": "粒子效果",
   "mobbattle.gui.team": "队伍",
@@ -23,6 +23,7 @@
   "mobbattle.gui.save": "保存",
   "tooltip.spawnegg": "手持时鼠标左键实体以存进高级刷怪蛋，按住潜行还可保存该实体的NBT数据。",
   "tooltip.spawnegg.spawn": "生成%s",
+  "tooltip.spawnegg.spawn.nbt": "生成%s(带NBT)",
   "tooltip.spawnegg.save": "已保存实体%s",
   "tooltip.spawnegg.save.nbt": "已附带NBT数据地保存了实体%s",
   "tooltip.spawnegg.creative": "仅在创造模式下可复制实体。",
@@ -39,7 +40,7 @@
   "tooltip.effect.remove.clear": "实体的状态效果已移除。",
   "tooltip.effect.give.first": "手持时鼠标左键实体来为TA给予当前已保存的状态效果。",
   "tooltip.effect.give.second": "手持时鼠标右键来编辑要给予的状态效果。",
-  "tooltip.effect.give.add": "已赋予持续%3$sTick的 %1$s %2$s级 状态效果。",
+  "tooltip.effect.give.add": "已赋予持续%3$stick的%2$s级%1$s状态效果。",
   "tooltip.equip.first": "鼠标右键方块设定框选的第一个对角线角落方块，再次鼠标右键其他方块设定框选的第二个对角线角落方块以完成框选(类似WorldEdit)",
   "tooltip.equip.second": "鼠标右键空气将使框选内的所有实体可以捡起掉落物。",
   "tooltip.equip.third": "潜行并鼠标右键以重设框选。",
@@ -61,5 +62,6 @@
   "tooltip.stick.first": "鼠标左键以选择实体。",
   "tooltip.stick.second": "鼠标右键以重置选择实体。",
   "tooltip.stick.reset": "已重置选择实体。",
-  "tooltip.stick.add": "已选择第一个实体，请选择第二个实体作为其攻击目标。"
+  "tooltip.stick.add": "已选择第一个实体，请选择第二个实体作为其攻击目标。",
+  "mobbattle.gui.potions": "状态效果"
 }
