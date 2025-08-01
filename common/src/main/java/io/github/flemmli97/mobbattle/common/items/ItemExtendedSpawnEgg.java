@@ -134,20 +134,20 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (!(player instanceof ServerPlayer serverPlayer))
             return InteractionResultHolder.success(stack);
         Optional<EntityType<?>> entityType = ItemExtendedSpawnEgg.getType(stack);
         if (entityType.isEmpty())
             return InteractionResultHolder.pass(stack);
-        BlockHitResult raytraceresult = getPlayerPOVHitResult(world, player, ClipContext.Fluid.ANY);
+        BlockHitResult raytraceresult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY);
         if (raytraceresult.getType() == HitResult.Type.BLOCK) {
             BlockPos blockpos = raytraceresult.getBlockPos();
-            if (!(world.getBlockState(blockpos).getBlock() instanceof LiquidBlock)) {
+            if (!(level.getBlockState(blockpos).getBlock() instanceof LiquidBlock)) {
                 return InteractionResultHolder.pass(stack);
-            } else if (world.mayInteract(player, blockpos) && player.mayUseItemAt(blockpos, raytraceresult.getDirection(), stack)) {
-                boolean spawned = ItemExtendedSpawnEgg.spawnEntity((ServerLevel) world, entityType.get(), stack, blockpos.getX() + 0.5D, blockpos.getY() + 0.5D,
+            } else if (level.mayInteract(player, blockpos) && player.mayUseItemAt(blockpos, raytraceresult.getDirection(), stack)) {
+                boolean spawned = ItemExtendedSpawnEgg.spawnEntity((ServerLevel) level, entityType.get(), stack, blockpos.getX() + 0.5D, blockpos.getY() + 0.5D,
                         blockpos.getZ() + 0.5D, player.getDirection());
                 if (spawned && !player.getAbilities().instabuild) {
                     stack.shrink(1);

@@ -26,7 +26,7 @@ public class MobArmor extends Item implements LeftClickInteractItem {
     }
 
     @Override
-    public boolean canAttackBlock(BlockState state, Level worldIn, BlockPos pos, Player player) {
+    public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) {
         return !player.isCreative();
     }
 

@@ -63,9 +63,9 @@ public class MobArmy extends Item implements LeftClickInteractItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!world.isClientSide && stack.has(CrossPlatformStuff.INSTANCE.getComponentAreaSelection())) {
+        if (!level.isClientSide && stack.has(CrossPlatformStuff.INSTANCE.getComponentAreaSelection())) {
             if (player.isShiftKeyDown()) {
                 stack.remove(CrossPlatformStuff.INSTANCE.getComponentAreaSelection());
                 player.sendSystemMessage(Component.translatable("tooltip.army.reset").withStyle(ChatFormatting.RED));

@@ -31,7 +31,7 @@ public class MobGroup extends Item implements LeftClickInteractItem, MobHighligh
     }
 
     @Override
-    public boolean canAttackBlock(BlockState state, Level worldIn, BlockPos pos, Player player) {
+    public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) {
         return !player.isCreative();
     }
 
@@ -60,7 +60,7 @@ public class MobGroup extends Item implements LeftClickInteractItem, MobHighligh
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (!player.level().isClientSide) {
             UuidListComponent ids = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid());

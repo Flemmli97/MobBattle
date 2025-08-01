@@ -32,7 +32,7 @@ public class MobEquip extends Item implements LeftClickInteractItem {
     }
 
     @Override
-    public boolean canAttackBlock(BlockState state, Level worldIn, BlockPos pos, Player player) {
+    public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) {
         return !player.isCreative();
     }
 
@@ -63,9 +63,9 @@ public class MobEquip extends Item implements LeftClickInteractItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!world.isClientSide && stack.has(CrossPlatformStuff.INSTANCE.getComponentAreaSelection())) {
+        if (!level.isClientSide && stack.has(CrossPlatformStuff.INSTANCE.getComponentAreaSelection())) {
             if (player.isShiftKeyDown()) {
                 stack.remove(CrossPlatformStuff.INSTANCE.getComponentAreaSelection());
                 player.sendSystemMessage(Component.translatable("tooltip.equip.reset").withStyle(ChatFormatting.RED));
