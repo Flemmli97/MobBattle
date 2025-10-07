@@ -67,7 +67,7 @@ public class MobStick extends Item implements LeftClickInteractItem {
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (player.level() instanceof ServerLevel) {
             UuidComponent comp = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
-            LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+            LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetLivingEntity(entity);
             if (!(living instanceof Mob target))
                 return true;
             if (comp != null && comp.uuid().isPresent()) {

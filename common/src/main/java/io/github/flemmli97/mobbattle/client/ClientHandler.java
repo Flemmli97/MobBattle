@@ -57,10 +57,10 @@ public class ClientHandler {
 
     private static boolean isHighlighted(Entity entity, ItemStack stack) {
         boolean highlight = false;
-        if (stack.getItem() instanceof MobHighlightItem) {
+        if (stack.getItem() instanceof MobHighlightItem item) {
             HitResult res = Minecraft.getInstance().hitResult;
             if (res != null && res.getType() == HitResult.Type.ENTITY) {
-                if (entity == CrossPlatformStuff.INSTANCE.tryGetEntity(((EntityHitResult) res).getEntity()))
+                if (entity == item.getDefaultHover((EntityHitResult) res))
                     return true;
             }
             UuidComponent id = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobUuid());

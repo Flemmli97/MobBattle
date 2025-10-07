@@ -44,7 +44,7 @@ public class MobGroup extends Item implements LeftClickInteractItem, MobHighligh
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand hand) {
-        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetLivingEntity(entity);
         if (living instanceof Mob mob && !player.isShiftKeyDown() && !player.level().isClientSide && stack.has(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid())) {
             UuidListComponent ids = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid());
             for (UUID id : ids.uuids()) {
@@ -80,7 +80,7 @@ public class MobGroup extends Item implements LeftClickInteractItem, MobHighligh
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetLivingEntity(entity);
         if (living instanceof Mob && !player.level().isClientSide) {
             UuidListComponent ids = stack.getOrDefault(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid(), UuidListComponent.EMPTY);
             AtomicBoolean changed = new AtomicBoolean();

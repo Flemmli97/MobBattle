@@ -45,14 +45,18 @@ public interface CrossPlatformStuff {
 
     DataComponentType<SpawnEggOptions> getComponentSpawnEggOptions();
 
-    default LivingEntity tryGetEntity(Entity entity) {
+    default Entity tryGetEntity(Entity entity) {
         if (entity instanceof OwnableEntity ownable && entity.getType().is(MULTIPART_ENTITY))
             return ownable.getOwner();
         if (entity instanceof TraceableEntity traceableEntity && entity.getType().is(MULTIPART_ENTITY) && traceableEntity.getOwner() instanceof LivingEntity owner)
             return owner;
         if (entity instanceof EnderDragonPart part)
             return part.parentMob;
-        return entity instanceof LivingEntity mob ? mob : null;
+        return entity;
+    }
+
+    default LivingEntity tryGetLivingEntity(Entity entity) {
+        return this.tryGetEntity(entity) instanceof LivingEntity living ? living : null;
     }
 
     void openGuiArmor(ServerPlayer sender, Mob entity);

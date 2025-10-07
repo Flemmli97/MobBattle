@@ -33,7 +33,7 @@ public class MobEffect extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetLivingEntity(entity);
         if (!player.level().isClientSide && living != null) {
             living.removeAllEffects();
             player.sendSystemMessage(Component.translatable("tooltip.effect.remove.clear").withStyle(ChatFormatting.GOLD));

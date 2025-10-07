@@ -87,7 +87,7 @@ public class MobEquip extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetLivingEntity(entity);
         if (living instanceof Mob mob && !player.level().isClientSide) {
             mob.addTag(LibTags.ENTITY_PICKUP);
             CrossPlatformStuff.INSTANCE.goalSelectorFrom(mob, false).addGoal(10, new EntityAIItemPickup(mob));

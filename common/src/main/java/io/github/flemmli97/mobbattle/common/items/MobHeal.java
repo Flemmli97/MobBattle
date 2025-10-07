@@ -29,7 +29,7 @@ public class MobHeal extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetLivingEntity(entity);
         if (living != null) {
             living.heal(living.getMaxHealth());
             living.level().addParticle(ParticleTypes.HEART, living.getX(), living.getY() + living.getBbHeight() + 0.5, living.getZ(), 0, 0.1, 0);

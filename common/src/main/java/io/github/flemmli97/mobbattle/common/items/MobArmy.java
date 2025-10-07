@@ -87,7 +87,7 @@ public class MobArmy extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetLivingEntity(entity);
         if (living instanceof Mob mob && !player.level().isClientSide) {
             String team = stack.has(DataComponents.CUSTOM_NAME) ? stack.getHoverName().getString() : "DEFAULT";
             Utils.updateEntity(team, mob);

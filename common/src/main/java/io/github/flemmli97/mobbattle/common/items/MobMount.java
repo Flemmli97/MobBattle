@@ -61,7 +61,7 @@ public class MobMount extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+        LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetLivingEntity(entity);
         if (living instanceof Mob mob && !player.level().isClientSide) {
             UuidComponent comp = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
             if (comp != null && comp.uuid().isPresent()) {

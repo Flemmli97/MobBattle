@@ -6,14 +6,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.EntityHitResult;
 
 import java.util.List;
 
@@ -31,11 +30,11 @@ public class MobKill extends Item implements LeftClickInteractItem {
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (player instanceof ServerPlayer) {
-            LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
-            if (living instanceof Mob mob) {
-                mob.hurt(entity.damageSources().genericKill(), Float.MAX_VALUE);
-                if (mob.isAlive()) {
-                    mob.kill();
+            Entity target = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
+            if (target != null) {
+                target.hurt(entity.damageSources().genericKill(), Float.MAX_VALUE);
+                if (target.isAlive()) {
+                    target.kill();
                 }
             }
         }
@@ -45,5 +44,10 @@ public class MobKill extends Item implements LeftClickInteractItem {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag flag) {
         list.add(Component.translatable("tooltip.kill").withStyle(ChatFormatting.AQUA));
+    }
+
+    @Override
+    public Entity getDefaultHover(EntityHitResult result) {
+        return CrossPlatformStuff.INSTANCE.tryGetEntity(result.getEntity());
     }
 }
