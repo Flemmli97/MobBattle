@@ -16,9 +16,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
@@ -30,8 +32,10 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 
 public class MobBattleFabric implements ModInitializer {
@@ -43,6 +47,21 @@ public class MobBattleFabric implements ModInitializer {
         MobBattleMenuTypes.init();
         postItemSetup();
         AttackEntityCallback.EVENT.register(EventHandler::attackCallback);
+        ServerTickEvents.END_WORLD_TICK.register(level -> {
+            if (level.dimension().equals(Level.OVERWORLD)) {
+                EventCalls.levelTick(level);
+            }
+        });
+        EntityTrackingEvents.START_TRACKING.register((entity, player) -> {
+            if (entity instanceof LivingEntity living) {
+                EventCalls.onStartTracking(player, living);
+            }
+        });
+        EntityTrackingEvents.STOP_TRACKING.register((entity, player) -> {
+            if (entity instanceof LivingEntity living) {
+                EventCalls.onStopTracking(player, living);
+            }
+        });
         ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> EventCalls.handleJoinLevel(entity));
         registerPackets();
         ConfigLoader.initConfig();

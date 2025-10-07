@@ -56,14 +56,15 @@ public class MobBossEvent extends ServerBossEvent {
         if (this.removed) {
             return true;
         }
-        if (this.entity.isRemoved()) {
-            if (this.entity.getRemovalReason() == Entity.RemovalReason.DISCARDED || this.entity.getRemovalReason() == Entity.RemovalReason.KILLED) {
-                this.removeAllPlayers();
-                return true;
-            }
-            this.entity = null;
-        }
         if (this.entity != null) {
+            if (this.entity.isRemoved()) {
+                if (this.entity.getRemovalReason() == Entity.RemovalReason.DISCARDED || this.entity.getRemovalReason() == Entity.RemovalReason.KILLED) {
+                    this.removeAllPlayers();
+                    return true;
+                }
+                this.entity = null;
+                return false;
+            }
             this.setProgress(this.entity.getHealth() / this.entity.getMaxHealth());
             Component displayName = this.entity.getDisplayName();
             if (!Objects.equal(displayName, this.getName())) {
