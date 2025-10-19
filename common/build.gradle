@@ -1,15 +1,9 @@
-apply from: "https://raw.githubusercontent.com/Flemmli97/GradleScripts/arch-loom-v2/common.gradle"
-
-repositories {
-    mavenLocal()
-    maven {
-        name = "TenshiLib"
-        url "https://maven.blazing-coop.net/releases"
-    }
+plugins {
+    id 'io.github.flemmli97.multiloader.platform-common'
 }
 
 dependencies {
-    modCompileOnly "${tenshilib_dep}-fabric"
+    commonDependency "${tenshilib_dep}-common"
 }
 
 sourceSets.main.resources {
