@@ -55,6 +55,8 @@
   "tooltip.group.add": "Added an entity",
   "tooltip.heal": "Left click on entity to heal it",
   "tooltip.kill": "Left click on entity to kill it",
+  "tooltip.kill.all": "Shift-Right click to kill all entities",
+  "tooltip.kill.all.success": "Cleared all entities",
   "tooltip.mount.first": "Left click an entity to select",
   "tooltip.mount.second": "Left click another entity to add selected entity as rider",
   "tooltip.mount.reset": "Reset entities",

@@ -102,6 +102,8 @@ public class Lang implements DataProvider {
         this.add("tooltip.heal", "Left click on entity to heal it");
 
         this.add("tooltip.kill", "Left click on entity to kill it");
+        this.add("tooltip.kill.all", "Use for 1 sec to kill all entities");
+        this.add("tooltip.kill.all.success", "Cleared all entities");
 
         this.add("tooltip.mount.first", "Left click an entity to select");
         this.add("tooltip.mount.second", "Left click another entity to add selected entity as rider");
