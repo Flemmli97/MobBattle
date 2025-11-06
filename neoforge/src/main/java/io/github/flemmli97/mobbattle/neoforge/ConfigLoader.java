@@ -19,7 +19,7 @@ public class ConfigLoader {
 
         public ClientConfig(ModConfigSpec.Builder builder) {
             this.showTeamParticleTypes = builder.comment("If the team has a color will play particles of that color above the mob").translation("conf.mobbattle.particle")
-                    .define("showTeamParticle", true);
+                    .define("showTeamParticle", Config.showTeamParticleTypes);
         }
 
         public void reload() {
@@ -33,7 +33,7 @@ public class ConfigLoader {
 
         public CommonConfig(ModConfigSpec.Builder builder) {
             this.autoAddAI = builder.comment("Auto target mobs from other teams (if e.g. done per command)").translation("conf.mobbattle.addai")
-                    .define("autoAddAI", true);
+                    .define("autoAddAI", Config.autoAddAI);
         }
 
         public void reload() {

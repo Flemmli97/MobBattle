@@ -62,10 +62,6 @@ public class Utils {
         teamColor.put(ChatFormatting.YELLOW, new DustParticleOptions(new Vector3f(1, 1, 0), 1.0f));
     }
 
-    public static String getTeam(Entity entity) {
-        return entity.getTeam() != null ? entity.getTeam().getName() : "none";
-    }
-
     public static boolean isOnSameTeam(Entity entity, Entity entity2) {
         if (entity.getTeam() != null && entity2.getTeam() != null)
             return entity.isAlliedTo(entity2);
@@ -89,22 +85,19 @@ public class Utils {
         score.addPlayerToTeam(entity.getStringUUID(), scoreTeam);
     }
 
-    public static int getTeamSize(Entity entity, String team) {
-        return entity.level().getScoreboard().getPlayerTeam(team) != null ? entity.level().getScoreboard().getPlayerTeam(team).getPlayers().size() : 0;
-    }
-
     private static final Predicate<Goal> targetGoal = (goal) -> true;
 
-    public static void updateEntity(String team, Mob e) {
+    public static void updateEntity(String team, Mob mob) {
         team = team.replace(" ", "");
-        addEntityToTeam(e, team);
-        e.setTarget(null);
-        e.addTag(LibTags.ENTITY_AI_ADDED);
-        if (e.getType().is(MobBattle.IGNORED))
+        addEntityToTeam(mob, team);
+        mob.setTarget(null);
+        mob.addTag(LibTags.ENTITY_AI_ADDED);
+        if (mob.getType().is(MobBattle.IGNORED))
             return;
-        removeGoal(CrossPlatformStuff.INSTANCE.goalSelectorFrom(e, true), targetGoal);
-        CrossPlatformStuff.INSTANCE.goalSelectorFrom(e, true).addGoal(0, new EntityAIHurt(e));
-        CrossPlatformStuff.INSTANCE.goalSelectorFrom(e, true).addGoal(3, new EntityAITeamTarget(e, false, true));
+        removeGoal(CrossPlatformStuff.INSTANCE.goalSelectorFrom(mob, true), targetGoal);
+        increaseFollow(mob);
+        CrossPlatformStuff.INSTANCE.goalSelectorFrom(mob, true).addGoal(0, new EntityAIHurt(mob));
+        CrossPlatformStuff.INSTANCE.goalSelectorFrom(mob, true).addGoal(3, new EntityAITeamTarget(mob, false, true));
     }
 
     /**
@@ -163,8 +156,9 @@ public class Utils {
 
     private static void increaseFollow(Mob mob) {
         AttributeInstance att = mob.getAttribute(Attributes.FOLLOW_RANGE);
-        if (att != null && !att.hasModifier(MOB_BATTLE_FOLLOW_MOD))
-            att.addTransientModifier(new AttributeModifier(MOB_BATTLE_FOLLOW_MOD, 64, AttributeModifier.Operation.ADD_VALUE));
+        if (att != null && !att.hasModifier(MOB_BATTLE_FOLLOW_MOD)) {
+            att.addTransientModifier(new AttributeModifier(MOB_BATTLE_FOLLOW_MOD, 96, AttributeModifier.Operation.ADD_VALUE));
+        }
     }
 
     private static void setTargetTo(Mob entity, LivingEntity target) {
