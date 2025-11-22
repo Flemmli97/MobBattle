@@ -24,7 +24,7 @@ import net.minecraft.world.phys.EntityHitResult;
 
 import java.util.List;
 
-public class MobKill extends Item implements LeftClickInteractItem {
+public class MobKill extends Item implements ExtendedItem {
 
     public MobKill(Item.Properties props) {
         super(props);

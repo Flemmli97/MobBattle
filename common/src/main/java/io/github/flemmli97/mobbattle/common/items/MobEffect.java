@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
-public class MobEffect extends Item implements LeftClickInteractItem {
+public class MobEffect extends Item implements ExtendedItem {
 
     public MobEffect(Item.Properties props) {
         super(props);

@@ -1,14 +1,10 @@
 package io.github.flemmli97.mobbattle.platform;
 
 import io.github.flemmli97.mobbattle.MobBattle;
-import io.github.flemmli97.mobbattle.common.components.AreaPositionComponent;
-import io.github.flemmli97.mobbattle.common.components.EffectComponent;
-import io.github.flemmli97.mobbattle.common.components.SpawnEggOptions;
-import io.github.flemmli97.mobbattle.common.components.UuidComponent;
-import io.github.flemmli97.mobbattle.common.components.UuidListComponent;
-import io.github.flemmli97.mobbattle.common.inv.ContainerArmor;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,8 +18,13 @@ import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.TraceableEntity;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.boss.EnderDragonPart;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.function.Supplier;
 
 public interface CrossPlatformStuff {
 
@@ -33,17 +34,11 @@ public interface CrossPlatformStuff {
             "io.github.flemmli97.mobbattle.fabric.platform.CrossPlatformStuffImpl",
             "io.github.flemmli97.mobbattle.neoforge.platform.CrossPlatformStuffImpl");
 
-    MenuType<ContainerArmor> getArmorMenuType();
+    <T extends Item> Supplier<T> registerItem(String id, Supplier<T> sup);
 
-    DataComponentType<UuidComponent> getComponentMobUuid();
+    <T> Supplier<DataComponentType<T>> registerComponent(String id, Supplier<DataComponentType<T>> sup);
 
-    DataComponentType<UuidListComponent> getComponentMobGroupUuid();
-
-    DataComponentType<EffectComponent> getComponentEffect();
-
-    DataComponentType<AreaPositionComponent> getComponentAreaSelection();
-
-    DataComponentType<SpawnEggOptions> getComponentSpawnEggOptions();
+    <T extends AbstractContainerMenu, D> Supplier<MenuType<T>> registerMenu(String id, MenuFactory<T, D> factory, StreamCodec<RegistryFriendlyByteBuf, D> codec);
 
     default Entity tryGetEntity(Entity entity) {
         if (entity instanceof OwnableEntity ownable && entity.getType().is(MULTIPART_ENTITY))
@@ -68,4 +63,8 @@ public interface CrossPlatformStuff {
     void sendToClient(CustomPacketPayload packet, ServerPlayer player);
 
     void sendToServer(CustomPacketPayload packet);
+
+    interface MenuFactory<T extends AbstractContainerMenu, D> {
+        T create(int idx, Inventory inv, D data);
+    }
 }

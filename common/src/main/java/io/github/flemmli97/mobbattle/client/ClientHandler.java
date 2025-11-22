@@ -3,13 +3,16 @@ package io.github.flemmli97.mobbattle.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.flemmli97.mobbattle.client.gui.GuiEffect;
 import io.github.flemmli97.mobbattle.client.gui.SpawnEggScreen;
+import io.github.flemmli97.mobbattle.common.components.AreaPositionComponent;
 import io.github.flemmli97.mobbattle.common.components.UuidComponent;
 import io.github.flemmli97.mobbattle.common.components.UuidListComponent;
 import io.github.flemmli97.mobbattle.common.items.MobHighlightItem;
+import io.github.flemmli97.mobbattle.common.registry.MobBattleDataComponents;
+import io.github.flemmli97.mobbattle.common.registry.MobBattleItems;
 import io.github.flemmli97.mobbattle.common.utils.Utils;
-import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -25,6 +28,17 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 
 public class ClientHandler {
+
+    public static void render(PoseStack stack) {
+        Minecraft mc = Minecraft.getInstance();
+        LocalPlayer player = mc.player;
+        ItemStack heldItem = player.getMainHandItem();
+        if (heldItem.getItem() == MobBattleItems.MOB_ARMY.get() || heldItem.getItem() == MobBattleItems.MOB_EQUIP.get()) {
+            AreaPositionComponent comp = heldItem.get(MobBattleDataComponents.BOX.get());
+            if (comp != null && comp.first() != null && comp.second() != null)
+                ClientHandler.renderBlockOutline(stack, Minecraft.getInstance().renderBuffers().crumblingBufferSource(), comp.first(), comp.second());
+        }
+    }
 
     public static void openEffectGui() {
         Minecraft.getInstance().setScreen(new GuiEffect());
@@ -63,12 +77,12 @@ public class ClientHandler {
                 if (entity == item.getDefaultHover((EntityHitResult) res))
                     return true;
             }
-            UuidComponent id = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
+            UuidComponent id = stack.get(MobBattleDataComponents.SELECTED_MOB.get());
             if (id != null && id.uuid().isPresent()) {
                 if (entity.getUUID().equals(id.uuid().get()))
                     return true;
             }
-            UuidListComponent list = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid());
+            UuidListComponent list = stack.get(MobBattleDataComponents.SELECTED_MOBS.get());
             if (list != null && list.uuids().stream().anyMatch(uuid -> entity.getUUID().equals(uuid))) {
                 return true;
             }

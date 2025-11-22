@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
-public class MobHeal extends Item implements LeftClickInteractItem {
+public class MobHeal extends Item implements ExtendedItem {
 
     public MobHeal(Item.Properties props) {
         super(props);

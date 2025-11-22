@@ -4,6 +4,7 @@ import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.client.gui.widget.SuggestionEditBox;
 import io.github.flemmli97.mobbattle.common.components.SpawnEggOptions;
 import io.github.flemmli97.mobbattle.common.items.ItemExtendedSpawnEgg;
+import io.github.flemmli97.mobbattle.common.registry.MobBattleDataComponents;
 import io.github.flemmli97.mobbattle.network.C2SSpawnEgg;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
@@ -45,7 +46,7 @@ public class SpawnEggScreen extends Screen {
         ItemStack stack = this.player.getItemInHand(this.hand);
         Entity entity = ItemExtendedSpawnEgg.getEntity(this.player.level(), stack);
         this.entity = entity instanceof Mob mob ? mob : null;
-        SpawnEggOptions options = stack.getOrDefault(CrossPlatformStuff.INSTANCE.getComponentSpawnEggOptions(), SpawnEggOptions.DEFAULT);
+        SpawnEggOptions options = stack.getOrDefault(MobBattleDataComponents.SPAWN_EGG_OPTIONS.get(), SpawnEggOptions.DEFAULT);
         this.team = options.team() != null ? options.team() : "";
         this.amount = options.amount();
         this.spacing = options.spacing();

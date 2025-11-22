@@ -1,6 +1,7 @@
 package io.github.flemmli97.mobbattle.common.items;
 
 import io.github.flemmli97.mobbattle.common.components.UuidComponent;
+import io.github.flemmli97.mobbattle.common.registry.MobBattleDataComponents;
 import io.github.flemmli97.mobbattle.common.utils.Utils;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
@@ -23,7 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.List;
 import java.util.Optional;
 
-public class MobMount extends Item implements LeftClickInteractItem {
+public class MobMount extends Item implements ExtendedItem {
 
     public MobMount(Item.Properties props) {
         super(props);
@@ -42,7 +43,7 @@ public class MobMount extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        UuidComponent comp = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
+        UuidComponent comp = stack.get(MobBattleDataComponents.SELECTED_MOB.get());
         return comp != null && comp.uuid().isPresent();
     }
 
@@ -50,9 +51,9 @@ public class MobMount extends Item implements LeftClickInteractItem {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (!player.level().isClientSide) {
-            UuidComponent comp = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
+            UuidComponent comp = stack.get(MobBattleDataComponents.SELECTED_MOB.get());
             if (comp != null) {
-                stack.remove(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
+                stack.remove(MobBattleDataComponents.SELECTED_MOB.get());
                 player.sendSystemMessage(Component.translatable("tooltip.mount.reset").withStyle(ChatFormatting.RED));
             }
         }
@@ -63,15 +64,15 @@ public class MobMount extends Item implements LeftClickInteractItem {
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetLivingEntity(entity);
         if (living instanceof Mob mob && !player.level().isClientSide) {
-            UuidComponent comp = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
+            UuidComponent comp = stack.get(MobBattleDataComponents.SELECTED_MOB.get());
             if (comp != null && comp.uuid().isPresent()) {
                 Mob storedEntity = Utils.fromUUID((ServerLevel) player.level(), comp.uuid().get());
                 if (storedEntity != null && storedEntity != mob && !this.passengerContainsEntity(storedEntity, mob)) {
                     storedEntity.startRiding(mob);
-                    stack.remove(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
+                    stack.remove(MobBattleDataComponents.SELECTED_MOB.get());
                 }
             } else {
-                stack.set(CrossPlatformStuff.INSTANCE.getComponentMobUuid(), new UuidComponent(Optional.of(mob.getUUID()),
+                stack.set(MobBattleDataComponents.SELECTED_MOB.get(), new UuidComponent(Optional.of(mob.getUUID()),
                         Optional.empty()));
             }
         }

@@ -2,11 +2,12 @@ package io.github.flemmli97.mobbattle.neoforge;
 
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.common.items.ItemExtendedSpawnEgg;
+import io.github.flemmli97.mobbattle.common.registry.MobBattleDataComponents;
+import io.github.flemmli97.mobbattle.common.registry.MobBattleItems;
+import io.github.flemmli97.mobbattle.common.registry.MobBattleMenuTypes;
 import io.github.flemmli97.mobbattle.neoforge.client.ClientEvents;
 import io.github.flemmli97.mobbattle.neoforge.handler.EventHandler;
-import io.github.flemmli97.mobbattle.neoforge.registry.ModComponents;
-import io.github.flemmli97.mobbattle.neoforge.registry.ModItems;
-import io.github.flemmli97.mobbattle.neoforge.registry.ModMenuType;
+import io.github.flemmli97.mobbattle.neoforge.registry.Registers;
 import io.github.flemmli97.mobbattle.network.C2SEffectStack;
 import io.github.flemmli97.mobbattle.network.C2SSpawnEgg;
 import io.github.flemmli97.mobbattle.network.S2CSpawnEggScreen;
@@ -46,20 +47,21 @@ public class MobBattleNeoForge {
         modBus.addListener(MobBattleNeoForge::registerPackets);
         modBus.addListener(MobBattleNeoForge::confLoad);
         modBus.addListener(MobBattleNeoForge::confReload);
-        ModItems.ITEMS.register(modBus);
-        ModMenuType.MENU_TYPE.register(modBus);
-        ModComponents.COMPONENTS.register(modBus);
+        MobBattleItems.init();
+        MobBattleDataComponents.init();
+        MobBattleMenuTypes.init();
+        Registers.register(modBus);
         if (FMLEnvironment.dist == Dist.CLIENT)
             ClientEvents.register(modBus);
         MobBattle.tenshiLib = ModList.get().isLoaded("tenshilib");
         MobBattle.customTab = TAB_REGISTER.register("tab", () -> CreativeModeTab.builder()
-                .icon(() -> new ItemStack(ModItems.MOB_STICK.get()))
+                .icon(() -> new ItemStack(MobBattleItems.MOB_STICK.get()))
                 .title(Component.translatable("mobbattle.tab")).build());
         TAB_REGISTER.register(modBus);
     }
 
     public static void preInit(FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> DispenserBlock.registerBehavior(ModItems.EXTENDED_EGG.get(), (source, stack) -> {
+        event.enqueueWork(() -> DispenserBlock.registerBehavior(MobBattleItems.EXTENDED_EGG.get(), (source, stack) -> {
             Direction direction = source.state().getValue(DispenserBlock.FACING);
             double x = source.center().x() + direction.getStepX();
             double y = source.pos().getY() + direction.getStepY() + 0.2;
@@ -76,13 +78,13 @@ public class MobBattleNeoForge {
 
     public static void creativeTabContents(BuildCreativeModeTabContentsEvent event) {
         if (event.getTab() == MobBattle.customTab.get()) {
-            ModItems.ITEMS.getEntries().forEach(holder -> event.accept(holder.get()));
+            Registers.ITEMS.getEntries().forEach(holder -> event.accept(holder.get()));
         }
     }
 
     public static void registerPackets(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar(MobBattle.MODID);
-        registrar.playToServer(C2SEffectStack.TYPE, C2SEffectStack.STREAM_CODEC, (pkt, ctx) -> ctx.enqueueWork(() -> C2SEffectStack.handle(pkt, ctx.player(), ModItems.MOB_EFFECT_GIVE.get())));
+        registrar.playToServer(C2SEffectStack.TYPE, C2SEffectStack.STREAM_CODEC, (pkt, ctx) -> ctx.enqueueWork(() -> C2SEffectStack.handle(pkt, ctx.player(), MobBattleItems.MOB_EFFECT_GIVE.get())));
         registrar.playToServer(C2SSpawnEgg.TYPE, C2SSpawnEgg.STREAM_CODEC, (pkt, ctx) -> ctx.enqueueWork(() -> C2SSpawnEgg.handle(pkt, ctx.player())));
         registrar.playToClient(S2CSpawnEggScreen.TYPE, S2CSpawnEggScreen.STREAM_CODEC, (pkt, ctx) -> ctx.enqueueWork(() -> S2CSpawnEggScreen.handle(pkt)));
     }

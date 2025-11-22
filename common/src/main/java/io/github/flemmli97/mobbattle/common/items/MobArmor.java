@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
-public class MobArmor extends Item implements LeftClickInteractItem {
+public class MobArmor extends Item implements ExtendedItem {
 
     public MobArmor(Item.Properties props) {
         super(props);

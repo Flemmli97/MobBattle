@@ -2,8 +2,7 @@ package io.github.flemmli97.mobbattle.common.inv;
 
 import com.mojang.datafixers.util.Pair;
 import io.github.flemmli97.mobbattle.MobBattle;
-import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import io.github.flemmli97.mobbattle.common.registry.MobBattleMenuTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
@@ -18,12 +17,12 @@ public class ContainerArmor extends AbstractContainerMenu {
 
     private InventoryArmor inv;
 
-    public ContainerArmor(int windowID, Inventory playerInv, RegistryFriendlyByteBuf buf) {
-        this(windowID, playerInv, playerInv.player.level().getEntity(buf.readInt()));
+    public ContainerArmor(int windowID, Inventory playerInv, int entity) {
+        this(windowID, playerInv, playerInv.player.level().getEntity(entity));
     }
 
     public ContainerArmor(int windowID, Inventory playerInv, Entity e) {
-        super(CrossPlatformStuff.INSTANCE.getArmorMenuType(), windowID);
+        super(MobBattleMenuTypes.ARMOR_MENU.get(), windowID);
         if (!(e instanceof Mob living))
             return;
         this.inv = new InventoryArmor(living);

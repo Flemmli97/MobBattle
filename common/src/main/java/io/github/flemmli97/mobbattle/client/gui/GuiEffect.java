@@ -4,6 +4,7 @@ import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.client.gui.widget.ButtonCheck;
 import io.github.flemmli97.mobbattle.client.gui.widget.SuggestionEditBox;
 import io.github.flemmli97.mobbattle.common.components.EffectComponent;
+import io.github.flemmli97.mobbattle.common.registry.MobBattleDataComponents;
 import io.github.flemmli97.mobbattle.network.C2SEffectStack;
 import io.github.flemmli97.mobbattle.platform.ClientPlatform;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
@@ -39,7 +40,7 @@ public class GuiEffect extends Screen {
     public GuiEffect() {
         super(Component.translatable("mobbattle.gui.potions"));
         ItemStack stack = Minecraft.getInstance().player.getMainHandItem();
-        this.effect = stack.getOrDefault(CrossPlatformStuff.INSTANCE.getComponentEffect(), EffectComponent.DEFAULT);
+        this.effect = stack.getOrDefault(MobBattleDataComponents.EFFECT.get(), EffectComponent.DEFAULT);
     }
 
     @Override

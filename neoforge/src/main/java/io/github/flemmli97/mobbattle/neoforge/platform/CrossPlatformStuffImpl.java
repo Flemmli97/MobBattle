@@ -1,17 +1,13 @@
 package io.github.flemmli97.mobbattle.neoforge.platform;
 
-import io.github.flemmli97.mobbattle.common.components.AreaPositionComponent;
-import io.github.flemmli97.mobbattle.common.components.EffectComponent;
-import io.github.flemmli97.mobbattle.common.components.SpawnEggOptions;
-import io.github.flemmli97.mobbattle.common.components.UuidComponent;
-import io.github.flemmli97.mobbattle.common.components.UuidListComponent;
 import io.github.flemmli97.mobbattle.common.inv.ContainerArmor;
 import io.github.flemmli97.mobbattle.neoforge.client.ClientEvents;
-import io.github.flemmli97.mobbattle.neoforge.registry.ModComponents;
-import io.github.flemmli97.mobbattle.neoforge.registry.ModMenuType;
+import io.github.flemmli97.mobbattle.neoforge.registry.Registers;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
@@ -22,37 +18,33 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.entity.PartEntity;
+import net.neoforged.neoforge.network.IContainerFactory;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 public class CrossPlatformStuffImpl implements CrossPlatformStuff {
 
     @Override
-    public MenuType<ContainerArmor> getArmorMenuType() {
-        return ModMenuType.ARMOR_MENU.get();
+    public <T extends Item> Supplier<T> registerItem(String id, Supplier<T> sup) {
+        return Registers.ITEMS.register(id, sup);
     }
 
     @Override
-    public DataComponentType<UuidComponent> getComponentMobUuid() {
-        return ModComponents.SELECTED_MOB.get();
+    public <T> Supplier<DataComponentType<T>> registerComponent(String id, Supplier<DataComponentType<T>> sup) {
+        return Registers.COMPONENTS.register(id, sup);
     }
 
     @Override
-    public DataComponentType<UuidListComponent> getComponentMobGroupUuid() {
-        return ModComponents.SELECTED_MOBS.get();
-    }
-
-    @Override
-    public DataComponentType<EffectComponent> getComponentEffect() {
-        return ModComponents.EFFECT.get();
-    }
-
-    @Override
-    public DataComponentType<AreaPositionComponent> getComponentAreaSelection() {
-        return ModComponents.BOX.get();
+    public <T extends AbstractContainerMenu, D> Supplier<MenuType<T>> registerMenu(String id, MenuFactory<T, D> factory, StreamCodec<RegistryFriendlyByteBuf, D> codec) {
+        return Registers.MENU_TYPE.register(id, () -> new MenuType<>((IContainerFactory<T>) (i, inv, buf) -> factory.create(i, inv, codec.decode(buf)),
+                FeatureFlagSet.of()));
     }
 
     @Override
@@ -61,11 +53,6 @@ public class CrossPlatformStuffImpl implements CrossPlatformStuff {
             return part.getParent();
         }
         return CrossPlatformStuff.super.tryGetEntity(entity);
-    }
-
-    @Override
-    public DataComponentType<SpawnEggOptions> getComponentSpawnEggOptions() {
-        return ModComponents.SPAWN_EGG_OPTIONS.get();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package io.github.flemmli97.mobbattle.common.items;
 
 import io.github.flemmli97.mobbattle.common.components.AreaPositionComponent;
+import io.github.flemmli97.mobbattle.common.registry.MobBattleDataComponents;
 import io.github.flemmli97.mobbattle.common.utils.Utils;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
@@ -24,7 +25,7 @@ import net.minecraft.world.phys.AABB;
 
 import java.util.List;
 
-public class MobArmy extends Item implements LeftClickInteractItem {
+public class MobArmy extends Item implements ExtendedItem {
 
     public MobArmy(Item.Properties props) {
         super(props);
@@ -47,7 +48,7 @@ public class MobArmy extends Item implements LeftClickInteractItem {
     public InteractionResult useOn(UseOnContext ctx) {
         ItemStack stack = ctx.getItemInHand();
         if (!ctx.getLevel().isClientSide) {
-            AreaPositionComponent comp = stack.getOrDefault(CrossPlatformStuff.INSTANCE.getComponentAreaSelection(), AreaPositionComponent.DEFAULT);
+            AreaPositionComponent comp = stack.getOrDefault(MobBattleDataComponents.BOX.get(), AreaPositionComponent.DEFAULT);
             boolean update = false;
             if (comp.first() == null) {
                 comp = comp.withFirst(ctx.getClickedPos());
@@ -57,7 +58,7 @@ public class MobArmy extends Item implements LeftClickInteractItem {
                 update = true;
             }
             if (update)
-                stack.set(CrossPlatformStuff.INSTANCE.getComponentAreaSelection(), comp);
+                stack.set(MobBattleDataComponents.BOX.get(), comp);
         }
         return InteractionResult.SUCCESS;
     }
@@ -65,12 +66,12 @@ public class MobArmy extends Item implements LeftClickInteractItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!level.isClientSide && stack.has(CrossPlatformStuff.INSTANCE.getComponentAreaSelection())) {
+        if (!level.isClientSide && stack.has(MobBattleDataComponents.BOX.get())) {
             if (player.isShiftKeyDown()) {
-                stack.remove(CrossPlatformStuff.INSTANCE.getComponentAreaSelection());
+                stack.remove(MobBattleDataComponents.BOX.get());
                 player.sendSystemMessage(Component.translatable("tooltip.army.reset").withStyle(ChatFormatting.RED));
             } else {
-                AreaPositionComponent comp = stack.get(CrossPlatformStuff.INSTANCE.getComponentAreaSelection());
+                AreaPositionComponent comp = stack.get(MobBattleDataComponents.BOX.get());
                 if (comp.first() != null && comp.second() != null) {
                     AABB bb = Utils.getBoundingBoxPositions(comp.first(), comp.second());
                     List<Mob> list = player.level().getEntitiesOfClass(Mob.class, bb);

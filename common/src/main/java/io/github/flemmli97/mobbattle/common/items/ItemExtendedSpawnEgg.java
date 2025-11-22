@@ -4,6 +4,7 @@ import com.google.common.base.Functions;
 import com.mojang.serialization.MapCodec;
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.common.components.SpawnEggOptions;
+import io.github.flemmli97.mobbattle.common.registry.MobBattleDataComponents;
 import io.github.flemmli97.mobbattle.common.utils.Utils;
 import io.github.flemmli97.mobbattle.network.S2CSpawnEggScreen;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
@@ -48,7 +49,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem {
+public class ItemExtendedSpawnEgg extends Item implements ExtendedItem {
 
     private static final MapCodec<EntityType<?>> ENTITY_TYPE_ID_CODEC = BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("id");
 
@@ -164,7 +165,7 @@ public class ItemExtendedSpawnEgg extends Item implements LeftClickInteractItem 
     }
 
     private static boolean spawnEntity(ServerLevel level, EntityType<?> type, ItemStack stack, double x, double y, double z, Direction direction) {
-        SpawnEggOptions options = stack.getOrDefault(CrossPlatformStuff.INSTANCE.getComponentSpawnEggOptions(), SpawnEggOptions.DEFAULT);
+        SpawnEggOptions options = stack.getOrDefault(MobBattleDataComponents.SPAWN_EGG_OPTIONS.get(), SpawnEggOptions.DEFAULT);
         boolean success = false;
         int sqr = options.amount() > 1 ? (int) Math.ceil(Math.sqrt(options.amount())) : 0;
         BlockPos origin = BlockPos.containing(x, y, z);

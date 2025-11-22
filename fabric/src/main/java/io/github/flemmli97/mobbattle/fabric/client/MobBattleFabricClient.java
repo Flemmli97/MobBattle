@@ -1,9 +1,10 @@
 package io.github.flemmli97.mobbattle.fabric.client;
 
+import io.github.flemmli97.mobbattle.client.ClientHandler;
 import io.github.flemmli97.mobbattle.client.MultiItemColor;
 import io.github.flemmli97.mobbattle.client.gui.GuiArmor;
-import io.github.flemmli97.mobbattle.fabric.registry.ModItems;
-import io.github.flemmli97.mobbattle.fabric.registry.ModMenuType;
+import io.github.flemmli97.mobbattle.common.registry.MobBattleItems;
+import io.github.flemmli97.mobbattle.common.registry.MobBattleMenuTypes;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
@@ -13,8 +14,8 @@ public class MobBattleFabricClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        ColorProviderRegistry.ITEM.register(new MultiItemColor(), ModItems.spawner);
-        WorldRenderEvents.END.register(ClientEvents::render);
-        MenuScreens.register(ModMenuType.armorMenu, GuiArmor::new);
+        ColorProviderRegistry.ITEM.register(new MultiItemColor(), MobBattleItems.EXTENDED_EGG.get());
+        WorldRenderEvents.END.register((event) -> ClientHandler.render(event.matrixStack()));
+        MenuScreens.register(MobBattleMenuTypes.ARMOR_MENU.get(), GuiArmor::new);
     }
 }

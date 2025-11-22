@@ -1,6 +1,7 @@
 package io.github.flemmli97.mobbattle.common.items;
 
 import io.github.flemmli97.mobbattle.common.components.UuidComponent;
+import io.github.flemmli97.mobbattle.common.registry.MobBattleDataComponents;
 import io.github.flemmli97.mobbattle.common.utils.Utils;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
@@ -23,7 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.List;
 import java.util.Optional;
 
-public class MobStick extends Item implements LeftClickInteractItem {
+public class MobStick extends Item implements ExtendedItem {
 
     public MobStick(Item.Properties props) {
         super(props);
@@ -36,7 +37,7 @@ public class MobStick extends Item implements LeftClickInteractItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag b) {
-        UuidComponent comp = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
+        UuidComponent comp = stack.get(MobBattleDataComponents.SELECTED_MOB.get());
         if (comp != null && comp.name().isPresent()) {
             list.add(Component.translatable("tooltip.stick.contains", comp.name()).withStyle(ChatFormatting.GREEN));
         }
@@ -46,7 +47,7 @@ public class MobStick extends Item implements LeftClickInteractItem {
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        UuidComponent comp = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
+        UuidComponent comp = stack.get(MobBattleDataComponents.SELECTED_MOB.get());
         return comp != null && comp.uuid().isPresent();
     }
 
@@ -54,9 +55,9 @@ public class MobStick extends Item implements LeftClickInteractItem {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (!player.level().isClientSide) {
-            UuidComponent comp = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
+            UuidComponent comp = stack.get(MobBattleDataComponents.SELECTED_MOB.get());
             if (comp != null) {
-                stack.remove(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
+                stack.remove(MobBattleDataComponents.SELECTED_MOB.get());
                 player.sendSystemMessage(Component.translatable("tooltip.stick.reset").withStyle(ChatFormatting.RED));
             }
         }
@@ -66,7 +67,7 @@ public class MobStick extends Item implements LeftClickInteractItem {
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (player.level() instanceof ServerLevel) {
-            UuidComponent comp = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
+            UuidComponent comp = stack.get(MobBattleDataComponents.SELECTED_MOB.get());
             LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetLivingEntity(entity);
             if (!(living instanceof Mob target))
                 return true;
@@ -74,11 +75,11 @@ public class MobStick extends Item implements LeftClickInteractItem {
                 Mob storedEntity = Utils.fromUUID((ServerLevel) player.level(), comp.uuid().get());
                 if (target != storedEntity) {
                     Utils.setAttackTarget(target, storedEntity, true);
-                    stack.remove(CrossPlatformStuff.INSTANCE.getComponentMobUuid());
+                    stack.remove(MobBattleDataComponents.SELECTED_MOB.get());
                     return true;
                 }
             } else {
-                stack.set(CrossPlatformStuff.INSTANCE.getComponentMobUuid(), new UuidComponent(Optional.of(target.getUUID()),
+                stack.set(MobBattleDataComponents.SELECTED_MOB.get(), new UuidComponent(Optional.of(target.getUUID()),
                         Optional.ofNullable(target.getCustomName())));
                 player.sendSystemMessage(Component.translatable("tooltip.stick.add").withStyle(ChatFormatting.GOLD));
                 return true;

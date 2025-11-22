@@ -2,7 +2,7 @@ package io.github.flemmli97.mobbattle.network;
 
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.common.components.EffectComponent;
-import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
+import io.github.flemmli97.mobbattle.common.registry.MobBattleDataComponents;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -37,7 +37,7 @@ public class C2SEffectStack implements CustomPacketPayload {
             return;
         ItemStack stack = player.getMainHandItem();
         if (!stack.isEmpty())
-            stack.set(CrossPlatformStuff.INSTANCE.getComponentEffect(), msg.data);
+            stack.set(MobBattleDataComponents.EFFECT.get(), msg.data);
     }
 
     @Override

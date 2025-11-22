@@ -1,6 +1,7 @@
 package io.github.flemmli97.mobbattle.common.items;
 
 import io.github.flemmli97.mobbattle.common.components.UuidListComponent;
+import io.github.flemmli97.mobbattle.common.registry.MobBattleDataComponents;
 import io.github.flemmli97.mobbattle.common.utils.Utils;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class MobGroup extends Item implements LeftClickInteractItem, MobHighlightItem {
+public class MobGroup extends Item implements ExtendedItem, MobHighlightItem {
 
     public MobGroup(Item.Properties props) {
         super(props);
@@ -45,15 +46,15 @@ public class MobGroup extends Item implements LeftClickInteractItem, MobHighligh
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand hand) {
         LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetLivingEntity(entity);
-        if (living instanceof Mob mob && !player.isShiftKeyDown() && !player.level().isClientSide && stack.has(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid())) {
-            UuidListComponent ids = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid());
+        if (living instanceof Mob mob && !player.isShiftKeyDown() && !player.level().isClientSide && stack.has(MobBattleDataComponents.SELECTED_MOBS.get())) {
+            UuidListComponent ids = stack.get(MobBattleDataComponents.SELECTED_MOBS.get());
             for (UUID id : ids.uuids()) {
                 Mob e = Utils.fromUUID((ServerLevel) player.level(), id);
                 if (mob != e) {
                     Utils.setAttackTarget(mob, e, true);
                 }
             }
-            stack.remove(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid());
+            stack.remove(MobBattleDataComponents.SELECTED_MOBS.get());
             player.setItemInHand(hand, stack);
         }
         return InteractionResult.SUCCESS;
@@ -63,14 +64,14 @@ public class MobGroup extends Item implements LeftClickInteractItem, MobHighligh
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (!player.level().isClientSide) {
-            UuidListComponent ids = stack.get(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid());
+            UuidListComponent ids = stack.get(MobBattleDataComponents.SELECTED_MOBS.get());
             if (ids != null && !ids.uuids().isEmpty()) {
                 if (!player.isShiftKeyDown() && !ids.uuids().isEmpty()) {
                     ids = ids.update(List::removeLast);
-                    stack.set(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid(), ids);
+                    stack.set(MobBattleDataComponents.SELECTED_MOBS.get(), ids);
                     player.sendSystemMessage(Component.translatable("tooltip.group.remove").withStyle(ChatFormatting.RED));
                 } else {
-                    stack.remove(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid());
+                    stack.remove(MobBattleDataComponents.SELECTED_MOBS.get());
                     player.sendSystemMessage(Component.translatable("tooltip.group.reset").withStyle(ChatFormatting.RED));
                 }
             }
@@ -82,7 +83,7 @@ public class MobGroup extends Item implements LeftClickInteractItem, MobHighligh
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetLivingEntity(entity);
         if (living instanceof Mob && !player.level().isClientSide) {
-            UuidListComponent ids = stack.getOrDefault(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid(), UuidListComponent.EMPTY);
+            UuidListComponent ids = stack.getOrDefault(MobBattleDataComponents.SELECTED_MOBS.get(), UuidListComponent.EMPTY);
             AtomicBoolean changed = new AtomicBoolean();
             ids = ids.update(list -> {
                 if (!list.contains(living.getUUID())) {
@@ -91,7 +92,7 @@ public class MobGroup extends Item implements LeftClickInteractItem, MobHighligh
                 }
             });
             if (changed.get()) {
-                stack.set(CrossPlatformStuff.INSTANCE.getComponentMobGroupUuid(), ids);
+                stack.set(MobBattleDataComponents.SELECTED_MOBS.get(), ids);
                 player.sendSystemMessage(Component.translatable("tooltip.group.add").withStyle(ChatFormatting.GOLD));
             }
         }

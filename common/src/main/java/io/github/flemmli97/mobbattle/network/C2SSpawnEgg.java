@@ -3,7 +3,7 @@ package io.github.flemmli97.mobbattle.network;
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.common.components.SpawnEggOptions;
 import io.github.flemmli97.mobbattle.common.items.ItemExtendedSpawnEgg;
-import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
+import io.github.flemmli97.mobbattle.common.registry.MobBattleDataComponents;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -45,7 +45,7 @@ public class C2SSpawnEgg implements CustomPacketPayload {
         if (sender != null) {
             ItemStack stack = sender.getItemInHand(pkt.hand);
             if (stack.getItem() instanceof ItemExtendedSpawnEgg) {
-                stack.set(CrossPlatformStuff.INSTANCE.getComponentSpawnEggOptions(), new SpawnEggOptions(pkt.team, pkt.amount, pkt.spacing));
+                stack.set(MobBattleDataComponents.SPAWN_EGG_OPTIONS.get(), new SpawnEggOptions(pkt.team, pkt.amount, pkt.spacing));
             }
         }
     }

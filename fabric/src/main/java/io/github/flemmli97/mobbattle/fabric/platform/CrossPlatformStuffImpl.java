@@ -1,22 +1,22 @@
 package io.github.flemmli97.mobbattle.fabric.platform;
 
-import io.github.flemmli97.mobbattle.common.components.AreaPositionComponent;
-import io.github.flemmli97.mobbattle.common.components.EffectComponent;
-import io.github.flemmli97.mobbattle.common.components.SpawnEggOptions;
-import io.github.flemmli97.mobbattle.common.components.UuidComponent;
-import io.github.flemmli97.mobbattle.common.components.UuidListComponent;
+import com.google.common.collect.ImmutableList;
+import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.common.inv.ContainerArmor;
-import io.github.flemmli97.mobbattle.fabric.registry.ModComponents;
-import io.github.flemmli97.mobbattle.fabric.registry.ModMenuType;
 import io.github.flemmli97.mobbattle.mixin.MobAccessor;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -27,39 +27,39 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+
 public class CrossPlatformStuffImpl implements CrossPlatformStuff {
 
+    private static final List<Item> ITEMS = new ArrayList<>();
+
     @Override
-    public MenuType<ContainerArmor> getArmorMenuType() {
-        return ModMenuType.armorMenu;
+    public <T extends Item> Supplier<T> registerItem(String id, Supplier<T> sup) {
+        T reg = Registry.register(BuiltInRegistries.ITEM, MobBattle.of(id), sup.get());
+        ITEMS.add(reg);
+        return () -> reg;
+    }
+
+    public static List<Item> modItems() {
+        return ImmutableList.copyOf(ITEMS);
     }
 
     @Override
-    public DataComponentType<UuidComponent> getComponentMobUuid() {
-        return ModComponents.SELECTED_MOB;
+    public <T> Supplier<DataComponentType<T>> registerComponent(String id, Supplier<DataComponentType<T>> sup) {
+        DataComponentType<T> reg = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, MobBattle.of(id), sup.get());
+        return () -> reg;
     }
 
     @Override
-    public DataComponentType<UuidListComponent> getComponentMobGroupUuid() {
-        return ModComponents.SELECTED_MOBS;
-    }
-
-    @Override
-    public DataComponentType<EffectComponent> getComponentEffect() {
-        return ModComponents.EFFECT;
-    }
-
-    @Override
-    public DataComponentType<AreaPositionComponent> getComponentAreaSelection() {
-        return ModComponents.BOX;
-    }
-
-    @Override
-    public DataComponentType<SpawnEggOptions> getComponentSpawnEggOptions() {
-        return ModComponents.SPAWN_EGG_OPTIONS;
+    public <T extends AbstractContainerMenu, D> Supplier<MenuType<T>> registerMenu(String id, MenuFactory<T, D> factory, StreamCodec<RegistryFriendlyByteBuf, D> codec) {
+        MenuType<T> reg = Registry.register(BuiltInRegistries.MENU, MobBattle.of("id"), new ExtendedScreenHandlerType<>(factory::create, codec));
+        return () -> reg;
     }
 
     @Override

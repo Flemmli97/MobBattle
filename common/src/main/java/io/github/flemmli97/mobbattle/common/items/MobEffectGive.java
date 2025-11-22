@@ -2,6 +2,7 @@ package io.github.flemmli97.mobbattle.common.items;
 
 import io.github.flemmli97.mobbattle.client.ClientHandler;
 import io.github.flemmli97.mobbattle.common.components.EffectComponent;
+import io.github.flemmli97.mobbattle.common.registry.MobBattleDataComponents;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -21,7 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
-public class MobEffectGive extends Item implements LeftClickInteractItem {
+public class MobEffectGive extends Item implements ExtendedItem {
 
     public MobEffectGive(Item.Properties props) {
         super(props);
@@ -49,8 +50,8 @@ public class MobEffectGive extends Item implements LeftClickInteractItem {
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetLivingEntity(entity);
         if (living != null && !player.level().isClientSide) {
-            if (stack.has(CrossPlatformStuff.INSTANCE.getComponentEffect())) {
-                EffectComponent effect = stack.get(CrossPlatformStuff.INSTANCE.getComponentEffect());
+            if (stack.has(MobBattleDataComponents.EFFECT.get())) {
+                EffectComponent effect = stack.get(MobBattleDataComponents.EFFECT.get());
                 effect.effect().ifPresent(eff -> {
                     living.addEffect(new MobEffectInstance(eff, effect.duration(), effect.amplifier(), false, effect.particles()));
                     player.sendSystemMessage(Component.translatable("tooltip.effect.give.add", Component.translatable(eff.value().getDescriptionId()), effect.amplifier(), effect.duration()).withStyle(ChatFormatting.GOLD));
