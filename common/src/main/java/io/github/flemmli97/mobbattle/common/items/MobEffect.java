@@ -28,7 +28,7 @@ public class MobEffect extends Item implements ExtendedItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag flag) {
-        list.add(Component.translatable("tooltip.effect.remove").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.effect.remove").withStyle(ChatFormatting.AQUA));
     }
 
     @Override
@@ -36,7 +36,7 @@ public class MobEffect extends Item implements ExtendedItem {
         LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetLivingEntity(entity);
         if (!player.level().isClientSide && living != null) {
             living.removeAllEffects();
-            player.sendSystemMessage(Component.translatable("tooltip.effect.remove.clear").withStyle(ChatFormatting.GOLD));
+            player.sendSystemMessage(Component.translatable("tooltip.mobbattle.effect.remove.clear").withStyle(ChatFormatting.GOLD));
         }
         return true;
     }

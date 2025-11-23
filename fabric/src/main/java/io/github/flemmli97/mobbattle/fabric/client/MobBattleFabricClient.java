@@ -6,6 +6,8 @@ import io.github.flemmli97.mobbattle.client.gui.GuiArmor;
 import io.github.flemmli97.mobbattle.common.registry.MobBattleItems;
 import io.github.flemmli97.mobbattle.common.registry.MobBattleMenuTypes;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -17,5 +19,7 @@ public class MobBattleFabricClient implements ClientModInitializer {
         ColorProviderRegistry.ITEM.register(new MultiItemColor(), MobBattleItems.EXTENDED_EGG.get());
         WorldRenderEvents.END.register((event) -> ClientHandler.render(event.matrixStack()));
         MenuScreens.register(MobBattleMenuTypes.ARMOR_MENU.get(), GuiArmor::new);
+        ClientHandler.registerKeyBinding(KeyBindingHelper::registerKeyBinding);
+        ClientTickEvents.END_CLIENT_TICK.register(client -> ClientHandler.keyEvent());
     }
 }

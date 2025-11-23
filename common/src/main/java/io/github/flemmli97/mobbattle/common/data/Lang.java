@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import io.github.flemmli97.mobbattle.MobBattle;
+import io.github.flemmli97.mobbattle.common.items.MobKill;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
@@ -60,60 +61,63 @@ public class Lang implements DataProvider {
         this.add("mobbattle.gui.spacing", "Spacing");
         this.add("mobbattle.gui.save", "Save");
 
-        this.add("tooltip.spawnegg", "Left click an entity to save it. Shift while doing saves nbt too.");
-        this.add("tooltip.spawnegg.spawn", "Spawns %s");
-        this.add("tooltip.spawnegg.spawn.nbt", "Spawns %s (+NBT)");
-        this.add("tooltip.spawnegg.save", "Saved Entity %s");
-        this.add("tooltip.spawnegg.save.nbt", "Saved Entity %s with NBT");
-        this.add("tooltip.spawnegg.creative", "Needs to be in creative mode to copy entity");
+        this.add("tooltip.mobbattle.spawnegg", "Left click an entity to save it. Shift while doing saves nbt too.");
+        this.add("tooltip.mobbattle.spawnegg.spawn", "Spawns %s");
+        this.add("tooltip.mobbattle.spawnegg.spawn.nbt", "Spawns %s (+NBT)");
+        this.add("tooltip.mobbattle.spawnegg.save", "Saved Entity %s");
+        this.add("tooltip.mobbattle.spawnegg.save.nbt", "Saved Entity %s with NBT");
+        this.add("tooltip.mobbattle.spawnegg.creative", "Needs to be in creative mode to copy entity");
 
-        this.add("tooltip.armor", "Right click an entity to edit their equipment");
+        this.add("tooltip.mobbattle.armor", "Right click an entity to edit their equipment");
 
-        this.add("tooltip.army.first", "Right click block to set first, and then second corner of the box");
-        this.add("tooltip.army.second", "Right click into air to to add entities in the box to the team with the name of this item (if exists, else DEFAULT)");
-        this.add("tooltip.army.third", "Shift-Right click to reset box");
-        this.add("tooltip.army.forth", "Left click to add entities to the team with the name of this item (if exists, else DEFAULT)");
-        this.add("tooltip.army.fifth", "Use vanilla /team command to show/change team color");
-        this.add("tooltip.army.add", "Added entity to team %s");
-        this.add("tooltip.army.add.box", "Added entities in the box to team %s");
-        this.add("tooltip.army.reset", "Reset Positions");
+        this.add("tooltip.mobbattle.army.first", "Right click block to set first, and then second corner of the box");
+        this.add("tooltip.mobbattle.army.second", "Right click into air to to add entities in the box to the team with the name of this item (if exists, else DEFAULT)");
+        this.add("tooltip.mobbattle.army.third", "Shift-Right click to reset box");
+        this.add("tooltip.mobbattle.army.forth", "Left click to add entities to the team with the name of this item (if exists, else DEFAULT)");
+        this.add("tooltip.mobbattle.army.fifth", "Use vanilla /team command to show/change team color");
+        this.add("tooltip.mobbattle.army.add", "Added entity to team %s");
+        this.add("tooltip.mobbattle.army.add.box", "Added entities in the box to team %s");
+        this.add("tooltip.mobbattle.army.reset", "Reset Positions");
 
-        this.add("tooltip.effect.remove", "Left click an entity to remove their potion effects");
-        this.add("tooltip.effect.remove.clear", "Effects cleared");
+        this.add("tooltip.mobbattle.effect.remove", "Left click an entity to remove their potion effects");
+        this.add("tooltip.mobbattle.effect.remove.clear", "Effects cleared");
 
-        this.add("tooltip.effect.give.first", "Left click an entity to add saved potion effects");
-        this.add("tooltip.effect.give.second", "Right click to edit potion effect");
-        this.add("tooltip.effect.give.add", "Added effect %1$s with amplifier %2$s for %3$s ticks");
+        this.add("tooltip.mobbattle.effect.give.first", "Left click an entity to add saved potion effects");
+        this.add("tooltip.mobbattle.effect.give.second", "Right click to edit potion effect");
+        this.add("tooltip.mobbattle.effect.give.add", "Added effect %1$s with amplifier %2$s for %3$s ticks");
 
-        this.add("tooltip.equip.first", "Right click block to set first, and then second corner of the box");
-        this.add("tooltip.equip.second", "Right click into air to to make entities able to pickup items");
-        this.add("tooltip.equip.third", "Shift-Right click to reset box");
-        this.add("tooltip.equip.box.add", "Entities in box can now pickup items");
-        this.add("tooltip.equip.add", "Entity can pickup items now");
-        this.add("tooltip.equip.reset", "Reset Positions");
+        this.add("tooltip.mobbattle.equip.first", "Right click block to set first, and then second corner of the box");
+        this.add("tooltip.mobbattle.equip.second", "Right click into air to to make entities able to pickup items");
+        this.add("tooltip.mobbattle.equip.third", "Shift-Right click to reset box");
+        this.add("tooltip.mobbattle.equip.box.add", "Entities in box can now pickup items");
+        this.add("tooltip.mobbattle.equip.add", "Entity can pickup items now");
+        this.add("tooltip.mobbattle.equip.reset", "Reset Positions");
 
-        this.add("tooltip.group.first", "Left click to select entities");
-        this.add("tooltip.group.second", "Right click on entity to set the target");
-        this.add("tooltip.group.third", "Shift right click to reset");
-        this.add("tooltip.group.remove", "Removed an entity");
-        this.add("tooltip.group.reset", "Reset all entities");
-        this.add("tooltip.group.add", "Added an entity");
+        this.add("tooltip.mobbattle.group.first", "Left click to select entities");
+        this.add("tooltip.mobbattle.group.second", "Right click on entity to set the target");
+        this.add("tooltip.mobbattle.group.third", "Shift right click to reset");
+        this.add("tooltip.mobbattle.group.remove", "Removed an entity");
+        this.add("tooltip.mobbattle.group.reset", "Reset all entities");
+        this.add("tooltip.mobbattle.group.add", "Added an entity");
 
-        this.add("tooltip.heal", "Left click on entity to heal it");
+        this.add("tooltip.mobbattle.heal", "Left click on entity to heal it");
 
-        this.add("tooltip.kill", "Left click on entity to kill it");
-        this.add("tooltip.kill.all", "Use for 1 sec to kill all entities");
-        this.add("tooltip.kill.all.success", "Cleared all entities");
+        this.add("tooltip.mobbattle.kill", "Left click on entity to kill it");
+        this.add("tooltip.mobbattle.kill.mode", "Current mode: %s");
+        this.add("tooltip.mobbattle.kill.mode.switch", "Press [%s] to switch between modes");
+        this.add("tooltip.mobbattle.kill.all.success", "Cleared all entities");
+        this.add(MobKill.Mode.SINGLE.translationKey, "Single Target");
+        this.add(MobKill.Mode.ALL.translationKey, "All (right click to kill all)");
 
-        this.add("tooltip.mount.first", "Left click an entity to select");
-        this.add("tooltip.mount.second", "Left click another entity to add selected entity as rider");
-        this.add("tooltip.mount.reset", "Reset entities");
+        this.add("tooltip.mobbattle.mount.first", "Left click an entity to select");
+        this.add("tooltip.mobbattle.mount.second", "Left click another entity to add selected entity as rider");
+        this.add("tooltip.mobbattle.mount.reset", "Reset entities");
 
-        this.add("tooltip.stick.contains", "Asigned entity: %s");
-        this.add("tooltip.stick.first", "Left click to asign an entity");
-        this.add("tooltip.stick.second", "Right click to reset");
-        this.add("tooltip.stick.reset", "Reset entities");
-        this.add("tooltip.stick.add", "First entity set, hit another entity to set target");
+        this.add("tooltip.mobbattle.stick.contains", "Asigned entity: %s");
+        this.add("tooltip.mobbattle.stick.first", "Left click to asign an entity");
+        this.add("tooltip.mobbattle.stick.second", "Right click to reset");
+        this.add("tooltip.mobbattle.stick.reset", "Reset entities");
+        this.add("tooltip.mobbattle.stick.add", "First entity set, hit another entity to set target");
         this.add("mobbattle.gui.potions", "Potions");
     }
 

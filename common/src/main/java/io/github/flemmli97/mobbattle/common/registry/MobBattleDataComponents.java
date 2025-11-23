@@ -1,12 +1,15 @@
 package io.github.flemmli97.mobbattle.common.registry;
 
+import com.mojang.serialization.Codec;
 import io.github.flemmli97.mobbattle.common.components.AreaPositionComponent;
 import io.github.flemmli97.mobbattle.common.components.EffectComponent;
 import io.github.flemmli97.mobbattle.common.components.SpawnEggOptions;
 import io.github.flemmli97.mobbattle.common.components.UuidComponent;
 import io.github.flemmli97.mobbattle.common.components.UuidListComponent;
+import io.github.flemmli97.mobbattle.common.items.MobKill;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.network.codec.ByteBufCodecs;
 
 import java.util.function.Supplier;
 
@@ -22,6 +25,9 @@ public class MobBattleDataComponents {
             () -> new DataComponentType.Builder<UuidListComponent>().persistent(UuidListComponent.CODEC).networkSynchronized(UuidListComponent.STREAM_CODEC).build());
     public static final Supplier<DataComponentType<SpawnEggOptions>> SPAWN_EGG_OPTIONS = CrossPlatformStuff.INSTANCE.registerComponent("spawnegg_options",
             () -> new DataComponentType.Builder<SpawnEggOptions>().persistent(SpawnEggOptions.CODEC).networkSynchronized(SpawnEggOptions.STREAM_CODEC).build());
+    public static final Supplier<DataComponentType<MobKill.Mode>> KILL_MODE = CrossPlatformStuff.INSTANCE.registerComponent("kill_mode",
+            () -> new DataComponentType.Builder<MobKill.Mode>().persistent(Codec.stringResolver(MobKill.Mode::toString, MobKill.Mode::valueOf))
+                    .networkSynchronized(ByteBufCodecs.idMapper(i -> MobKill.Mode.values()[i], MobKill.Mode::ordinal)).build());
 
     public static void init() {
     }

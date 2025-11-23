@@ -38,9 +38,9 @@ public class MobGroup extends Item implements ExtendedItem, MobHighlightItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag b) {
-        list.add(Component.translatable("tooltip.group.first").withStyle(ChatFormatting.AQUA));
-        list.add(Component.translatable("tooltip.group.second").withStyle(ChatFormatting.AQUA));
-        list.add(Component.translatable("tooltip.group.third").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.group.first").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.group.second").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.group.third").withStyle(ChatFormatting.AQUA));
     }
 
     @Override
@@ -69,10 +69,10 @@ public class MobGroup extends Item implements ExtendedItem, MobHighlightItem {
                 if (!player.isShiftKeyDown() && !ids.uuids().isEmpty()) {
                     ids = ids.update(List::removeLast);
                     stack.set(MobBattleDataComponents.SELECTED_MOBS.get(), ids);
-                    player.sendSystemMessage(Component.translatable("tooltip.group.remove").withStyle(ChatFormatting.RED));
+                    player.sendSystemMessage(Component.translatable("tooltip.mobbattle.group.remove").withStyle(ChatFormatting.RED));
                 } else {
                     stack.remove(MobBattleDataComponents.SELECTED_MOBS.get());
-                    player.sendSystemMessage(Component.translatable("tooltip.group.reset").withStyle(ChatFormatting.RED));
+                    player.sendSystemMessage(Component.translatable("tooltip.mobbattle.group.reset").withStyle(ChatFormatting.RED));
                 }
             }
         }
@@ -93,7 +93,7 @@ public class MobGroup extends Item implements ExtendedItem, MobHighlightItem {
             });
             if (changed.get()) {
                 stack.set(MobBattleDataComponents.SELECTED_MOBS.get(), ids);
-                player.sendSystemMessage(Component.translatable("tooltip.group.add").withStyle(ChatFormatting.GOLD));
+                player.sendSystemMessage(Component.translatable("tooltip.mobbattle.group.add").withStyle(ChatFormatting.GOLD));
             }
         }
         return true;

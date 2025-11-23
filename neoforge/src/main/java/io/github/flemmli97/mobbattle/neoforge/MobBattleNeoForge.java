@@ -9,6 +9,7 @@ import io.github.flemmli97.mobbattle.neoforge.client.ClientEvents;
 import io.github.flemmli97.mobbattle.neoforge.handler.EventHandler;
 import io.github.flemmli97.mobbattle.neoforge.registry.Registers;
 import io.github.flemmli97.mobbattle.network.C2SEffectStack;
+import io.github.flemmli97.mobbattle.network.C2SItemFunctionPress;
 import io.github.flemmli97.mobbattle.network.C2SSpawnEgg;
 import io.github.flemmli97.mobbattle.network.S2CSpawnEggScreen;
 import net.minecraft.core.BlockPos;
@@ -86,6 +87,8 @@ public class MobBattleNeoForge {
         PayloadRegistrar registrar = event.registrar(MobBattle.MODID);
         registrar.playToServer(C2SEffectStack.TYPE, C2SEffectStack.STREAM_CODEC, (pkt, ctx) -> ctx.enqueueWork(() -> C2SEffectStack.handle(pkt, ctx.player(), MobBattleItems.MOB_EFFECT_GIVE.get())));
         registrar.playToServer(C2SSpawnEgg.TYPE, C2SSpawnEgg.STREAM_CODEC, (pkt, ctx) -> ctx.enqueueWork(() -> C2SSpawnEgg.handle(pkt, ctx.player())));
+        registrar.playToServer(C2SItemFunctionPress.TYPE, C2SItemFunctionPress.STREAM_CODEC, (pkt, ctx) -> ctx.enqueueWork(() -> C2SItemFunctionPress.handle(pkt, ctx.player())));
+
         registrar.playToClient(S2CSpawnEggScreen.TYPE, S2CSpawnEggScreen.STREAM_CODEC, (pkt, ctx) -> ctx.enqueueWork(() -> S2CSpawnEggScreen.handle(pkt)));
     }
 

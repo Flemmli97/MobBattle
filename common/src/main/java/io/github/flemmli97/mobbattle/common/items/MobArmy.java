@@ -38,10 +38,10 @@ public class MobArmy extends Item implements ExtendedItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag b) {
-        list.add(Component.translatable("tooltip.army.first").withStyle(ChatFormatting.AQUA));
-        list.add(Component.translatable("tooltip.army.second").withStyle(ChatFormatting.AQUA));
-        list.add(Component.translatable("tooltip.army.third").withStyle(ChatFormatting.AQUA));
-        list.add(Component.translatable("tooltip.army.forth").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.army.first").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.army.second").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.army.third").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.army.forth").withStyle(ChatFormatting.AQUA));
     }
 
     @Override
@@ -69,7 +69,7 @@ public class MobArmy extends Item implements ExtendedItem {
         if (!level.isClientSide && stack.has(MobBattleDataComponents.BOX.get())) {
             if (player.isShiftKeyDown()) {
                 stack.remove(MobBattleDataComponents.BOX.get());
-                player.sendSystemMessage(Component.translatable("tooltip.army.reset").withStyle(ChatFormatting.RED));
+                player.sendSystemMessage(Component.translatable("tooltip.mobbattle.army.reset").withStyle(ChatFormatting.RED));
             } else {
                 AreaPositionComponent comp = stack.get(MobBattleDataComponents.BOX.get());
                 if (comp.first() != null && comp.second() != null) {
@@ -79,7 +79,7 @@ public class MobArmy extends Item implements ExtendedItem {
                     for (Mob living : list) {
                         Utils.updateEntity(team, living);
                     }
-                    player.sendSystemMessage(Component.translatable("tooltip.army.add.box", team).withStyle(ChatFormatting.GOLD));
+                    player.sendSystemMessage(Component.translatable("tooltip.mobbattle.army.add.box", team).withStyle(ChatFormatting.GOLD));
                 }
             }
         }
@@ -92,7 +92,7 @@ public class MobArmy extends Item implements ExtendedItem {
         if (living instanceof Mob mob && !player.level().isClientSide) {
             String team = stack.has(DataComponents.CUSTOM_NAME) ? stack.getHoverName().getString() : "DEFAULT";
             Utils.updateEntity(team, mob);
-            player.sendSystemMessage(Component.translatable("tooltip.army.add", team).withStyle(ChatFormatting.GOLD));
+            player.sendSystemMessage(Component.translatable("tooltip.mobbattle.army.add", team).withStyle(ChatFormatting.GOLD));
         }
         return true;
     }

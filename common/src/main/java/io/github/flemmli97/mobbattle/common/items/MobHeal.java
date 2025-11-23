@@ -39,6 +39,6 @@ public class MobHeal extends Item implements ExtendedItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag flag) {
-        list.add(Component.translatable("tooltip.heal").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.heal").withStyle(ChatFormatting.AQUA));
     }
 }

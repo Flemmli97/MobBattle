@@ -59,11 +59,11 @@ public class ItemExtendedSpawnEgg extends Item implements ExtendedItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag flag) {
-        list.add(Component.translatable("tooltip.spawnegg").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.spawnegg").withStyle(ChatFormatting.AQUA));
         Optional<EntityType<?>> entityType = ItemExtendedSpawnEgg.getType(stack);
         entityType.ifPresent(type -> {
             CustomData data = stack.get(DataComponents.ENTITY_DATA);
-            list.add(Component.translatable("tooltip.spawnegg.spawn" + (data.size() > 1 ? ".nbt" : ""), type.getDescription()).withStyle(ChatFormatting.GOLD));
+            list.add(Component.translatable("tooltip.mobbattle.spawnegg.spawn" + (data.size() > 1 ? ".nbt" : ""), type.getDescription()).withStyle(ChatFormatting.GOLD));
         });
     }
 
@@ -72,7 +72,7 @@ public class ItemExtendedSpawnEgg extends Item implements ExtendedItem {
         LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetLivingEntity(entity);
         if (living instanceof Mob) {
             if (!player.isCreative()) {
-                player.sendSystemMessage(Component.translatable("tooltip.spawnegg.creative").withStyle(ChatFormatting.GOLD));
+                player.sendSystemMessage(Component.translatable("tooltip.mobbattle.spawnegg.creative").withStyle(ChatFormatting.GOLD));
                 return true;
             }
             boolean nbt = false;
@@ -88,7 +88,7 @@ public class ItemExtendedSpawnEgg extends Item implements ExtendedItem {
             stack.set(DataComponents.ENTITY_DATA, CustomData.of(tag));
 
             if (!player.level().isClientSide) {
-                player.sendSystemMessage(Component.translatable("tooltip.spawnegg.save" + (nbt ? ".nbt" : ""), living.getName()).withStyle(ChatFormatting.GOLD));
+                player.sendSystemMessage(Component.translatable("tooltip.mobbattle.spawnegg.save" + (nbt ? ".nbt" : ""), living.getName()).withStyle(ChatFormatting.GOLD));
             }
             return true;
         }

@@ -35,8 +35,8 @@ public class MobEffectGive extends Item implements ExtendedItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag flag) {
-        list.add(Component.translatable("tooltip.effect.give.first").withStyle(ChatFormatting.AQUA));
-        list.add(Component.translatable("tooltip.effect.give.second").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.effect.give.first").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.effect.give.second").withStyle(ChatFormatting.AQUA));
     }
 
     @Override
@@ -54,7 +54,7 @@ public class MobEffectGive extends Item implements ExtendedItem {
                 EffectComponent effect = stack.get(MobBattleDataComponents.EFFECT.get());
                 effect.effect().ifPresent(eff -> {
                     living.addEffect(new MobEffectInstance(eff, effect.duration(), effect.amplifier(), false, effect.particles()));
-                    player.sendSystemMessage(Component.translatable("tooltip.effect.give.add", Component.translatable(eff.value().getDescriptionId()), effect.amplifier(), effect.duration()).withStyle(ChatFormatting.GOLD));
+                    player.sendSystemMessage(Component.translatable("tooltip.mobbattle.effect.give.add", Component.translatable(eff.value().getDescriptionId()), effect.amplifier(), effect.duration()).withStyle(ChatFormatting.GOLD));
                 });
             }
         }

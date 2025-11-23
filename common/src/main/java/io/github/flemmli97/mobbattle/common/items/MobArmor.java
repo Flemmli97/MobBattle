@@ -32,7 +32,7 @@ public class MobArmor extends Item implements ExtendedItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag flagIn) {
-        list.add(Component.translatable("tooltip.armor").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.armor").withStyle(ChatFormatting.AQUA));
     }
 
     @Override

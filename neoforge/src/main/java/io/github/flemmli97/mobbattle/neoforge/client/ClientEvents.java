@@ -9,7 +9,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -20,6 +22,7 @@ public class ClientEvents {
         NeoForge.EVENT_BUS.register(new ClientEvents());
         modBus.addListener(ClientEvents::spawnEggColor);
         modBus.addListener(ClientEvents::menuRegister);
+        modBus.addListener(ClientEvents::keyRegister);
     }
 
     @SubscribeEvent
@@ -27,6 +30,11 @@ public class ClientEvents {
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_SOLID_BLOCKS)
             return;
         ClientHandler.render(event.getPoseStack());
+    }
+
+    @SubscribeEvent(receiveCanceled = true)
+    public void keyEvent(ClientTickEvent.Post event) {
+        ClientHandler.keyEvent();
     }
 
     public static void spawnEggColor(RegisterColorHandlersEvent.Item e) {
@@ -39,5 +47,9 @@ public class ClientEvents {
 
     public static void sendPacketServer(CustomPacketPayload packet) {
         Minecraft.getInstance().getConnection().send(packet);
+    }
+
+    public static void keyRegister(RegisterKeyMappingsEvent event) {
+        ClientHandler.registerKeyBinding(event::register);
     }
 }

@@ -39,9 +39,9 @@ public class MobEquip extends Item implements ExtendedItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag b) {
-        list.add(Component.translatable("tooltip.equip.first").withStyle(ChatFormatting.AQUA));
-        list.add(Component.translatable("tooltip.equip.second").withStyle(ChatFormatting.AQUA));
-        list.add(Component.translatable("tooltip.equip.third").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.equip.first").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.equip.second").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.equip.third").withStyle(ChatFormatting.AQUA));
     }
 
     @Override
@@ -69,7 +69,7 @@ public class MobEquip extends Item implements ExtendedItem {
         if (!level.isClientSide && stack.has(MobBattleDataComponents.BOX.get())) {
             if (player.isShiftKeyDown()) {
                 stack.remove(MobBattleDataComponents.BOX.get());
-                player.sendSystemMessage(Component.translatable("tooltip.equip.reset").withStyle(ChatFormatting.RED));
+                player.sendSystemMessage(Component.translatable("tooltip.mobbattle.equip.reset").withStyle(ChatFormatting.RED));
             } else {
                 AreaPositionComponent comp = stack.get(MobBattleDataComponents.BOX.get());
                 if (comp.first() != null && comp.second() != null) {
@@ -79,7 +79,7 @@ public class MobEquip extends Item implements ExtendedItem {
                         living.addTag(LibTags.ENTITY_PICKUP);
                         CrossPlatformStuff.INSTANCE.goalSelectorFrom(living, false).addGoal(10, new EntityAIItemPickup(living));
                     }
-                    player.sendSystemMessage(Component.translatable("tooltip.equip.add").withStyle(ChatFormatting.GOLD));
+                    player.sendSystemMessage(Component.translatable("tooltip.mobbattle.equip.add").withStyle(ChatFormatting.GOLD));
                 }
             }
         }
@@ -92,7 +92,7 @@ public class MobEquip extends Item implements ExtendedItem {
         if (living instanceof Mob mob && !player.level().isClientSide) {
             mob.addTag(LibTags.ENTITY_PICKUP);
             CrossPlatformStuff.INSTANCE.goalSelectorFrom(mob, false).addGoal(10, new EntityAIItemPickup(mob));
-            player.sendSystemMessage(Component.translatable("tooltip.equip.add").withStyle(ChatFormatting.GOLD));
+            player.sendSystemMessage(Component.translatable("tooltip.mobbattle.equip.add").withStyle(ChatFormatting.GOLD));
         }
         return true;
     }

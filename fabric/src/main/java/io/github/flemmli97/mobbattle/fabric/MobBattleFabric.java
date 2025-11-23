@@ -9,6 +9,7 @@ import io.github.flemmli97.mobbattle.common.registry.MobBattleMenuTypes;
 import io.github.flemmli97.mobbattle.fabric.handler.EventHandler;
 import io.github.flemmli97.mobbattle.fabric.platform.CrossPlatformStuffImpl;
 import io.github.flemmli97.mobbattle.network.C2SEffectStack;
+import io.github.flemmli97.mobbattle.network.C2SItemFunctionPress;
 import io.github.flemmli97.mobbattle.network.C2SSpawnEgg;
 import io.github.flemmli97.mobbattle.network.S2CSpawnEggScreen;
 import net.fabricmc.api.EnvType;
@@ -78,6 +79,9 @@ public class MobBattleFabric implements ModInitializer {
         ServerPlayNetworking.registerGlobalReceiver(C2SEffectStack.TYPE, (pkt, ctx) -> C2SEffectStack.handle(pkt, ctx.player(), MobBattleItems.MOB_EFFECT_GIVE.get()));
         PayloadTypeRegistry.playC2S().register(C2SSpawnEgg.TYPE, C2SSpawnEgg.STREAM_CODEC);
         ServerPlayNetworking.registerGlobalReceiver(C2SSpawnEgg.TYPE, (pkt, ctx) -> C2SSpawnEgg.handle(pkt, ctx.player()));
+        PayloadTypeRegistry.playC2S().register(C2SItemFunctionPress.TYPE, C2SItemFunctionPress.STREAM_CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(C2SItemFunctionPress.TYPE, (pkt, ctx) -> C2SItemFunctionPress.handle(pkt, ctx.player()));
+
         PayloadTypeRegistry.playS2C().register(S2CSpawnEggScreen.TYPE, S2CSpawnEggScreen.STREAM_CODEC);
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
             ClientPlayNetworking.registerGlobalReceiver(S2CSpawnEggScreen.TYPE, (pkt, ctx) -> S2CSpawnEggScreen.handle(pkt));

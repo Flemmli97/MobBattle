@@ -37,8 +37,8 @@ public class MobMount extends Item implements ExtendedItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag b) {
-        list.add(Component.translatable("tooltip.mount.first").withStyle(ChatFormatting.AQUA));
-        list.add(Component.translatable("tooltip.mount.second").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.mount.first").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.mount.second").withStyle(ChatFormatting.AQUA));
     }
 
     @Override
@@ -54,7 +54,7 @@ public class MobMount extends Item implements ExtendedItem {
             UuidComponent comp = stack.get(MobBattleDataComponents.SELECTED_MOB.get());
             if (comp != null) {
                 stack.remove(MobBattleDataComponents.SELECTED_MOB.get());
-                player.sendSystemMessage(Component.translatable("tooltip.mount.reset").withStyle(ChatFormatting.RED));
+                player.sendSystemMessage(Component.translatable("tooltip.mobbattle.mount.reset").withStyle(ChatFormatting.RED));
             }
         }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);

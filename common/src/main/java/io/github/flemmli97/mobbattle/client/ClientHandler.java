@@ -1,16 +1,21 @@
 package io.github.flemmli97.mobbattle.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.client.gui.GuiEffect;
 import io.github.flemmli97.mobbattle.client.gui.SpawnEggScreen;
 import io.github.flemmli97.mobbattle.common.components.AreaPositionComponent;
 import io.github.flemmli97.mobbattle.common.components.UuidComponent;
 import io.github.flemmli97.mobbattle.common.components.UuidListComponent;
+import io.github.flemmli97.mobbattle.common.items.ExtendedItem;
 import io.github.flemmli97.mobbattle.common.items.MobHighlightItem;
 import io.github.flemmli97.mobbattle.common.registry.MobBattleDataComponents;
 import io.github.flemmli97.mobbattle.common.registry.MobBattleItems;
 import io.github.flemmli97.mobbattle.common.utils.Utils;
+import io.github.flemmli97.mobbattle.network.C2SItemFunctionPress;
+import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.client.Camera;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -26,8 +31,42 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
+import org.lwjgl.glfw.GLFW;
+
+import java.util.function.Consumer;
 
 public class ClientHandler {
+
+    public static KeyMapping itemFunction;
+
+    public static void registerKeyBinding(Consumer<KeyMapping> consumer) {
+        consumer.accept(ClientHandler.itemFunction = new KeyMapping(ExtendedItem.KEY_ID, GLFW.GLFW_KEY_V, MobBattle.MODID + ".keycategory"));
+    }
+
+    public static void keyEvent() {
+        Player player = Minecraft.getInstance().player;
+        if (ClientHandler.itemFunction.consumeClick()) {
+            if (player != null && checkItem(player)) {
+                CrossPlatformStuff.INSTANCE.sendToServer(C2SItemFunctionPress.INSTANCE);
+            }
+        }
+    }
+
+    private static boolean checkItem(Player player) {
+        ItemStack stack = player.getMainHandItem();
+        if (!triggerPress(stack, player)) {
+            stack = player.getOffhandItem();
+            return triggerPress(stack, player);
+        }
+        return true;
+    }
+
+    private static boolean triggerPress(ItemStack stack, Player player) {
+        if (!stack.isEmpty() && stack.getItem() instanceof ExtendedItem ext) {
+            return ext.onFunctionPress(stack, player);
+        }
+        return false;
+    }
 
     public static void render(PoseStack stack) {
         Minecraft mc = Minecraft.getInstance();

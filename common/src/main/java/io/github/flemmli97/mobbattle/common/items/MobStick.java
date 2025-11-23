@@ -39,10 +39,10 @@ public class MobStick extends Item implements ExtendedItem {
     public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag b) {
         UuidComponent comp = stack.get(MobBattleDataComponents.SELECTED_MOB.get());
         if (comp != null && comp.name().isPresent()) {
-            list.add(Component.translatable("tooltip.stick.contains", comp.name()).withStyle(ChatFormatting.GREEN));
+            list.add(Component.translatable("tooltip.mobbattle.stick.contains", comp.name()).withStyle(ChatFormatting.GREEN));
         }
-        list.add(Component.translatable("tooltip.stick.first").withStyle(ChatFormatting.AQUA));
-        list.add(Component.translatable("tooltip.stick.second").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.stick.first").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.stick.second").withStyle(ChatFormatting.AQUA));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class MobStick extends Item implements ExtendedItem {
             UuidComponent comp = stack.get(MobBattleDataComponents.SELECTED_MOB.get());
             if (comp != null) {
                 stack.remove(MobBattleDataComponents.SELECTED_MOB.get());
-                player.sendSystemMessage(Component.translatable("tooltip.stick.reset").withStyle(ChatFormatting.RED));
+                player.sendSystemMessage(Component.translatable("tooltip.mobbattle.stick.reset").withStyle(ChatFormatting.RED));
             }
         }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
@@ -81,7 +81,7 @@ public class MobStick extends Item implements ExtendedItem {
             } else {
                 stack.set(MobBattleDataComponents.SELECTED_MOB.get(), new UuidComponent(Optional.of(target.getUUID()),
                         Optional.ofNullable(target.getCustomName())));
-                player.sendSystemMessage(Component.translatable("tooltip.stick.add").withStyle(ChatFormatting.GOLD));
+                player.sendSystemMessage(Component.translatable("tooltip.mobbattle.stick.add").withStyle(ChatFormatting.GOLD));
                 return true;
             }
         }

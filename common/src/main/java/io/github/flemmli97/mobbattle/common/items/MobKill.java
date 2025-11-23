@@ -1,13 +1,12 @@
 package io.github.flemmli97.mobbattle.common.items;
 
+import io.github.flemmli97.mobbattle.common.registry.MobBattleDataComponents;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -51,41 +50,31 @@ public class MobKill extends Item implements ExtendedItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag flag) {
-        list.add(Component.translatable("tooltip.kill").withStyle(ChatFormatting.AQUA));
-        list.add(Component.translatable("tooltip.kill.all").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.kill").withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.kill.mode", Component.translatable(stack.getOrDefault(MobBattleDataComponents.KILL_MODE.get(), Mode.SINGLE).translationKey)
+                        .withStyle(ChatFormatting.GOLD))
+                .withStyle(ChatFormatting.AQUA));
+        list.add(Component.translatable("tooltip.mobbattle.kill.mode.switch", Component.keybind(ExtendedItem.KEY_ID)
+                .withStyle(ChatFormatting.LIGHT_PURPLE)).withStyle(ChatFormatting.AQUA));
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (level instanceof ServerLevel) {
-            player.startUsingItem(hand);
+        if (level instanceof ServerLevel serverLevel) {
+            Mode mode = stack.getOrDefault(MobBattleDataComponents.KILL_MODE.get(), Mode.SINGLE);
+            if (mode == Mode.ALL) {
+                serverLevel.getEntities(EntityTypeTest.forClass(Entity.class), e -> !(e instanceof Player))
+                        .forEach(target -> {
+                            target.hurt(target.damageSources().genericKill(), Float.MAX_VALUE);
+                            if (target.isAlive()) {
+                                target.kill();
+                            }
+                        });
+                player.sendSystemMessage(Component.translatable("tooltip.mobbattle.kill.all.success").withStyle(ChatFormatting.RED));
+            }
         }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
-    }
-
-    @Override
-    public void onUseTick(Level level, LivingEntity entity, ItemStack stack, int remainingUseDuration) {
-        int i = this.getUseDuration(stack, entity) - remainingUseDuration;
-        if (i == 20 && entity instanceof ServerPlayer player) {
-            player.connection.send(new ClientboundSoundPacket(SoundEvents.NOTE_BLOCK_HARP, entity.getSoundSource(), entity.getX(), entity.getY(), entity.getZ(),
-                    1, 2, 0));
-        }
-    }
-
-    @Override
-    public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int timeCharged) {
-        int i = this.getUseDuration(stack, entity) - timeCharged;
-        if (i > 20 && level instanceof ServerLevel serverLevel && entity instanceof Player player) {
-            serverLevel.getEntities(EntityTypeTest.forClass(Entity.class), e -> !(e instanceof Player))
-                    .forEach(target -> {
-                        target.hurt(target.damageSources().genericKill(), Float.MAX_VALUE);
-                        if (target.isAlive()) {
-                            target.kill();
-                        }
-                    });
-            player.sendSystemMessage(Component.translatable("tooltip.kill.all.success").withStyle(ChatFormatting.RED));
-        }
     }
 
     @Override
@@ -96,5 +85,31 @@ public class MobKill extends Item implements ExtendedItem {
     @Override
     public Entity getDefaultHover(EntityHitResult result) {
         return CrossPlatformStuff.INSTANCE.tryGetEntity(result.getEntity());
+    }
+
+    @Override
+    public boolean isFoil(ItemStack stack) {
+        return stack.getOrDefault(MobBattleDataComponents.KILL_MODE.get(), Mode.SINGLE) == Mode.ALL;
+    }
+
+    @Override
+    public boolean onFunctionPress(ItemStack stack, Player player) {
+        if (player.level().isClientSide())
+            return true;
+        Mode mode = stack.getOrDefault(MobBattleDataComponents.KILL_MODE.get(), Mode.SINGLE);
+        mode = mode == Mode.SINGLE ? Mode.ALL : Mode.SINGLE;
+        stack.set(MobBattleDataComponents.KILL_MODE.get(), mode);
+        return true;
+    }
+
+    public enum Mode {
+        SINGLE("tooltip.mobbattle.kill.mode.single"),
+        ALL("tooltip.mobbattle.kill.mode.all");
+
+        public final String translationKey;
+
+        Mode(String translationKey) {
+            this.translationKey = translationKey;
+        }
     }
 }
