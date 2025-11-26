@@ -1,21 +1,24 @@
 package io.github.flemmli97.mobbattle.common;
 
 import io.github.flemmli97.mobbattle.common.entity.ai.EntityAIItemPickup;
+import io.github.flemmli97.mobbattle.common.utils.BossbarHandler;
 import io.github.flemmli97.mobbattle.common.utils.LibTags;
 import io.github.flemmli97.mobbattle.common.utils.Utils;
 import io.github.flemmli97.mobbattle.mixin.MobAccessor;
 import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.TraceableEntity;
+import net.minecraft.world.level.Level;
 
 public class EventCalls {
 
     public static void handleJoinLevel(Entity entity) {
-        if (!entity.level().isClientSide && entity instanceof Mob) {
+        if (!entity.level().isClientSide && entity instanceof Mob mob) {
             if (entity instanceof TraceableEntity traceable) {
                 Entity owner = traceable.getOwner();
                 if (owner != null && owner.getTeam() != null) {
@@ -28,10 +31,13 @@ public class EventCalls {
                 }
             }
             if (entity.getTeam() != null)
-                Utils.updateEntity(entity.getTeam().getName(), (Mob) entity);
+                Utils.updateEntity(entity.getTeam().getName(), mob);
             if (entity.getTags().contains(LibTags.ENTITY_PICKUP)) {
-                ((MobAccessor) entity).getGoalSelector().addGoal(10, new EntityAIItemPickup((Mob) entity));
+                ((MobAccessor) mob).getGoalSelector().addGoal(10, new EntityAIItemPickup(mob));
             }
+        }
+        if (!entity.level().isClientSide && entity instanceof LivingEntity living) {
+            BossbarHandler.get(living.level().getServer()).onMobLoad(living);
         }
     }
 
@@ -54,5 +60,19 @@ public class EventCalls {
                 }
             }
         }
+    }
+
+    public static void levelTick(Level level) {
+        if (level.getServer() == null)
+            return;
+        BossbarHandler.get(level.getServer()).tick();
+    }
+
+    public static void onStartTracking(ServerPlayer player, LivingEntity target) {
+        BossbarHandler.get(player.getServer()).onStartTracking(player, target);
+    }
+
+    public static void onStopTracking(ServerPlayer player, LivingEntity target) {
+        BossbarHandler.get(player.getServer()).onStopTracking(player, target);
     }
 }

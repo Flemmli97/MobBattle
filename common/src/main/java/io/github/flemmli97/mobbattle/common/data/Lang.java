@@ -45,6 +45,7 @@ public class Lang implements DataProvider {
         this.add("item.mobbattle.mob_army", "Mob Army");
         this.add("item.mobbattle.mob_mount", "Mob Mount");
         this.add("item.mobbattle.mob_equip", "Mob Equip");
+        this.add("item.mobbattle.boss_bar_adder", "Boss Bar Adder");
         this.add("item.mobbattle.egg_ex", "Mob Spawner");
 
         this.add("mobbattle.tab", "Mob Battle");
@@ -112,6 +113,10 @@ public class Lang implements DataProvider {
         this.add("tooltip.mobbattle.mount.first", "Left click an entity to select");
         this.add("tooltip.mobbattle.mount.second", "Left click another entity to add selected entity as rider");
         this.add("tooltip.mobbattle.mount.reset", "Reset entities");
+
+        this.add("tooltip.mobbattle.bossbar", "Left click an entity to add a bossbar to it");
+        this.add("tooltip.mobbattle.bossbar.remove", "Right click an entity to remove the bossbar");
+        this.add("tooltip.mobbattle.bossbar.color", "Press [%s] to change bossbar colors");
 
         this.add("tooltip.mobbattle.stick.contains", "Asigned entity: %s");
         this.add("tooltip.mobbattle.stick.first", "Left click to asign an entity");

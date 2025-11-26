@@ -10,6 +10,7 @@ import io.github.flemmli97.mobbattle.common.items.MobKill;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.world.BossEvent;
 
 import java.util.function.Supplier;
 
@@ -28,6 +29,9 @@ public class MobBattleDataComponents {
     public static final Supplier<DataComponentType<MobKill.Mode>> KILL_MODE = CrossPlatformStuff.INSTANCE.registerComponent("kill_mode",
             () -> new DataComponentType.Builder<MobKill.Mode>().persistent(Codec.stringResolver(MobKill.Mode::toString, MobKill.Mode::valueOf))
                     .networkSynchronized(ByteBufCodecs.idMapper(i -> MobKill.Mode.values()[i], MobKill.Mode::ordinal)).build());
+    public static final Supplier<DataComponentType<BossEvent.BossBarColor>> BOSS_BAR_COLOR = CrossPlatformStuff.INSTANCE.registerComponent("boss_bar_color",
+            () -> new DataComponentType.Builder<BossEvent.BossBarColor>().persistent(Codec.stringResolver(BossEvent.BossBarColor::toString, BossEvent.BossBarColor::valueOf))
+                    .networkSynchronized(ByteBufCodecs.idMapper(i -> BossEvent.BossBarColor.values()[i], BossEvent.BossBarColor::ordinal)).build());
 
     public static void init() {
     }

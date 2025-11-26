@@ -1,5 +1,6 @@
 package io.github.flemmli97.mobbattle.neoforge.client;
 
+import io.github.flemmli97.mobbattle.client.BossBarItemColor;
 import io.github.flemmli97.mobbattle.client.ClientHandler;
 import io.github.flemmli97.mobbattle.client.MultiItemColor;
 import io.github.flemmli97.mobbattle.client.gui.GuiArmor;
@@ -39,6 +40,7 @@ public class ClientEvents {
 
     public static void spawnEggColor(RegisterColorHandlersEvent.Item e) {
         e.register(new MultiItemColor(), MobBattleItems.EXTENDED_EGG.get());
+        e.register(new BossBarItemColor(), MobBattleItems.BOSS_BAR_ADDER.get());
     }
 
     public static void menuRegister(RegisterMenuScreensEvent event) {

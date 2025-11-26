@@ -1,6 +1,7 @@
 package io.github.flemmli97.mobbattle.common.registry;
 
 import io.github.flemmli97.mobbattle.MobBattle;
+import io.github.flemmli97.mobbattle.common.items.BossBarAdder;
 import io.github.flemmli97.mobbattle.common.items.ItemExtendedSpawnEgg;
 import io.github.flemmli97.mobbattle.common.items.MobArmor;
 import io.github.flemmli97.mobbattle.common.items.MobArmy;
@@ -35,6 +36,7 @@ public class MobBattleItems {
     public static final Supplier<MobArmy> MOB_ARMY = CrossPlatformStuff.INSTANCE.registerItem("mob_army", () -> new MobArmy(mainProp()));
     public static final Supplier<MobEquip> MOB_EQUIP = CrossPlatformStuff.INSTANCE.registerItem("mob_equip", () -> new MobEquip(mainProp()));
     public static final Supplier<MobEffectGive> MOB_EFFECT_GIVE = CrossPlatformStuff.INSTANCE.registerItem("mob_effect_give", () -> new MobEffectGive(mainProp()));
+    public static final Supplier<BossBarAdder> BOSS_BAR_ADDER = CrossPlatformStuff.INSTANCE.registerItem("boss_bar_adder", () -> new BossBarAdder(mainProp()));
     public static final Supplier<ItemExtendedSpawnEgg> EXTENDED_EGG = CrossPlatformStuff.INSTANCE.registerItem("egg_ex", () -> new ItemExtendedSpawnEgg(new Item.Properties()));
 
     private static Item.Properties mainProp() {

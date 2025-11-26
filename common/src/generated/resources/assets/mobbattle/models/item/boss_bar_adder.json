@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "mobbattle:item/boss_bar_adder",
+    "layer1": "mobbattle:item/boss_bar_adder_overlay"
+  }
+}

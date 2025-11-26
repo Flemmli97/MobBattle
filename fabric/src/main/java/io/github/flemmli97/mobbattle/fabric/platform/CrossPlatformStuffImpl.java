@@ -7,6 +7,7 @@ import io.github.flemmli97.mobbattle.mixin.MobAccessor;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
@@ -19,6 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -32,6 +34,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -60,6 +63,11 @@ public class CrossPlatformStuffImpl implements CrossPlatformStuff {
     public <T extends AbstractContainerMenu, D> Supplier<MenuType<T>> registerMenu(String id, MenuFactory<T, D> factory, StreamCodec<RegistryFriendlyByteBuf, D> codec) {
         MenuType<T> reg = Registry.register(BuiltInRegistries.MENU, MobBattle.of("id"), new ExtendedScreenHandlerType<>(factory::create, codec));
         return () -> reg;
+    }
+
+    @Override
+    public Collection<ServerPlayer> getTrackingPlayers(Entity entity) {
+        return PlayerLookup.tracking(entity);
     }
 
     @Override

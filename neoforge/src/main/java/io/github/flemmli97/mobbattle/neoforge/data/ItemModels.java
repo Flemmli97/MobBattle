@@ -21,6 +21,10 @@ public class ItemModels extends ItemModelProvider {
         for (DeferredHolder<?, ?> reg : Registers.ITEMS.getEntries()) {
             if (reg == MobBattleItems.EXTENDED_EGG) {
                 this.withExistingParent(reg.getId().toString(), ModelLocationUtils.decorateItemModelLocation("template_spawn_egg"));
+            } else if (reg == MobBattleItems.BOSS_BAR_ADDER) {
+                this.withExistingParent(reg.getId().toString(), ModelLocationUtils.decorateItemModelLocation("handheld"))
+                        .texture("layer0", ResourceLocation.fromNamespaceAndPath(reg.getId().getNamespace(), "item/" + reg.getId().getPath()))
+                        .texture("layer1", ResourceLocation.fromNamespaceAndPath(reg.getId().getNamespace(), "item/" + reg.getId().getPath() + "_overlay"));
             } else
                 this.withExistingParent(reg.getId().toString(), ModelLocationUtils.decorateItemModelLocation("handheld"))
                         .texture("layer0", ResourceLocation.fromNamespaceAndPath(reg.getId().getNamespace(), "item/" + reg.getId().getPath()));

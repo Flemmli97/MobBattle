@@ -9,6 +9,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
@@ -23,10 +24,12 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.chunk.ChunkSource;
 import net.neoforged.neoforge.entity.PartEntity;
 import net.neoforged.neoforge.network.IContainerFactory;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.function.Supplier;
 
 public class CrossPlatformStuffImpl implements CrossPlatformStuff {
@@ -53,6 +56,14 @@ public class CrossPlatformStuffImpl implements CrossPlatformStuff {
             return part.getParent();
         }
         return CrossPlatformStuff.super.tryGetEntity(entity);
+    }
+
+    @Override
+    public Collection<ServerPlayer> getTrackingPlayers(Entity entity) {
+        ChunkSource source = entity.level().getChunkSource();
+        if (!(source instanceof ServerChunkCache cache))
+            throw new IllegalArgumentException("This cannot be called on the client!");
+        return cache.chunkMap.getPlayersWatching(entity);
     }
 
     @Override

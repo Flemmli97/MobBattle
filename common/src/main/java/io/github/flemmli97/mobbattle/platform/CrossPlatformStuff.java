@@ -24,6 +24,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.Collection;
 import java.util.function.Supplier;
 
 public interface CrossPlatformStuff {
@@ -53,6 +54,8 @@ public interface CrossPlatformStuff {
     default LivingEntity tryGetLivingEntity(Entity entity) {
         return this.tryGetEntity(entity) instanceof LivingEntity living ? living : null;
     }
+
+    Collection<ServerPlayer> getTrackingPlayers(Entity entity);
 
     void openGuiArmor(ServerPlayer sender, Mob entity);
 
