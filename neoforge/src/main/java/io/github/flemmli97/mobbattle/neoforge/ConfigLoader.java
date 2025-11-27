@@ -36,7 +36,7 @@ public class ConfigLoader {
             this.autoAddAI = builder.comment("Auto target mobs from other teams (if e.g. done per command)").translation("conf.mobbattle.addai")
                     .define("autoAddAI", Config.autoAddAI);
             this.followRangeIncrease = builder.comment("Follow range increase for battling mobs").translation("conf.mobbattle.followRangeIncrease")
-                    .defineInRange("followRangeIncrease", 0, Double.MAX_VALUE, Config.followRangeIncrease);
+                    .defineInRange("followRangeIncrease", Config.followRangeIncrease, 0, Double.MAX_VALUE);
         }
 
         public void reload() {

@@ -1,3 +1,7 @@
+Mob Battle 2.7.0.b
+================
+- Neo: Fix config load error
+
 Mob Battle 2.7.0
 ================
 - Add kill all operation for mob kill item
