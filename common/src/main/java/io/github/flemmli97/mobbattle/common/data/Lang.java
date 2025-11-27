@@ -124,6 +124,9 @@ public class Lang implements DataProvider {
         this.add("tooltip.mobbattle.stick.reset", "Reset entities");
         this.add("tooltip.mobbattle.stick.add", "First entity set, hit another entity to set target");
         this.add("mobbattle.gui.potions", "Potions");
+
+        this.add("mobbattle.keycategory", "Mob Battle");
+        this.add("mobbattle.key.item", "Item Function");
     }
 
     @Override

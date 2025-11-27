@@ -72,5 +72,7 @@
   "tooltip.mobbattle.stick.second": "Right click to reset",
   "tooltip.mobbattle.stick.reset": "Reset entities",
   "tooltip.mobbattle.stick.add": "First entity set, hit another entity to set target",
-  "mobbattle.gui.potions": "Potions"
+  "mobbattle.gui.potions": "Potions",
+  "mobbattle.keycategory": "Mob Battle",
+  "mobbattle.key.item": "Item Function"
 }
