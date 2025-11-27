@@ -30,14 +30,18 @@ public class ConfigLoader {
     public static class CommonConfig {
 
         public final ModConfigSpec.BooleanValue autoAddAI;
+        public final ModConfigSpec.DoubleValue followRangeIncrease;
 
         public CommonConfig(ModConfigSpec.Builder builder) {
             this.autoAddAI = builder.comment("Auto target mobs from other teams (if e.g. done per command)").translation("conf.mobbattle.addai")
                     .define("autoAddAI", Config.autoAddAI);
+            this.followRangeIncrease = builder.comment("Follow range increase for battling mobs").translation("conf.mobbattle.followRangeIncrease")
+                    .defineInRange("followRangeIncrease", 0, Double.MAX_VALUE, Config.followRangeIncrease);
         }
 
         public void reload() {
             Config.autoAddAI = this.autoAddAI.get();
+            Config.followRangeIncrease = this.followRangeIncrease.get();
         }
     }
 

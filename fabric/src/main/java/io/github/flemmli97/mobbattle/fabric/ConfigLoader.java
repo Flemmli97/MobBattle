@@ -3,8 +3,10 @@ package io.github.flemmli97.mobbattle.fabric;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.common.Config;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.util.GsonHelper;
 
 import java.io.File;
 import java.io.FileReader;
@@ -48,10 +50,11 @@ public class ConfigLoader {
             FileReader reader = new FileReader(this.configFile);
             JsonObject obj = GSON.fromJson(reader, JsonObject.class);
             reader.close();
-            Config.showTeamParticleTypes = obj.has("showTeamParticleTypes") && obj.get("showTeamParticleTypes").getAsBoolean();
-            Config.autoAddAI = obj.has("autoAddAI") && obj.get("autoAddAI").getAsBoolean();
+            Config.showTeamParticleTypes = GsonHelper.getAsBoolean(obj, "showTeamParticleTypes", Config.showTeamParticleTypes);
+            Config.autoAddAI = GsonHelper.getAsBoolean(obj, "autoAddAI", Config.autoAddAI);
+            Config.followRangeIncrease = GsonHelper.getAsDouble(obj, "followRangeIncrease", Config.followRangeIncrease);
         } catch (IOException e) {
-            e.printStackTrace();
+            MobBattle.LOGGER.error(e);
         }
     }
 
@@ -61,12 +64,14 @@ public class ConfigLoader {
         obj.addProperty("showTeamParticleTypes", Config.showTeamParticleTypes);
         obj.addProperty("__autoAddAI", "Auto target mobs from other teams (if e.g. done per command)");
         obj.addProperty("autoAddAI", Config.autoAddAI);
+        obj.addProperty("__followRangeIncrease", "Follow range increase for battling mobs");
+        obj.addProperty("followRangeIncrease", Config.followRangeIncrease);
         try {
             FileWriter writer = new FileWriter(this.configFile);
             GSON.toJson(obj, writer);
             writer.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            MobBattle.LOGGER.error(e);
         }
     }
 }

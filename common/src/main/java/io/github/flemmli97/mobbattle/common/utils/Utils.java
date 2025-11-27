@@ -1,6 +1,7 @@
 package io.github.flemmli97.mobbattle.common.utils;
 
 import io.github.flemmli97.mobbattle.MobBattle;
+import io.github.flemmli97.mobbattle.common.Config;
 import io.github.flemmli97.mobbattle.common.entity.ai.EntityAIHurt;
 import io.github.flemmli97.mobbattle.common.entity.ai.EntityAITeamTarget;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
@@ -156,8 +157,8 @@ public class Utils {
 
     private static void increaseFollow(Mob mob) {
         AttributeInstance att = mob.getAttribute(Attributes.FOLLOW_RANGE);
-        if (att != null && !att.hasModifier(MOB_BATTLE_FOLLOW_MOD)) {
-            att.addTransientModifier(new AttributeModifier(MOB_BATTLE_FOLLOW_MOD, 96, AttributeModifier.Operation.ADD_VALUE));
+        if (Config.followRangeIncrease > 0 && att != null && !att.hasModifier(MOB_BATTLE_FOLLOW_MOD)) {
+            att.addTransientModifier(new AttributeModifier(MOB_BATTLE_FOLLOW_MOD, Config.followRangeIncrease, AttributeModifier.Operation.ADD_VALUE));
         }
     }
 

@@ -4,4 +4,5 @@ public class Config {
 
     public static boolean showTeamParticleTypes = true;
     public static boolean autoAddAI = true;
+    public static double followRangeIncrease = 96;
 }
