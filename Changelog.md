@@ -1,3 +1,10 @@
+Mob Battle 2.7.0
+================
+- Add kill all operation for mob kill item
+- Increase follow range of fighting mobs more (64 -> 96)
+- Make follow range increase configurable
+- Add `Boss Bar Adder` to add bossbars to any mobs
+
 Mob Battle 2.6.2
 ================
 - Prevent spaces in team names
