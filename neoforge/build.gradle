@@ -8,7 +8,7 @@ neoForge {
     runs {
         var common = project(":common")
         data {
-            data()
+            clientData()
             programArguments.addAll "--all", "--mod", "mobbattle"
             programArguments.addAll "--output", common.file("src/generated/resources").absolutePath
             programArguments.addAll "--existing", common.file("src/main/resources").absolutePath

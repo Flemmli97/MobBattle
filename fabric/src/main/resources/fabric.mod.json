@@ -28,7 +28,7 @@
     "mobbattle.fabric.mixins.json"
   ],
   "depends": {
-    "fabric": ">=${fabric_version}",
+    "fabric-api": ">=${fabric_api_version}",
     "minecraft": ">=${mcversion}"
   }
 }
