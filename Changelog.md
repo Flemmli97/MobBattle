@@ -1,3 +1,8 @@
+Mob Battle 2.7.1
+================
+- Update to 26.1
+- Fix offset not reset for suggestion box (effect item)
+
 Mob Battle 2.7.0.b
 ================
 - Neo: Fix config load error
