@@ -1,33 +1,45 @@
 package io.github.flemmli97.mobbattle.neoforge.data;
 
 import io.github.flemmli97.mobbattle.MobBattle;
+import io.github.flemmli97.mobbattle.client.BossBarItemColor;
 import io.github.flemmli97.mobbattle.common.registry.MobBattleItems;
 import io.github.flemmli97.mobbattle.neoforge.registry.Registers;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.ModelProvider;
+import net.minecraft.client.data.models.model.ItemModelUtils;
+import net.minecraft.client.data.models.model.ModelLocationUtils;
+import net.minecraft.client.data.models.model.ModelTemplates;
+import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.models.model.ModelLocationUtils;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
-public class ItemModels extends ItemModelProvider {
+public class ItemModels extends ModelProvider {
 
-    public ItemModels(PackOutput output, ExistingFileHelper existingFileHelper) {
-        super(output, MobBattle.MODID, existingFileHelper);
+    public ItemModels(PackOutput output) {
+        super(output, MobBattle.MODID);
     }
 
     @Override
-    protected void registerModels() {
-        for (DeferredHolder<?, ?> reg : Registers.ITEMS.getEntries()) {
+    protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
+        for (DeferredHolder<Item, ?> reg : Registers.ITEMS.getEntries()) {
             if (reg == MobBattleItems.EXTENDED_EGG) {
-                this.withExistingParent(reg.getId().toString(), ModelLocationUtils.decorateItemModelLocation("template_spawn_egg"));
+                itemModels.itemModelOutput.accept(reg.get(), ItemModelUtils.plainModel(ModelTemplates.FLAT_HANDHELD_ITEM.create(
+                        ModelLocationUtils.getModelLocation(reg.get()),
+                        TextureMapping.layer0(new Material(Identifier.fromNamespaceAndPath(reg.getId().getNamespace(), "item/blank_spawn_egg"))),
+                        itemModels.modelOutput)));
             } else if (reg == MobBattleItems.BOSS_BAR_ADDER) {
-                this.withExistingParent(reg.getId().toString(), ModelLocationUtils.decorateItemModelLocation("handheld"))
-                        .texture("layer0", ResourceLocation.fromNamespaceAndPath(reg.getId().getNamespace(), "item/" + reg.getId().getPath()))
-                        .texture("layer1", ResourceLocation.fromNamespaceAndPath(reg.getId().getNamespace(), "item/" + reg.getId().getPath() + "_overlay"));
+                itemModels.itemModelOutput.accept(reg.get(), ItemModelUtils.tintedModel(ModelTemplates.createItem("handheld", TextureSlot.LAYER0, TextureSlot.LAYER1).create(
+                        ModelLocationUtils.getModelLocation(reg.get()),
+                        TextureMapping.layered(new Material(Identifier.fromNamespaceAndPath(reg.getId().getNamespace(), "item/" + reg.getId().getPath())),
+                                new Material(Identifier.fromNamespaceAndPath(reg.getId().getNamespace(), "item/" + reg.getId().getPath() + "_overlay"))),
+                        itemModels.modelOutput), ItemModelGenerators.BLANK_LAYER, BossBarItemColor.INSTANCE));
             } else
-                this.withExistingParent(reg.getId().toString(), ModelLocationUtils.decorateItemModelLocation("handheld"))
-                        .texture("layer0", ResourceLocation.fromNamespaceAndPath(reg.getId().getNamespace(), "item/" + reg.getId().getPath()));
+                itemModels.generateFlatItem(reg.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         }
     }
 }

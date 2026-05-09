@@ -52,7 +52,7 @@ public class MobBattleNeoForge {
         MobBattleDataComponents.init();
         MobBattleMenuTypes.init();
         Registers.register(modBus);
-        if (FMLEnvironment.dist == Dist.CLIENT)
+        if (FMLEnvironment.getDist() == Dist.CLIENT)
             ClientEvents.register(modBus);
         MobBattle.tenshiLib = ModList.get().isLoaded("tenshilib");
         MobBattle.customTab = TAB_REGISTER.register("tab", () -> CreativeModeTab.builder()

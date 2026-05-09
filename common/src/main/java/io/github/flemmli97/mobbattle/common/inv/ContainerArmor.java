@@ -1,9 +1,8 @@
 package io.github.flemmli97.mobbattle.common.inv;
 
-import com.mojang.datafixers.util.Pair;
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.common.registry.MobBattleMenuTypes;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Inventory;
@@ -30,15 +29,15 @@ public class ContainerArmor extends AbstractContainerMenu {
         this.addSlot(new Slot(this.inv, 0, 80, 17) {
 
             @Override
-            public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-                return Pair.of(InventoryMenu.BLOCK_ATLAS, MobBattle.of("item/armor_slot_sword"));
+            public Identifier getNoItemIcon() {
+                return MobBattle.of("container/slot/armor_slot_sword");
             }
         });
         this.addSlot(new Slot(this.inv, 1, 80, 35) {
 
             @Override
-            public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-                return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD);
+            public Identifier getNoItemIcon() {
+                return InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD;
             }
         });
         this.addSlot(new Slot(this.inv, 2, 44, 17) {
@@ -49,8 +48,8 @@ public class ContainerArmor extends AbstractContainerMenu {
             }
 
             @Override
-            public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-                return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_HELMET);
+            public Identifier getNoItemIcon() {
+                return InventoryMenu.EMPTY_ARMOR_SLOT_HELMET;
             }
         });
         this.addSlot(new Slot(this.inv, 3, 44, 35) {
@@ -66,8 +65,8 @@ public class ContainerArmor extends AbstractContainerMenu {
             }
 
             @Override
-            public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-                return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE);
+            public Identifier getNoItemIcon() {
+                return InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE;
             }
         });
         this.addSlot(new Slot(this.inv, 4, 116, 17) {
@@ -83,8 +82,8 @@ public class ContainerArmor extends AbstractContainerMenu {
             }
 
             @Override
-            public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-                return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS);
+            public Identifier getNoItemIcon() {
+                return InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS;
             }
         });
         this.addSlot(new Slot(this.inv, 5, 116, 35) {
@@ -100,8 +99,8 @@ public class ContainerArmor extends AbstractContainerMenu {
             }
 
             @Override
-            public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-                return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS);
+            public Identifier getNoItemIcon() {
+                return InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS;
             }
         });
         for (int column = 0; column < 3; ++column) {

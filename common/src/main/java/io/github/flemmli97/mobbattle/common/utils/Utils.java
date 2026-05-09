@@ -8,8 +8,9 @@ import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -29,7 +30,6 @@ import net.minecraft.world.scores.ScoreHolder;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.Team.CollisionRule;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
-import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,25 +42,25 @@ public class Utils {
 
     public static Map<ChatFormatting, DustParticleOptions> teamColor = new HashMap<>();
 
-    public static final ResourceLocation MOB_BATTLE_FOLLOW_MOD = ResourceLocation.fromNamespaceAndPath(MobBattle.MODID, "follow_target_mod");
+    public static final Identifier MOB_BATTLE_FOLLOW_MOD = Identifier.fromNamespaceAndPath(MobBattle.MODID, "follow_target_mod");
 
     static {
-        teamColor.put(ChatFormatting.AQUA, new DustParticleOptions(new Vector3f(0.01f, 0.9f, 1f), 1.0f));
-        teamColor.put(ChatFormatting.BLACK, new DustParticleOptions(new Vector3f(0.01f, 0, 0f), 1.0f));
-        teamColor.put(ChatFormatting.BLUE, new DustParticleOptions(new Vector3f(0.2f, 0.2f, 1), 1.0f));
-        teamColor.put(ChatFormatting.DARK_AQUA, new DustParticleOptions(new Vector3f(0.01f, 0.4f, 0.5f), 1.0f));
-        teamColor.put(ChatFormatting.DARK_BLUE, new DustParticleOptions(new Vector3f(0.01f, 0, 0.4f), 1.0f));
-        teamColor.put(ChatFormatting.DARK_GRAY, new DustParticleOptions(new Vector3f(0.2f, 0.2f, 0.2f), 1.0f));
-        teamColor.put(ChatFormatting.DARK_GREEN, new DustParticleOptions(new Vector3f(0.01f, 0.5f, 0), 1.0f));
-        teamColor.put(ChatFormatting.DARK_PURPLE, new DustParticleOptions(new Vector3f(0.3f, 0, 0.4f), 1.0f));
-        teamColor.put(ChatFormatting.DARK_RED, new DustParticleOptions(new Vector3f(0.5f, 0, 0), 1.0f));
-        teamColor.put(ChatFormatting.GOLD, new DustParticleOptions(new Vector3f(1, 0.6f, 0), 1.0f));
-        teamColor.put(ChatFormatting.GRAY, new DustParticleOptions(new Vector3f(0.4f, 0.4f, 0.4f), 1.0f));
-        teamColor.put(ChatFormatting.GREEN, new DustParticleOptions(new Vector3f(0.01f, 1, 0), 1.0f));
-        teamColor.put(ChatFormatting.LIGHT_PURPLE, new DustParticleOptions(new Vector3f(0.6f, 0, 0.7f), 1.0f));
-        teamColor.put(ChatFormatting.RED, new DustParticleOptions(new Vector3f(1, 0.2f, 0.2f), 1.0f));
-        teamColor.put(ChatFormatting.WHITE, new DustParticleOptions(new Vector3f(1, 1, 1), 1.0f));
-        teamColor.put(ChatFormatting.YELLOW, new DustParticleOptions(new Vector3f(1, 1, 0), 1.0f));
+        teamColor.put(ChatFormatting.AQUA, new DustParticleOptions(ARGB.colorFromFloat(1, 0.01f, 0.9f, 1f), 1.0f));
+        teamColor.put(ChatFormatting.BLACK, new DustParticleOptions(ARGB.colorFromFloat(1, 0.01f, 0, 0f), 1.0f));
+        teamColor.put(ChatFormatting.BLUE, new DustParticleOptions(ARGB.colorFromFloat(1, 0.2f, 0.2f, 1), 1.0f));
+        teamColor.put(ChatFormatting.DARK_AQUA, new DustParticleOptions(ARGB.colorFromFloat(1, 0.01f, 0.4f, 0.5f), 1.0f));
+        teamColor.put(ChatFormatting.DARK_BLUE, new DustParticleOptions(ARGB.colorFromFloat(1, 0.01f, 0, 0.4f), 1.0f));
+        teamColor.put(ChatFormatting.DARK_GRAY, new DustParticleOptions(ARGB.colorFromFloat(1, 0.2f, 0.2f, 0.2f), 1.0f));
+        teamColor.put(ChatFormatting.DARK_GREEN, new DustParticleOptions(ARGB.colorFromFloat(1, 0.01f, 0.5f, 0), 1.0f));
+        teamColor.put(ChatFormatting.DARK_PURPLE, new DustParticleOptions(ARGB.colorFromFloat(1, 0.3f, 0, 0.4f), 1.0f));
+        teamColor.put(ChatFormatting.DARK_RED, new DustParticleOptions(ARGB.colorFromFloat(1, 0.5f, 0, 0), 1.0f));
+        teamColor.put(ChatFormatting.GOLD, new DustParticleOptions(ARGB.colorFromFloat(1, 1, 0.6f, 0), 1.0f));
+        teamColor.put(ChatFormatting.GRAY, new DustParticleOptions(ARGB.colorFromFloat(1, 0.4f, 0.4f, 0.4f), 1.0f));
+        teamColor.put(ChatFormatting.GREEN, new DustParticleOptions(ARGB.colorFromFloat(1, 0.01f, 1, 0), 1.0f));
+        teamColor.put(ChatFormatting.LIGHT_PURPLE, new DustParticleOptions(ARGB.colorFromFloat(1, 0.6f, 0, 0.7f), 1.0f));
+        teamColor.put(ChatFormatting.RED, new DustParticleOptions(ARGB.colorFromFloat(1, 1, 0.2f, 0.2f), 1.0f));
+        teamColor.put(ChatFormatting.WHITE, new DustParticleOptions(ARGB.colorFromFloat(1, 1, 1, 1), 1.0f));
+        teamColor.put(ChatFormatting.YELLOW, new DustParticleOptions(ARGB.colorFromFloat(1, 1, 1, 0), 1.0f));
     }
 
     public static boolean isOnSameTeam(Entity entity, Entity entity2) {
@@ -93,7 +93,7 @@ public class Utils {
         addEntityToTeam(mob, team);
         mob.setTarget(null);
         mob.addTag(LibTags.ENTITY_AI_ADDED);
-        if (mob.getType().is(MobBattle.IGNORED))
+        if (mob.is(MobBattle.IGNORED))
             return;
         removeGoal(CrossPlatformStuff.INSTANCE.goalSelectorFrom(mob, true), targetGoal);
         increaseFollow(mob);

@@ -19,7 +19,7 @@ public class LivingMixin implements ActiveTargetMobbattle {
     private boolean mobbattle$active_targeting;
 
     @Inject(method = "die", at = @At("RETURN"))
-    private void handleDeath(DamageSource damageSource, CallbackInfo ci) {
+    private void handleDeath(DamageSource source, CallbackInfo ci) {
         LivingEntity self = (LivingEntity) (Object) this;
         if (self instanceof Player)
             return;

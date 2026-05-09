@@ -1,14 +1,14 @@
 package io.github.flemmli97.mobbattle.common.utils;
 
 import com.google.common.base.Objects;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.UUIDUtil;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.server.level.ServerBossEvent;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -16,29 +16,34 @@ import java.util.UUID;
 
 public class MobBossEvent extends ServerBossEvent {
 
-    private final UUID id;
+    public static final Codec<MobBossEvent> CODEC = RecordCodecBuilder.create(instance ->
+            instance.group(UUIDUtil.CODEC.fieldOf("Id").forGetter(BossEvent::getId),
+                            ComponentSerialization.CODEC.fieldOf("Name").forGetter(BossEvent::getName),
+                            BossBarColor.CODEC.fieldOf("Color").forGetter(BossEvent::getColor)
+                    )
+                    .apply(instance, MobBossEvent::new)
+    );
+
     private LivingEntity entity;
     private boolean removed;
 
     public MobBossEvent(LivingEntity entity) {
-        super(entity.getDisplayName(), BossBarColor.WHITE, BossBarOverlay.PROGRESS);
-        this.id = entity.getUUID();
+        super(entity.getUUID(), entity.getDisplayName(), BossBarColor.WHITE, BossBarOverlay.PROGRESS);
         this.entity = entity;
         CrossPlatformStuff.INSTANCE.getTrackingPlayers(entity)
                 .forEach(this::addPlayer);
     }
 
     private MobBossEvent(UUID id, Component name) {
-        super(name, BossBarColor.WHITE, BossBarOverlay.PROGRESS);
-        this.id = id;
+        super(id, name, BossBarColor.WHITE, BossBarOverlay.PROGRESS);
     }
 
-    public UUID id() {
-        return this.id;
+    private MobBossEvent(UUID id, Component name, BossBarColor color) {
+        super(id, name, color, BossBarOverlay.PROGRESS);
     }
 
     public void setEntity(LivingEntity entity) {
-        if (entity.getUUID().equals(this.id())) {
+        if (entity.getUUID().equals(this.getId())) {
             this.entity = entity;
             this.setName(entity.getDisplayName());
             this.removeAllPlayers();
@@ -72,21 +77,5 @@ public class MobBossEvent extends ServerBossEvent {
             }
         }
         return false;
-    }
-
-    public CompoundTag save(HolderLookup.Provider provider) {
-        CompoundTag tag = new CompoundTag();
-        tag.putString("Color", this.getColor().getName());
-        tag.put("Name", ComponentSerialization.CODEC.encodeStart(provider.createSerializationContext(NbtOps.INSTANCE), this.getName()).getOrThrow());
-        tag.put("Id", UUIDUtil.CODEC.encodeStart(NbtOps.INSTANCE, this.id()).getOrThrow());
-        return tag;
-    }
-
-    public static MobBossEvent load(CompoundTag tag, HolderLookup.Provider provider) {
-        UUID id = UUIDUtil.CODEC.parse(NbtOps.INSTANCE, tag.get("Id")).getOrThrow();
-        Component name = ComponentSerialization.CODEC.parse(provider.createSerializationContext(NbtOps.INSTANCE), tag.get("Name")).getOrThrow();
-        MobBossEvent event = new MobBossEvent(id, name);
-        event.setColor(BossBarColor.byName(tag.getString("Color")));
-        return event;
     }
 }

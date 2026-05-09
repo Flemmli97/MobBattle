@@ -1,7 +1,7 @@
 package io.github.flemmli97.mobbattle;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.CreativeModeTab;
@@ -48,7 +48,7 @@ public class MobBattle {
         throw new IllegalStateException("Couldn't create an instance of " + abstractClss);
     }
 
-    public static ResourceLocation of(String path) {
-        return ResourceLocation.fromNamespaceAndPath(MODID, path);
+    public static Identifier of(String path) {
+        return Identifier.fromNamespaceAndPath(MODID, path);
     }
 }

@@ -1,23 +1,25 @@
 package io.github.flemmli97.mobbattle.client.gui.widget;
 
 import io.github.flemmli97.mobbattle.MobBattle;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class ButtonCheck extends Button {
 
-    private static final ResourceLocation TEX = MobBattle.of("textures/gui/effect.png");
+    private static final Identifier SPRITE = MobBattle.of("widget/checkbox");
+    private static final Identifier SPRITE_CHECK = MobBattle.of("widget/checkbox_ticked");
     private boolean check;
 
     public ButtonCheck(int x, int y, OnPress press) {
-        super(x, y, 10, 10, Component.empty(), press, DEFAULT_NARRATION);
+        super(x, y, 12, 12, Component.empty(), press, DEFAULT_NARRATION);
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        graphics.blit(TEX, this.getX(), this.getY(), 202, this.check ? 14 : 1, this.width, this.height);
+    protected void extractContents(GuiGraphicsExtractor guiGraphicsExtractor, int i, int i1, float v) {
+        guiGraphicsExtractor.blitSprite(RenderPipelines.GUI_TEXTURED, this.check ? SPRITE_CHECK : SPRITE, this.getX(), this.getY(), this.width, this.height);
     }
 
     public void checkUncheck(boolean check) {

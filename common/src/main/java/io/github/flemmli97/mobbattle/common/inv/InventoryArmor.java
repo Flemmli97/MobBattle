@@ -27,7 +27,7 @@ public class InventoryArmor extends SimpleContainer {
     public void setItem(int index, ItemStack stack) {
         super.setItem(index, stack);
         EquipmentSlot slot = this.slotType(index);
-        if (slot != null && !this.mob.level().isClientSide)
+        if (slot != null && !this.mob.level().isClientSide())
             this.mob.setItemSlot(slot, stack);
     }
 

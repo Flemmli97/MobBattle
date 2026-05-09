@@ -11,10 +11,10 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 public class DataEvent {
 
     @SubscribeEvent
-    public static void data(GatherDataEvent event) {
+    public static void data(GatherDataEvent.Client event) {
         DataGenerator data = event.getGenerator();
-        data.addProvider(event.includeClient(), new Lang(data.getPackOutput()));
-        data.addProvider(event.includeClient(), new ItemModels(data.getPackOutput(), event.getExistingFileHelper()));
-        data.addProvider(event.includeServer(), new EntityTagGen(data.getPackOutput(), event.getLookupProvider(), event.getExistingFileHelper()));
+        data.addProvider(true, new Lang(data.getPackOutput()));
+        data.addProvider(true, new ItemModels(data.getPackOutput()));
+        data.addProvider(true, new EntityTagGen(data.getPackOutput(), event.getLookupProvider()));
     }
 }

@@ -9,6 +9,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
@@ -30,13 +31,14 @@ import net.neoforged.neoforge.network.IContainerFactory;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class CrossPlatformStuffImpl implements CrossPlatformStuff {
 
     @Override
-    public <T extends Item> Supplier<T> registerItem(String id, Supplier<T> sup) {
-        return Registers.ITEMS.register(id, sup);
+    public <T extends Item> Supplier<T> registerItem(String id, Function<Identifier, T> func) {
+        return Registers.ITEMS.register(id, func);
     }
 
     @Override

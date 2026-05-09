@@ -1,3 +1,6 @@
 {
-  "parent": "minecraft:item/template_spawn_egg"
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "mobbattle:item/blank_spawn_egg"
+  }
 }

@@ -1,36 +1,40 @@
 package io.github.flemmli97.mobbattle.common.utils;
 
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
+import com.mojang.serialization.Codec;
+import io.github.flemmli97.mobbattle.MobBattle;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 public class BossbarHandler extends SavedData {
 
-    private static final String IDENTIFIER = "MobBattleBossBars";
-    private static final SavedData.Factory<BossbarHandler> FACTORY = new Factory<>(BossbarHandler::new, BossbarHandler::new, DataFixTypes.LEVEL);
+    public static final Codec<BossbarHandler> CODEC = MobBossEvent.CODEC.listOf().fieldOf("BossBars")
+            .xmap(BossbarHandler::new, h -> List.copyOf(h.bars.values())).codec();
+
+    private static final SavedDataType<BossbarHandler> TYPE = new SavedDataType<>(MobBattle.of("boss_bars"), BossbarHandler::new, CODEC, DataFixTypes.LEVEL);
 
     private final Map<UUID, MobBossEvent> bars = new HashMap<>();
 
     private BossbarHandler() {
     }
 
-    private BossbarHandler(CompoundTag tag, HolderLookup.Provider provider) {
-        this.load(tag, provider);
+    private BossbarHandler(List<MobBossEvent> bossBars) {
+        bossBars.forEach(evt -> {
+            this.bars.put(evt.getId(), evt);
+        });
     }
 
     public static BossbarHandler get(MinecraftServer server) {
-        return server.overworld().getDataStorage().computeIfAbsent(FACTORY, IDENTIFIER);
+        return server.overworld().getDataStorage().computeIfAbsent(TYPE);
     }
 
     public void addBossBarTo(LivingEntity target, BossEvent.BossBarColor color) {
@@ -38,7 +42,7 @@ public class BossbarHandler extends SavedData {
         if (event == null) {
             event = new MobBossEvent(target);
             event.setColor(color);
-            this.bars.put(event.id(), event);
+            this.bars.put(event.getId(), event);
             this.setDirty();
         }
         event.setColor(color);
@@ -77,21 +81,5 @@ public class BossbarHandler extends SavedData {
         if (!this.bars.isEmpty())
             this.setDirty();
         this.bars.values().removeIf(MobBossEvent::tick);
-    }
-
-    public void load(CompoundTag tag, HolderLookup.Provider provider) {
-        ListTag bossBars = tag.getList("BossBars", Tag.TAG_COMPOUND);
-        bossBars.forEach(t -> {
-            MobBossEvent evt = MobBossEvent.load((CompoundTag) t, provider);
-            this.bars.put(evt.id(), evt);
-        });
-    }
-
-    @Override
-    public CompoundTag save(CompoundTag tag, HolderLookup.Provider provider) {
-        ListTag bossBars = new ListTag();
-        this.bars.forEach((id, evt) -> bossBars.add(evt.save(provider)));
-        tag.put("BossBars", bossBars);
-        return tag;
     }
 }

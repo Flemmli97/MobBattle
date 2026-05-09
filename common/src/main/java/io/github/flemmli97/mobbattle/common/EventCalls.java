@@ -18,7 +18,7 @@ import net.minecraft.world.level.Level;
 public class EventCalls {
 
     public static void handleJoinLevel(Entity entity) {
-        if (!entity.level().isClientSide && entity instanceof Mob mob) {
+        if (!entity.level().isClientSide() && entity instanceof Mob mob) {
             if (entity instanceof TraceableEntity traceable) {
                 Entity owner = traceable.getOwner();
                 if (owner != null && owner.getTeam() != null) {
@@ -32,11 +32,11 @@ public class EventCalls {
             }
             if (entity.getTeam() != null)
                 Utils.updateEntity(entity.getTeam().getName(), mob);
-            if (entity.getTags().contains(LibTags.ENTITY_PICKUP)) {
+            if (entity.entityTags().contains(LibTags.ENTITY_PICKUP)) {
                 ((MobAccessor) mob).getGoalSelector().addGoal(10, new EntityAIItemPickup(mob));
             }
         }
-        if (!entity.level().isClientSide && entity instanceof LivingEntity living) {
+        if (!entity.level().isClientSide() && entity instanceof LivingEntity living) {
             BossbarHandler.get(living.level().getServer()).onMobLoad(living);
         }
     }
@@ -51,11 +51,11 @@ public class EventCalls {
     public static void tick(Entity entity) {
         if (entity instanceof Mob mob) {
             if (mob.getTeam() != null) {
-                if (Config.showTeamParticleTypes && mob.level().isClientSide) {
+                if (Config.showTeamParticleTypes && mob.level().isClientSide()) {
                     DustParticleOptions color = Utils.teamColor.get(mob.getTeam().getColor());
                     if (color != null)
                         mob.level().addParticle(color, mob.getX(), mob.getY() + mob.getBbHeight() + 0.5, mob.getZ(), 0, 0, 0);
-                } else if (Config.autoAddAI && !mob.getTags().contains(LibTags.ENTITY_AI_ADDED)) {
+                } else if (Config.autoAddAI && !mob.entityTags().contains(LibTags.ENTITY_AI_ADDED)) {
                     Utils.updateEntity(mob.getTeam().getName(), mob);
                 }
             }
@@ -69,10 +69,10 @@ public class EventCalls {
     }
 
     public static void onStartTracking(ServerPlayer player, LivingEntity target) {
-        BossbarHandler.get(player.getServer()).onStartTracking(player, target);
+        BossbarHandler.get(player.level().getServer()).onStartTracking(player, target);
     }
 
     public static void onStopTracking(ServerPlayer player, LivingEntity target) {
-        BossbarHandler.get(player.getServer()).onStopTracking(player, target);
+        BossbarHandler.get(player.level().getServer()).onStopTracking(player, target);
     }
 }

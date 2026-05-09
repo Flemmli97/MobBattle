@@ -1,11 +1,14 @@
 package io.github.flemmli97.mobbattle.client.gui.widget;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.CommonColors;
 import net.minecraft.util.Mth;
 import org.lwjgl.glfw.GLFW;
 
@@ -58,7 +61,7 @@ public class SuggestionEditBox extends EditBox {
         }).toList();
     }
 
-    public static Collection<SuggestionContent> ofResourceLocation(Collection<ResourceLocation> strings) {
+    public static Collection<SuggestionContent> ofResourceLocation(Collection<Identifier> strings) {
         return strings.stream().<SuggestionContent>map(res -> new SuggestionContent() {
 
             @Override
@@ -80,8 +83,8 @@ public class SuggestionEditBox extends EditBox {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTick);
         if (this.suggestionsHidden() || this.suggestions.length == 0)
             return;
         if (this.suggestions.length == 1 && this.getValue().equals(this.suggestions[0]))
@@ -90,9 +93,9 @@ public class SuggestionEditBox extends EditBox {
         if (idx >= 0 && idx < this.suggestions.length) {
             this.select(idx);
         }
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(0, 0, 1);
-        guiGraphics.fill(this.rect.getX(), this.rect.getY(), this.rect.getX() + this.rect.getWidth(), this.rect.getY() + this.rect.getHeight(), 0xe0101010);
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(0, 0);
+        graphics.fill(this.rect.getX(), this.rect.getY(), this.rect.getX() + this.rect.getWidth(), this.rect.getY() + this.rect.getHeight(), 0xe0101010);
         int x = this.getX() + this.paddingX;
         int y = this.rect.getY() + this.paddingY;
         for (int i = 0; i < this.suggestions.length; i++) {
@@ -100,9 +103,9 @@ public class SuggestionEditBox extends EditBox {
             if (i >= 5 || idxx >= this.suggestions.length)
                 break;
             String string = this.suggestions[idxx];
-            guiGraphics.drawString(this.font, string, x, y + i * this.lineHeight, this.current == idxx ? 0xFFFF55 : 0xFFFFFF);
+            graphics.text(this.font, string, x, y + i * this.lineHeight, this.current == idxx ? 0xFFFFFF55 : CommonColors.WHITE);
         }
-        guiGraphics.pose().popPose();
+        graphics.pose().popMatrix();
     }
 
     private boolean suggestionsHidden() {
@@ -110,15 +113,14 @@ public class SuggestionEditBox extends EditBox {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (super.mouseClicked(mouseX, mouseY, button)) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        if (super.mouseClicked(event, doubleClick)) {
             this.hidden = false;
-            return true;
+            if (this.suggestionsHidden() || !this.rect.contains((int) event.x(), (int) event.y())) {
+                return true;
+            }
         }
-        if (this.suggestionsHidden() || !this.rect.contains((int) mouseX, (int) mouseY)) {
-            return false;
-        }
-        int i = this.indexFromMouse(mouseY);
+        int i = this.indexFromMouse(event.y());
         if (i >= 0 && i < this.suggestions.length) {
             this.select(i);
             this.useSuggestion();
@@ -148,22 +150,22 @@ public class SuggestionEditBox extends EditBox {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyEvent keyEvent) {
         if (this.canConsumeInput()) {
-            if (keyCode == GLFW.GLFW_KEY_UP) {
+            if (keyEvent.key() == GLFW.GLFW_KEY_UP) {
                 this.cycle(-1);
                 return true;
             }
-            if (keyCode == GLFW.GLFW_KEY_DOWN) {
+            if (keyEvent.key() == GLFW.GLFW_KEY_DOWN) {
                 this.cycle(1);
                 return true;
             }
-            if (keyCode == GLFW.GLFW_KEY_ENTER) {
+            if (keyEvent.key() == GLFW.GLFW_KEY_ENTER) {
                 this.useSuggestion();
                 return true;
             }
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(keyEvent);
     }
 
     @Override
@@ -199,6 +201,7 @@ public class SuggestionEditBox extends EditBox {
         }
         this.rect = new Rect2i(this.getX(), y, width, sizeY + this.paddingY);
         this.hidden = false;
+        this.offset = Mth.clamp(this.offset, 0, Math.max(this.suggestions.length - this.limit, 0));
     }
 
     public void cycle(int change) {
@@ -228,6 +231,7 @@ public class SuggestionEditBox extends EditBox {
         this.setCursorPosition(suggestion.length());
         this.setHighlightPos(suggestion.length());
         this.select(this.current);
+        this.recalculateSuggestions(this.getValue());
         this.hidden = true;
     }
 

@@ -2,10 +2,9 @@ package io.github.flemmli97.mobbattle.neoforge.client;
 
 import io.github.flemmli97.mobbattle.client.BossBarItemColor;
 import io.github.flemmli97.mobbattle.client.ClientHandler;
-import io.github.flemmli97.mobbattle.client.MultiItemColor;
 import io.github.flemmli97.mobbattle.client.gui.GuiArmor;
-import io.github.flemmli97.mobbattle.common.registry.MobBattleItems;
 import io.github.flemmli97.mobbattle.common.registry.MobBattleMenuTypes;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.bus.api.IEventBus;
@@ -27,9 +26,7 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public void render(RenderLevelStageEvent event) {
-        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_SOLID_BLOCKS)
-            return;
+    public void render(RenderLevelStageEvent.AfterOpaqueFeatures event) {
         ClientHandler.render(event.getPoseStack());
     }
 
@@ -38,9 +35,8 @@ public class ClientEvents {
         ClientHandler.keyEvent();
     }
 
-    public static void spawnEggColor(RegisterColorHandlersEvent.Item e) {
-        e.register(new MultiItemColor(), MobBattleItems.EXTENDED_EGG.get());
-        e.register(new BossBarItemColor(), MobBattleItems.BOSS_BAR_ADDER.get());
+    public static void spawnEggColor(RegisterColorHandlersEvent.ItemTintSources e) {
+        e.register(BossBarItemColor.ID, BossBarItemColor.CODEC);
     }
 
     public static void menuRegister(RegisterMenuScreensEvent event) {
@@ -52,6 +48,10 @@ public class ClientEvents {
     }
 
     public static void keyRegister(RegisterKeyMappingsEvent event) {
-        ClientHandler.registerKeyBinding(event::register);
+        ClientHandler.registerKeyBinding(id -> {
+            KeyMapping.Category category = new KeyMapping.Category(id);
+            event.registerCategory(category);
+            return category;
+        }, event::register);
     }
 }

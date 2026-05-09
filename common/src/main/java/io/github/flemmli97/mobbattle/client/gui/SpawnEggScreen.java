@@ -9,20 +9,23 @@ import io.github.flemmli97.mobbattle.network.C2SSpawnEgg;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.CommonColors;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 public class SpawnEggScreen extends Screen {
@@ -71,27 +74,26 @@ public class SpawnEggScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         guiGraphics.fillGradient(this.leftPos, this.topPos, this.leftPos + this.sizeX, this.topPos + this.sizeY, 0xc0101010, 0xc0101010);
         int xPadding = 16;
         int yOff = xPadding;
         int width = this.font.width(this.entity.getType().getDescription());
-        guiGraphics.drawString(this.font, this.entity.getType().getDescription(), (int) (this.leftPos + this.sizeX * 0.5f - width * 0.5f), this.topPos + yOff, ChatFormatting.GOLD.getColor());
+        guiGraphics.text(this.font, this.entity.getType().getDescription(), (int) (this.leftPos + this.sizeX * 0.5f - width * 0.5f), this.topPos + yOff, ARGB.color(255, ChatFormatting.GOLD.getColor()));
         yOff += 16;
-        guiGraphics.drawString(this.font, Component.translatable("mobbattle.gui.team"), this.leftPos + xPadding, this.topPos + yOff, 0xffffff);
+        guiGraphics.text(this.font, Component.translatable("mobbattle.gui.team"), this.leftPos + xPadding, this.topPos + yOff, CommonColors.WHITE);
         yOff += 16 + 20 + 8;
-        guiGraphics.drawString(this.font, Component.translatable("mobbattle.gui.amount"), this.leftPos + xPadding, this.topPos + yOff, 0xffffff);
+        guiGraphics.text(this.font, Component.translatable("mobbattle.gui.amount"), this.leftPos + xPadding, this.topPos + yOff, CommonColors.WHITE);
         yOff += 16 + 20;
-        guiGraphics.drawString(this.font, Component.translatable("mobbattle.gui.spacing"), this.leftPos + xPadding, this.topPos + yOff, 0xffffff);
-
-        renderEntityMouseNoClip(guiGraphics,
+        guiGraphics.text(this.font, Component.translatable("mobbattle.gui.spacing"), this.leftPos + xPadding, this.topPos + yOff, CommonColors.WHITE);
+        extractEntityInInventoryFollowsMouse(guiGraphics,
                 this.leftPos + this.sizeX - xPadding - (3 * 30), this.topPos + xPadding + 16, 30, 3f, 3,
                 0.0625f, mouseX, mouseY, this.entity);
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
-    public static void renderEntityMouseNoClip(GuiGraphics guiGraphics, int x, int y, int scale, float maxWidth, float maxHeight,
-                                               float yOffset, float mouseX, float mouseY, LivingEntity entity) {
+    public static void extractEntityInInventoryFollowsMouse(GuiGraphicsExtractor graphics, int x, int y, int scale, float maxWidth, float maxHeight,
+                                                            float yOffset, float mouseX, float mouseY, LivingEntity entity) {
         int sizeX = (int) (maxWidth * scale);
         int sizeY = (int) (maxHeight * scale);
         float scaleMult = 1;
@@ -101,42 +103,13 @@ public class SpawnEggScreen extends Screen {
         if (entity.getBbHeight() > maxHeight) {
             scaleMult = Math.min(scaleMult, maxHeight / entity.getBbHeight());
         }
-        renderEntityMouseNoClip(guiGraphics,
+        InventoryScreen.extractEntityInInventoryFollowsMouse(graphics,
                 x, y, x + sizeX, y + sizeY,
                 (int) (scale * scaleMult), yOffset, mouseX, mouseY, entity);
     }
 
-    private static void renderEntityMouseNoClip(GuiGraphics guiGraphics, int x1, int y1, int x2, int y2, int scale, float yOffset, float mouseX, float mouseY, LivingEntity entity) {
-        float xM = (float) (x1 + x2) / 2.0f;
-        float yM = (float) (y1 + y2) / 2.0f;
-        float yRot = (float) Math.atan((xM - mouseX) / 40.0f);
-        float xRot = (float) Math.atan((yM - mouseY) / 40.0f);
-        Quaternionf quaternionf = new Quaternionf().rotateZ((float) Math.PI);
-        Quaternionf quaternionf2 = new Quaternionf().rotateX(xRot * 20.0f * ((float) Math.PI / 180));
-        quaternionf.mul(quaternionf2);
-        float j = entity.yBodyRot;
-        float k = entity.getYRot();
-        float l = entity.getXRot();
-        float m = entity.yHeadRotO;
-        float n = entity.yHeadRot;
-        entity.yBodyRot = 180.0f + yRot * 20.0f;
-        entity.setYRot(180.0f + yRot * 40.0f);
-        entity.setXRot(-xRot * 20.0f);
-        entity.yHeadRot = entity.getYRot();
-        entity.yHeadRotO = entity.getYRot();
-        float o = entity.getScale();
-        Vector3f vector3f = new Vector3f(0.0f, entity.getBbHeight() / 2.0f + yOffset * o, 0.0f);
-        float p = (float) scale / o;
-        InventoryScreen.renderEntityInInventory(guiGraphics, xM, yM, p, vector3f, quaternionf, quaternionf2, entity);
-        entity.yBodyRot = j;
-        entity.setYRot(k);
-        entity.setXRot(l);
-        entity.yHeadRotO = m;
-        entity.yHeadRot = n;
-    }
-
     @Override
-    protected void renderBlurredBackground(float partialTick) {
+    protected void extractBlurredBackground(GuiGraphicsExtractor graphics) {
     }
 
     protected void buttons() {
@@ -145,10 +118,10 @@ public class SpawnEggScreen extends Screen {
         this.teamBox = new SuggestionEditBox(this.font, this.leftPos + padding, this.topPos + yOff, 100, 14, Component.empty(), 5, false,
                 SuggestionEditBox.ofString(this.player.level().getScoreboard().getTeamNames())) {
             @Override
-            public boolean charTyped(char codePoint, int modifiers) {
-                if (codePoint == GLFW.GLFW_KEY_SPACE)
+            public boolean charTyped(CharacterEvent event) {
+                if (event.codepoint() == GLFW.GLFW_KEY_SPACE)
                     return false;
-                return super.charTyped(codePoint, modifiers);
+                return super.charTyped(event);
             }
         };
         this.teamBox.setResponder(s -> this.team = s);
@@ -160,9 +133,9 @@ public class SpawnEggScreen extends Screen {
         yOff += 16 + 20 + 8;
         EditBox amountBox = new EditBox(this.font, this.leftPos + padding, this.topPos + yOff, 27, 10, Component.empty()) {
             @Override
-            public boolean charTyped(char typedChar, int keyCode) {
-                if (Character.isDigit(typedChar) || SpawnEggScreen.this.isHelperKey(keyCode)) {
-                    if (super.charTyped(typedChar, keyCode) && !this.getValue().isEmpty()) {
+            public boolean charTyped(CharacterEvent event) {
+                if (Character.isDigit(event.codepoint()) || SpawnEggScreen.this.isHelperKey(event.codepoint())) {
+                    if (super.charTyped(event) && !this.getValue().isEmpty()) {
                         try {
                             int amount = Integer.parseInt(this.getValue());
                             if (amount > 100) {
@@ -187,9 +160,9 @@ public class SpawnEggScreen extends Screen {
         yOff += 16 + 20;
         EditBox spacingBox = new EditBox(this.font, this.leftPos + padding, this.topPos + yOff, 27, 10, Component.empty()) {
             @Override
-            public boolean charTyped(char typedChar, int keyCode) {
-                if (Character.isDigit(typedChar) || SpawnEggScreen.this.isHelperKey(keyCode)) {
-                    if (super.charTyped(typedChar, keyCode) && !this.getValue().isEmpty()) {
+            public boolean charTyped(CharacterEvent event) {
+                if (Character.isDigit(event.codepoint()) || SpawnEggScreen.this.isHelperKey(event.codepoint())) {
+                    if (super.charTyped(event) && !this.getValue().isEmpty()) {
                         try {
                             SpawnEggScreen.this.spacing = Integer.parseInt(this.getValue());
                         } catch (NumberFormatException e) {
@@ -223,17 +196,17 @@ public class SpawnEggScreen extends Screen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (!this.teamBox.canConsumeInput() && this.minecraft.options.keyInventory.matches(keyCode, scanCode)) {
+    public boolean keyPressed(KeyEvent event) {
+        if (!this.teamBox.canConsumeInput() && this.minecraft.options.keyInventory.matches(event)) {
             this.onClose();
             return true;
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        boolean click = super.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        boolean click = super.mouseClicked(event, doubleClick);
         if (!click)
             this.setFocused(null);
         return click;

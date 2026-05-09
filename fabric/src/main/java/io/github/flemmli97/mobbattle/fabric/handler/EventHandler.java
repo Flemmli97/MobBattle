@@ -14,8 +14,8 @@ public class EventHandler {
 
     public static InteractionResult attackCallback(Player player, Level level, InteractionHand hand, Entity entity, @Nullable EntityHitResult result) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() instanceof ExtendedItem) {
-            if (((ExtendedItem) stack.getItem()).onLeftClickEntity(stack, player, entity))
+        if (stack.getItem() instanceof ExtendedItem ext) {
+            if (ext.onLeftClickEntity(stack, player, entity))
                 return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;

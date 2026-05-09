@@ -29,6 +29,6 @@
   ],
   "depends": {
     "fabric-api": ">=${fabric_api_version}",
-    "minecraft": ">=${mcversion}"
+    "minecraft": ">=${minecraft_version}"
   }
 }

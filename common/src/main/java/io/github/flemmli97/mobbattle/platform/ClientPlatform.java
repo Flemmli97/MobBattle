@@ -2,6 +2,7 @@ package io.github.flemmli97.mobbattle.platform;
 
 import io.github.flemmli97.mobbattle.MobBattle;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.input.KeyEvent;
 
 public interface ClientPlatform {
 
@@ -9,5 +10,5 @@ public interface ClientPlatform {
             "io.github.flemmli97.mobbattle.fabric.platform.ClientPlatformImpl",
             "io.github.flemmli97.mobbattle.neoforge.platform.ClientPlatformImpl");
 
-    boolean keyMatches(KeyMapping mapping, int keyCode, int scanCode);
+    boolean keyMatches(KeyMapping mapping, KeyEvent event);
 }

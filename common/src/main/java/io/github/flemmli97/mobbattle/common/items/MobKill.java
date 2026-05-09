@@ -9,18 +9,19 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.EntityHitResult;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class MobKill extends Item implements ExtendedItem {
 
@@ -29,18 +30,18 @@ public class MobKill extends Item implements ExtendedItem {
     }
 
     @Override
-    public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) {
-        return !player.isCreative();
+    public boolean canDestroyBlock(ItemStack stack, BlockState state, Level level, BlockPos pos, LivingEntity entity) {
+        return !(entity instanceof Player player) || !player.getAbilities().instabuild;
     }
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (player instanceof ServerPlayer) {
+        if (player instanceof ServerPlayer serverPlayer) {
             Entity target = CrossPlatformStuff.INSTANCE.tryGetEntity(entity);
             if (target != null) {
                 target.hurt(entity.damageSources().genericKill(), Float.MAX_VALUE);
                 if (target.isAlive()) {
-                    target.kill();
+                    target.kill(serverPlayer.level());
                 }
             }
         }
@@ -48,17 +49,17 @@ public class MobKill extends Item implements ExtendedItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag flag) {
-        list.add(Component.translatable("tooltip.mobbattle.kill").withStyle(ChatFormatting.AQUA));
-        list.add(Component.translatable("tooltip.mobbattle.kill.mode", Component.translatable(stack.getOrDefault(MobBattleDataComponents.KILL_MODE.get(), Mode.SINGLE).translationKey)
+    public void appendHoverText(ItemStack stack, Item.TooltipContext ctx, TooltipDisplay display, Consumer<Component> adder, TooltipFlag flag) {
+        adder.accept(Component.translatable("tooltip.mobbattle.kill").withStyle(ChatFormatting.AQUA));
+        adder.accept(Component.translatable("tooltip.mobbattle.kill.mode", Component.translatable(stack.getOrDefault(MobBattleDataComponents.KILL_MODE.get(), Mode.SINGLE).translationKey)
                         .withStyle(ChatFormatting.GOLD))
                 .withStyle(ChatFormatting.AQUA));
-        list.add(Component.translatable("tooltip.mobbattle.kill.mode.switch", Component.keybind(ExtendedItem.KEY_ID)
+        adder.accept(Component.translatable("tooltip.mobbattle.kill.mode.switch", Component.keybind(ExtendedItem.KEY_ID)
                 .withStyle(ChatFormatting.LIGHT_PURPLE)).withStyle(ChatFormatting.AQUA));
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (level instanceof ServerLevel serverLevel) {
             Mode mode = stack.getOrDefault(MobBattleDataComponents.KILL_MODE.get(), Mode.SINGLE);
@@ -67,13 +68,13 @@ public class MobKill extends Item implements ExtendedItem {
                         .forEach(target -> {
                             target.hurt(target.damageSources().genericKill(), Float.MAX_VALUE);
                             if (target.isAlive()) {
-                                target.kill();
+                                target.kill(serverLevel);
                             }
                         });
                 player.sendSystemMessage(Component.translatable("tooltip.mobbattle.kill.all.success").withStyle(ChatFormatting.RED));
             }
         }
-        return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+        return InteractionResult.SUCCESS;
     }
 
     @Override

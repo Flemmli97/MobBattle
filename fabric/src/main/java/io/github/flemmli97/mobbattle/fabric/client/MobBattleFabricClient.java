@@ -2,26 +2,24 @@ package io.github.flemmli97.mobbattle.fabric.client;
 
 import io.github.flemmli97.mobbattle.client.BossBarItemColor;
 import io.github.flemmli97.mobbattle.client.ClientHandler;
-import io.github.flemmli97.mobbattle.client.MultiItemColor;
 import io.github.flemmli97.mobbattle.client.gui.GuiArmor;
-import io.github.flemmli97.mobbattle.common.registry.MobBattleItems;
 import io.github.flemmli97.mobbattle.common.registry.MobBattleMenuTypes;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.color.item.ItemTintSources;
 import net.minecraft.client.gui.screens.MenuScreens;
 
 public class MobBattleFabricClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        ColorProviderRegistry.ITEM.register(new MultiItemColor(), MobBattleItems.EXTENDED_EGG.get());
-        ColorProviderRegistry.ITEM.register(new BossBarItemColor(), MobBattleItems.BOSS_BAR_ADDER.get());
-        WorldRenderEvents.END.register((event) -> ClientHandler.render(event.matrixStack()));
+        ItemTintSources.ID_MAPPER.put(BossBarItemColor.ID, BossBarItemColor.CODEC);
+        LevelRenderEvents.AFTER_SOLID_FEATURES.register((event) -> ClientHandler.render(event.poseStack()));
         MenuScreens.register(MobBattleMenuTypes.ARMOR_MENU.get(), GuiArmor::new);
-        ClientHandler.registerKeyBinding(KeyBindingHelper::registerKeyBinding);
+        ClientHandler.registerKeyBinding(KeyMapping.Category::register, KeyMappingHelper::registerKeyMapping);
         ClientTickEvents.END_CLIENT_TICK.register(client -> ClientHandler.keyEvent());
     }
 }

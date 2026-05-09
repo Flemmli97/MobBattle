@@ -16,10 +16,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class BossBarAdder extends Item implements ExtendedItem {
 
@@ -28,15 +29,15 @@ public class BossBarAdder extends Item implements ExtendedItem {
     }
 
     @Override
-    public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) {
-        return !player.isCreative();
+    public boolean canDestroyBlock(ItemStack stack, BlockState state, Level level, BlockPos pos, LivingEntity entity) {
+        return !(entity instanceof Player player) || !player.getAbilities().instabuild;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag flag) {
-        list.add(Component.translatable("tooltip.mobbattle.bossbar").withStyle(ChatFormatting.AQUA));
-        list.add(Component.translatable("tooltip.mobbattle.bossbar.remove").withStyle(ChatFormatting.AQUA));
-        list.add(Component.translatable("tooltip.mobbattle.bossbar.color", Component.keybind(ExtendedItem.KEY_ID)
+    public void appendHoverText(ItemStack stack, Item.TooltipContext ctx, TooltipDisplay display, Consumer<Component> adder, TooltipFlag flag) {
+        adder.accept(Component.translatable("tooltip.mobbattle.bossbar").withStyle(ChatFormatting.AQUA));
+        adder.accept(Component.translatable("tooltip.mobbattle.bossbar.remove").withStyle(ChatFormatting.AQUA));
+        adder.accept(Component.translatable("tooltip.mobbattle.bossbar.color", Component.keybind(ExtendedItem.KEY_ID)
                 .withStyle(ChatFormatting.LIGHT_PURPLE)).withStyle(ChatFormatting.AQUA));
     }
 
@@ -45,7 +46,7 @@ public class BossBarAdder extends Item implements ExtendedItem {
         if (player instanceof ServerPlayer) {
             LivingEntity target = CrossPlatformStuff.INSTANCE.tryGetLivingEntity(entity);
             if (target != null) {
-                BossbarHandler.get(player.getServer()).addBossBarTo(target, stack.getOrDefault(MobBattleDataComponents.BOSS_BAR_COLOR.get(), BossEvent.BossBarColor.WHITE));
+                BossbarHandler.get(player.level().getServer()).addBossBarTo(target, stack.getOrDefault(MobBattleDataComponents.BOSS_BAR_COLOR.get(), BossEvent.BossBarColor.WHITE));
             }
         }
         return true;
@@ -56,10 +57,10 @@ public class BossBarAdder extends Item implements ExtendedItem {
         if (player instanceof ServerPlayer) {
             LivingEntity target = CrossPlatformStuff.INSTANCE.tryGetLivingEntity(entity);
             if (target != null) {
-                BossbarHandler.get(player.getServer()).removeBossbar(target);
+                BossbarHandler.get(player.level().getServer()).removeBossbar(target);
             }
         }
-        return InteractionResult.sidedSuccess(player.level().isClientSide());
+        return InteractionResult.SUCCESS;
     }
 
     @Override

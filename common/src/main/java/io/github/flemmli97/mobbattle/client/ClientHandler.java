@@ -18,10 +18,12 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShapeRenderer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -30,17 +32,21 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
 import org.joml.Quaternionf;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class ClientHandler {
 
+    public static KeyMapping.Category mobBattleCategory;
     public static KeyMapping itemFunction;
 
-    public static void registerKeyBinding(Consumer<KeyMapping> consumer) {
-        consumer.accept(ClientHandler.itemFunction = new KeyMapping(ExtendedItem.KEY_ID, GLFW.GLFW_KEY_V, MobBattle.MODID + ".keycategory"));
+    public static void registerKeyBinding(Function<Identifier, KeyMapping.Category> categoryRegister, Consumer<KeyMapping> consumer) {
+        ClientHandler.mobBattleCategory = categoryRegister.apply(MobBattle.of("keycategory"));
+        consumer.accept(ClientHandler.itemFunction = new KeyMapping(ExtendedItem.KEY_ID, GLFW.GLFW_KEY_V, mobBattleCategory));
     }
 
     public static void keyEvent() {
@@ -88,10 +94,11 @@ public class ClientHandler {
         stack.pushPose();
         stack.mulPose(camera.rotation().conjugate(new Quaternionf()));
         AABB aabb = Utils.getBoundingBoxPositions(pos, pos2).deflate(0.05);
-        Vec3 vec = camera.getPosition();
+        Vec3 vec = camera.position();
         stack.translate(-vec.x, -vec.y, -vec.z);
-        LevelRenderer.renderLineBox(stack, buffer.getBuffer(RenderType.lines()), aabb, 1, 0.5F, 0.5F, 1);
-        buffer.endBatch(RenderType.LINES);
+        ShapeRenderer.renderShape(stack, buffer.getBuffer(RenderTypes.lines()),
+                Shapes.create(aabb), 0, 0, 0, ARGB.colorFromFloat(0.5F, 0.5F, 1, 1), 1);
+        buffer.endBatch(RenderTypes.LINES);
         stack.popPose();
     }
 

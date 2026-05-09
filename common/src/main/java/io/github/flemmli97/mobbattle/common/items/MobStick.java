@@ -10,7 +10,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -18,11 +17,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class MobStick extends Item implements ExtendedItem {
 
@@ -31,18 +31,18 @@ public class MobStick extends Item implements ExtendedItem {
     }
 
     @Override
-    public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) {
-        return !player.isCreative();
+    public boolean canDestroyBlock(ItemStack stack, BlockState state, Level level, BlockPos pos, LivingEntity entity) {
+        return !(entity instanceof Player player) || !player.getAbilities().instabuild;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> list, TooltipFlag b) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext ctx, TooltipDisplay display, Consumer<Component> adder, TooltipFlag flag) {
         UuidComponent comp = stack.get(MobBattleDataComponents.SELECTED_MOB.get());
         if (comp != null && comp.name().isPresent()) {
-            list.add(Component.translatable("tooltip.mobbattle.stick.contains", comp.name()).withStyle(ChatFormatting.GREEN));
+            adder.accept(Component.translatable("tooltip.mobbattle.stick.contains", comp.name()).withStyle(ChatFormatting.GREEN));
         }
-        list.add(Component.translatable("tooltip.mobbattle.stick.first").withStyle(ChatFormatting.AQUA));
-        list.add(Component.translatable("tooltip.mobbattle.stick.second").withStyle(ChatFormatting.AQUA));
+        adder.accept(Component.translatable("tooltip.mobbattle.stick.first").withStyle(ChatFormatting.AQUA));
+        adder.accept(Component.translatable("tooltip.mobbattle.stick.second").withStyle(ChatFormatting.AQUA));
     }
 
     @Override
@@ -52,16 +52,16 @@ public class MobStick extends Item implements ExtendedItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!player.level().isClientSide) {
+        if (!player.level().isClientSide()) {
             UuidComponent comp = stack.get(MobBattleDataComponents.SELECTED_MOB.get());
             if (comp != null) {
                 stack.remove(MobBattleDataComponents.SELECTED_MOB.get());
                 player.sendSystemMessage(Component.translatable("tooltip.mobbattle.stick.reset").withStyle(ChatFormatting.RED));
             }
         }
-        return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+        return InteractionResult.SUCCESS;
     }
 
     @Override

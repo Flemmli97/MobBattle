@@ -19,7 +19,7 @@ public abstract class SlimeMixin {
     }
 
     @Shadow
-    protected abstract void dealDamage(LivingEntity livingEntity);
+    protected abstract void dealDamage(LivingEntity target);
 
     @Shadow
     protected abstract boolean isDealsDamage();
