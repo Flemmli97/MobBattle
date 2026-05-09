@@ -199,6 +199,7 @@ public class SuggestionEditBox extends EditBox {
         }
         this.rect = new Rect2i(this.getX(), y, width, sizeY + this.paddingY);
         this.hidden = false;
+        this.offset = Mth.clamp(this.offset, 0, Math.max(this.suggestions.length - this.limit, 0));
     }
 
     public void cycle(int change) {
