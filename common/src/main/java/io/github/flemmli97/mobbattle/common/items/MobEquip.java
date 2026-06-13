@@ -1,7 +1,7 @@
 package io.github.flemmli97.mobbattle.common.items;
 
 import io.github.flemmli97.mobbattle.common.components.AreaPositionComponent;
-import io.github.flemmli97.mobbattle.common.entity.ai.EntityAIItemPickup;
+import io.github.flemmli97.mobbattle.common.entity.goal.ItemPickupGoal;
 import io.github.flemmli97.mobbattle.common.registry.MobBattleDataComponents;
 import io.github.flemmli97.mobbattle.common.utils.LibTags;
 import io.github.flemmli97.mobbattle.common.utils.Utils;
@@ -78,7 +78,7 @@ public class MobEquip extends Item implements ExtendedItem {
                     List<Mob> list = player.level().getEntitiesOfClass(Mob.class, bb);
                     for (Mob living : list) {
                         living.addTag(LibTags.ENTITY_PICKUP);
-                        CrossPlatformStuff.INSTANCE.goalSelectorFrom(living, false).addGoal(10, new EntityAIItemPickup(living));
+                        CrossPlatformStuff.INSTANCE.goalSelectorFrom(living, false).addGoal(10, new ItemPickupGoal(living));
                     }
                     player.sendSystemMessage(Component.translatable("tooltip.mobbattle.equip.add").withStyle(ChatFormatting.GOLD));
                 }
@@ -92,7 +92,7 @@ public class MobEquip extends Item implements ExtendedItem {
         LivingEntity living = CrossPlatformStuff.INSTANCE.tryGetLivingEntity(entity);
         if (living instanceof Mob mob && !player.level().isClientSide()) {
             mob.addTag(LibTags.ENTITY_PICKUP);
-            CrossPlatformStuff.INSTANCE.goalSelectorFrom(mob, false).addGoal(10, new EntityAIItemPickup(mob));
+            CrossPlatformStuff.INSTANCE.goalSelectorFrom(mob, false).addGoal(10, new ItemPickupGoal(mob));
             player.sendSystemMessage(Component.translatable("tooltip.mobbattle.equip.add").withStyle(ChatFormatting.GOLD));
         }
         return true;

@@ -1,4 +1,4 @@
-package io.github.flemmli97.mobbattle.common.entity.ai;
+package io.github.flemmli97.mobbattle.common.entity.goal;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.core.Holder;
@@ -28,12 +28,12 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class EntityAIItemPickup extends Goal {
+public class ItemPickupGoal extends Goal {
 
     private final Mob entity;
     private List<ItemEntity> nearby;
 
-    public EntityAIItemPickup(Mob creature) {
+    public ItemPickupGoal(Mob creature) {
         this.setFlags(EnumSet.of(Flag.MOVE));
         this.entity = creature;
     }
