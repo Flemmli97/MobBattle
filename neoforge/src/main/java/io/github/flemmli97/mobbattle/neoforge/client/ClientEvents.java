@@ -2,7 +2,7 @@ package io.github.flemmli97.mobbattle.neoforge.client;
 
 import io.github.flemmli97.mobbattle.client.BossBarItemColor;
 import io.github.flemmli97.mobbattle.client.ClientHandler;
-import io.github.flemmli97.mobbattle.client.gui.GuiArmor;
+import io.github.flemmli97.mobbattle.client.gui.ArmorScreen;
 import io.github.flemmli97.mobbattle.common.registry.MobBattleMenuTypes;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -40,7 +40,7 @@ public class ClientEvents {
     }
 
     public static void menuRegister(RegisterMenuScreensEvent event) {
-        event.register(MobBattleMenuTypes.ARMOR_MENU.get(), GuiArmor::new);
+        event.register(MobBattleMenuTypes.ARMOR_MENU.get(), ArmorScreen::new);
     }
 
     public static void sendPacketServer(CustomPacketPayload packet) {
