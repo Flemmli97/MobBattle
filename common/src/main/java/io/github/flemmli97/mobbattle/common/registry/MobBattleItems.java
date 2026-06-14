@@ -13,6 +13,7 @@ import io.github.flemmli97.mobbattle.common.items.MobHeal;
 import io.github.flemmli97.mobbattle.common.items.MobKill;
 import io.github.flemmli97.mobbattle.common.items.MobMount;
 import io.github.flemmli97.mobbattle.common.items.MobStick;
+import io.github.flemmli97.mobbattle.common.items.PerimeterTool;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -39,6 +40,7 @@ public class MobBattleItems {
     public static final Supplier<MobEquip> MOB_EQUIP = CrossPlatformStuff.INSTANCE.registerItem("mob_equip", r -> new MobEquip(mainProp(r)));
     public static final Supplier<MobEffectGive> MOB_EFFECT_GIVE = CrossPlatformStuff.INSTANCE.registerItem("mob_effect_give", r -> new MobEffectGive(mainProp(r)));
     public static final Supplier<BossBarAdder> BOSS_BAR_ADDER = CrossPlatformStuff.INSTANCE.registerItem("boss_bar_adder", r -> new BossBarAdder(mainProp(r)));
+    public static final Supplier<PerimeterTool> PERIMETER_TOOL = CrossPlatformStuff.INSTANCE.registerItem("perimeter_tool", r -> new PerimeterTool(mainProp(r)));
     public static final Supplier<ItemExtendedSpawnEgg> EXTENDED_EGG = CrossPlatformStuff.INSTANCE.registerItem("egg_ex", r -> new ItemExtendedSpawnEgg(new Item.Properties().setId(ResourceKey.create(Registries.ITEM, r))));
 
     private static Item.Properties mainProp(Identifier r) {

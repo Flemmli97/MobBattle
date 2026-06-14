@@ -3,6 +3,7 @@ package io.github.flemmli97.mobbattle.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.client.gui.EffectScreen;
+import io.github.flemmli97.mobbattle.client.gui.PerimeterSettingScreen;
 import io.github.flemmli97.mobbattle.client.gui.SpawnEggScreen;
 import io.github.flemmli97.mobbattle.common.components.AreaPositionComponent;
 import io.github.flemmli97.mobbattle.common.components.UuidComponent;
@@ -13,6 +14,7 @@ import io.github.flemmli97.mobbattle.common.registry.MobBattleDataComponents;
 import io.github.flemmli97.mobbattle.common.registry.MobBattleItems;
 import io.github.flemmli97.mobbattle.common.utils.Utils;
 import io.github.flemmli97.mobbattle.network.C2SItemFunctionPress;
+import io.github.flemmli97.mobbattle.network.S2CSpawnEggScreen;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.client.Camera;
 import net.minecraft.client.KeyMapping;
@@ -33,7 +35,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
-import org.joml.Quaternionf;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
@@ -81,8 +83,9 @@ public class ClientHandler {
         if (heldItem.getItem() == MobBattleItems.MOB_ARMY.get() || heldItem.getItem() == MobBattleItems.MOB_EQUIP.get()) {
             AreaPositionComponent comp = heldItem.get(MobBattleDataComponents.BOX.get());
             if (comp != null && comp.first() != null && comp.second() != null)
-                ClientHandler.renderBlockOutline(stack, Minecraft.getInstance().renderBuffers().crumblingBufferSource(), comp.first(), comp.second());
+                ClientHandler.renderBlockOutline(stack, Minecraft.getInstance().renderBuffers().bufferSource(), comp.first(), comp.second());
         }
+        ClientPerimeterData.render(player, stack);
     }
 
     public static void openEffectGui() {
@@ -90,20 +93,25 @@ public class ClientHandler {
     }
 
     public static void renderBlockOutline(PoseStack stack, MultiBufferSource.BufferSource buffer, BlockPos pos, BlockPos pos2) {
-        Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
-        stack.pushPose();
-        stack.mulPose(camera.rotation().conjugate(new Quaternionf()));
         AABB aabb = Utils.getBoundingBoxPositions(pos, pos2).deflate(0.05);
+        renderShapeOutline(stack, buffer, Shapes.create(aabb), ARGB.colorFromFloat(0.5F, 0.5F, 1, 1));
+    }
+
+    public static void renderShapeOutline(PoseStack stack, MultiBufferSource.BufferSource buffer, VoxelShape shape, int color) {
+        Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
         Vec3 vec = camera.position();
+        stack.pushPose();
         stack.translate(-vec.x, -vec.y, -vec.z);
-        ShapeRenderer.renderShape(stack, buffer.getBuffer(RenderTypes.lines()),
-                Shapes.create(aabb), 0, 0, 0, ARGB.colorFromFloat(0.5F, 0.5F, 1, 1), 1);
+        ShapeRenderer.renderShape(stack, buffer.getBuffer(RenderTypes.lines()), shape, 0, 0, 0, color, 1);
         buffer.endBatch(RenderTypes.LINES);
         stack.popPose();
     }
 
-    public static void openSpawneggGui(InteractionHand hand) {
-        Minecraft.getInstance().setScreen(new SpawnEggScreen(hand));
+    public static void openItemScreen(InteractionHand hand, S2CSpawnEggScreen.ScreenType type) {
+        switch (type) {
+            case SPAWN_EGG -> Minecraft.getInstance().setScreen(new SpawnEggScreen(hand));
+            case PERIMETER -> Minecraft.getInstance().setScreen(new PerimeterSettingScreen(hand));
+        }
     }
 
     public static boolean handleEntityHighlight(Entity entity) {

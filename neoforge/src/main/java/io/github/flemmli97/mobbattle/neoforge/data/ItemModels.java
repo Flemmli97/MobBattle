@@ -2,6 +2,7 @@ package io.github.flemmli97.mobbattle.neoforge.data;
 
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.client.BossBarItemColor;
+import io.github.flemmli97.mobbattle.common.registry.MobBattleDataComponents;
 import io.github.flemmli97.mobbattle.common.registry.MobBattleItems;
 import io.github.flemmli97.mobbattle.neoforge.registry.Registers;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -12,6 +13,7 @@ import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.renderer.item.properties.conditional.HasComponent;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
@@ -38,6 +40,11 @@ public class ItemModels extends ModelProvider {
                         TextureMapping.layered(new Material(Identifier.fromNamespaceAndPath(reg.getId().getNamespace(), "item/" + reg.getId().getPath())),
                                 new Material(Identifier.fromNamespaceAndPath(reg.getId().getNamespace(), "item/" + reg.getId().getPath() + "_overlay"))),
                         itemModels.modelOutput), ItemModelGenerators.BLANK_LAYER, BossBarItemColor.INSTANCE));
+            } else if (reg == MobBattleItems.PERIMETER_TOOL) {
+                itemModels.itemModelOutput.accept(reg.get(), ItemModelUtils.conditional(
+                        new HasComponent(MobBattleDataComponents.PERIMETER_REMOVE.get(), false),
+                        ItemModelUtils.plainModel(itemModels.createFlatItemModel(reg.get(), "_remove", ModelTemplates.FLAT_HANDHELD_ITEM)),
+                        ItemModelUtils.plainModel(itemModels.createFlatItemModel(reg.get(), ModelTemplates.FLAT_HANDHELD_ITEM))));
             } else
                 itemModels.generateFlatItem(reg.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         }

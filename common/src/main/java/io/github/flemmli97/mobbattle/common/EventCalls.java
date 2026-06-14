@@ -1,18 +1,24 @@
 package io.github.flemmli97.mobbattle.common;
 
 import io.github.flemmli97.mobbattle.common.entity.goal.ItemPickupGoal;
+import io.github.flemmli97.mobbattle.common.entity.goal.PerimeterGoal;
+import io.github.flemmli97.mobbattle.common.registry.MobBattleItems;
 import io.github.flemmli97.mobbattle.common.utils.BossbarHandler;
 import io.github.flemmli97.mobbattle.common.utils.LibTags;
 import io.github.flemmli97.mobbattle.common.utils.Utils;
 import io.github.flemmli97.mobbattle.mixin.MobAccessor;
+import io.github.flemmli97.mobbattle.network.S2CPerimeterInfo;
+import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.TraceableEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class EventCalls {
@@ -35,6 +41,7 @@ public class EventCalls {
             if (entity.entityTags().contains(LibTags.ENTITY_PICKUP)) {
                 ((MobAccessor) mob).getGoalSelector().addGoal(10, new ItemPickupGoal(mob));
             }
+            ((MobAccessor) mob).getGoalSelector().addGoal(-1, new PerimeterGoal(mob));
         }
         if (!entity.level().isClientSide() && entity instanceof LivingEntity living) {
             BossbarHandler.get(living.level().getServer()).onMobLoad(living);
@@ -74,5 +81,12 @@ public class EventCalls {
 
     public static void onStopTracking(ServerPlayer player, LivingEntity target) {
         BossbarHandler.get(player.level().getServer()).onStopTracking(player, target);
+    }
+
+    public static void onEquipmentChange(LivingEntity entity, EquipmentSlot slot, ItemStack stack) {
+        if (entity instanceof ServerPlayer player && (slot == EquipmentSlot.MAINHAND || slot == EquipmentSlot.OFFHAND)
+                && stack.is(MobBattleItems.PERIMETER_TOOL.get())) {
+            CrossPlatformStuff.INSTANCE.sendToClient(new S2CPerimeterInfo(player.level()), player);
+        }
     }
 }

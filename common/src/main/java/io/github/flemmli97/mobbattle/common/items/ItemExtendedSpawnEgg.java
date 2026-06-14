@@ -179,7 +179,7 @@ public class ItemExtendedSpawnEgg extends Item implements ExtendedItem {
                 }
             }
         } else {
-            CrossPlatformStuff.INSTANCE.sendToClient(new S2CSpawnEggScreen(hand), serverPlayer);
+            CrossPlatformStuff.INSTANCE.sendToClient(new S2CSpawnEggScreen(hand, S2CSpawnEggScreen.ScreenType.SPAWN_EGG), serverPlayer);
         }
         return InteractionResult.CONSUME;
     }

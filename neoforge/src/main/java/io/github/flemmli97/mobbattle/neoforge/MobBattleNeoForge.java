@@ -10,7 +10,9 @@ import io.github.flemmli97.mobbattle.neoforge.handler.EventHandler;
 import io.github.flemmli97.mobbattle.neoforge.registry.Registers;
 import io.github.flemmli97.mobbattle.network.C2SEffectStack;
 import io.github.flemmli97.mobbattle.network.C2SItemFunctionPress;
+import io.github.flemmli97.mobbattle.network.C2SPerimeterComponent;
 import io.github.flemmli97.mobbattle.network.C2SSpawnEgg;
+import io.github.flemmli97.mobbattle.network.S2CPerimeterInfo;
 import io.github.flemmli97.mobbattle.network.S2CSpawnEggScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -88,8 +90,10 @@ public class MobBattleNeoForge {
         registrar.playToServer(C2SEffectStack.TYPE, C2SEffectStack.STREAM_CODEC, (pkt, ctx) -> ctx.enqueueWork(() -> C2SEffectStack.handle(pkt, ctx.player(), MobBattleItems.MOB_EFFECT_GIVE.get())));
         registrar.playToServer(C2SSpawnEgg.TYPE, C2SSpawnEgg.STREAM_CODEC, (pkt, ctx) -> ctx.enqueueWork(() -> C2SSpawnEgg.handle(pkt, ctx.player())));
         registrar.playToServer(C2SItemFunctionPress.TYPE, C2SItemFunctionPress.STREAM_CODEC, (pkt, ctx) -> ctx.enqueueWork(() -> C2SItemFunctionPress.handle(pkt, ctx.player())));
+        registrar.playToServer(C2SPerimeterComponent.TYPE, C2SPerimeterComponent.STREAM_CODEC, (pkt, ctx) -> ctx.enqueueWork(() -> C2SPerimeterComponent.handle(pkt, ctx.player())));
 
         registrar.playToClient(S2CSpawnEggScreen.TYPE, S2CSpawnEggScreen.STREAM_CODEC, (pkt, ctx) -> ctx.enqueueWork(() -> S2CSpawnEggScreen.handle(pkt)));
+        registrar.playToClient(S2CPerimeterInfo.TYPE, S2CPerimeterInfo.STREAM_CODEC, (pkt, ctx) -> ctx.enqueueWork(() -> S2CPerimeterInfo.handle(pkt)));
     }
 
     public static void confLoad(ModConfigEvent.Loading event) {
