@@ -76,7 +76,7 @@
   "tooltip.mobbattle.stick.second": "Right click to reset",
   "tooltip.mobbattle.stick.reset": "Reset entities",
   "tooltip.mobbattle.stick.add": "First entity set, hit another entity to set target",
-  "tooltip.mobbattle.perimeter.1": "Creates a mob battle perimeter with a outer and inner radius",
+  "tooltip.mobbattle.perimeter.1": "Creates a mob battle perimeter with an outer and inner radius",
   "tooltip.mobbattle.perimeter.2": "Mobs outside the inner radius but not the outer will try to move back into the perimeter",
   "tooltip.mobbattle.perimeter.3": "Mobs outside the outer radius will get teleported to the center",
   "tooltip.mobbattle.perimeter.mode": "Press [%s] to switch modes",

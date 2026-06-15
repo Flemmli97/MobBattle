@@ -129,7 +129,7 @@ public class Lang implements DataProvider {
         this.add("tooltip.mobbattle.stick.reset", "Reset entities");
         this.add("tooltip.mobbattle.stick.add", "First entity set, hit another entity to set target");
 
-        this.add("tooltip.mobbattle.perimeter.1", "Creates a mob battle perimeter with a outer and inner radius");
+        this.add("tooltip.mobbattle.perimeter.1", "Creates a mob battle perimeter with an outer and inner radius");
         this.add("tooltip.mobbattle.perimeter.2", "Mobs outside the inner radius but not the outer will try to move back into the perimeter");
         this.add("tooltip.mobbattle.perimeter.3", "Mobs outside the outer radius will get teleported to the center");
         this.add("tooltip.mobbattle.perimeter.mode", "Press [%s] to switch modes");
