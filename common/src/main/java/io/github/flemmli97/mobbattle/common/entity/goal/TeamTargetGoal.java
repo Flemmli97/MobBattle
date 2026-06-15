@@ -1,4 +1,4 @@
-package io.github.flemmli97.mobbattle.common.entity.ai;
+package io.github.flemmli97.mobbattle.common.entity.goal;
 
 import io.github.flemmli97.mobbattle.common.utils.ActiveTargetMobbattle;
 import io.github.flemmli97.mobbattle.common.utils.Utils;
@@ -9,9 +9,9 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.function.Predicate;
 
-public class EntityAITeamTarget extends NearestAttackableTargetGoal<LivingEntity> {
+public class TeamTargetGoal extends NearestAttackableTargetGoal<LivingEntity> {
 
-    public EntityAITeamTarget(Mob mob, boolean checkSight, boolean onlyNearby) {
+    public TeamTargetGoal(Mob mob, boolean checkSight, boolean onlyNearby) {
         super(mob, LivingEntity.class, 10, checkSight, onlyNearby, targetPred(mob));
         this.targetConditions.ignoreLineOfSight();
     }

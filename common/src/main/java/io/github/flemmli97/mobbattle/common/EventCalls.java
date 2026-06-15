@@ -1,6 +1,6 @@
 package io.github.flemmli97.mobbattle.common;
 
-import io.github.flemmli97.mobbattle.common.entity.ai.EntityAIItemPickup;
+import io.github.flemmli97.mobbattle.common.entity.goal.ItemPickupGoal;
 import io.github.flemmli97.mobbattle.common.utils.BossbarHandler;
 import io.github.flemmli97.mobbattle.common.utils.LibTags;
 import io.github.flemmli97.mobbattle.common.utils.Utils;
@@ -33,7 +33,7 @@ public class EventCalls {
             if (entity.getTeam() != null)
                 Utils.updateEntity(entity.getTeam().getName(), mob);
             if (entity.getTags().contains(LibTags.ENTITY_PICKUP)) {
-                ((MobAccessor) mob).getGoalSelector().addGoal(10, new EntityAIItemPickup(mob));
+                ((MobAccessor) mob).getGoalSelector().addGoal(10, new ItemPickupGoal(mob));
             }
         }
         if (!entity.level().isClientSide && entity instanceof LivingEntity living) {

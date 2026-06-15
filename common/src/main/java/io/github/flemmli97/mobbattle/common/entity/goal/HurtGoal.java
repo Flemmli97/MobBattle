@@ -1,4 +1,4 @@
-package io.github.flemmli97.mobbattle.common.entity.ai;
+package io.github.flemmli97.mobbattle.common.entity.goal;
 
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.common.utils.ActiveTargetMobbattle;
@@ -10,15 +10,15 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 
 import java.util.EnumSet;
 
-public class EntityAIHurt extends TargetGoal {
+public class HurtGoal extends TargetGoal {
 
     protected final TargetingConditions targetConditions;
     private int timestamp;
 
-    public EntityAIHurt(Mob mob) {
+    public HurtGoal(Mob mob) {
         super(mob, true);
         this.setFlags(EnumSet.of(Goal.Flag.TARGET));
-        this.targetConditions = TargetingConditions.forCombat().ignoreLineOfSight().ignoreInvisibilityTesting().selector(EntityAITeamTarget.targetPred(mob));
+        this.targetConditions = TargetingConditions.forCombat().ignoreLineOfSight().ignoreInvisibilityTesting().selector(TeamTargetGoal.targetPred(mob));
     }
 
     @Override

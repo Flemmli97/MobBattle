@@ -1,4 +1,4 @@
-package io.github.flemmli97.mobbattle.common.entity.ai;
+package io.github.flemmli97.mobbattle.common.entity.goal;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -19,12 +19,12 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import java.util.EnumSet;
 import java.util.List;
 
-public class EntityAIItemPickup extends Goal {
+public class ItemPickupGoal extends Goal {
 
     private final Mob entity;
     private List<ItemEntity> nearby;
 
-    public EntityAIItemPickup(Mob creature) {
+    public ItemPickupGoal(Mob creature) {
         this.setFlags(EnumSet.of(Flag.MOVE));
         this.entity = creature;
     }

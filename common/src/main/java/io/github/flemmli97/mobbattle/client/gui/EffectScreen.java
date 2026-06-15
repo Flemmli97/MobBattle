@@ -21,7 +21,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.Optional;
 
-public class GuiEffect extends Screen {
+public class EffectScreen extends Screen {
 
     private static final ResourceLocation TEX = ResourceLocation.fromNamespaceAndPath(MobBattle.MODID, "textures/gui/effect.png");
     private final int xSize = 200;
@@ -37,7 +37,7 @@ public class GuiEffect extends Screen {
 
     private EffectComponent effect;
 
-    public GuiEffect() {
+    public EffectScreen() {
         super(Component.translatable("mobbattle.gui.potions"));
         ItemStack stack = Minecraft.getInstance().player.getMainHandItem();
         this.effect = stack.getOrDefault(MobBattleDataComponents.EFFECT.get(), EffectComponent.DEFAULT);
@@ -60,7 +60,7 @@ public class GuiEffect extends Screen {
                 Optional<Holder.Reference<MobEffect>> effect = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.parse(s));
                 if (effect.isPresent()) {
                     this.potionBox.setTextColor(0xE0E0E0);
-                    GuiEffect.this.effect = GuiEffect.this.effect.withEffect(effect.get());
+                    EffectScreen.this.effect = EffectScreen.this.effect.withEffect(effect.get());
                 } else {
                     this.potionBox.setTextColor(0xFF0000);
                 }
@@ -76,10 +76,10 @@ public class GuiEffect extends Screen {
         this.durationBox = new EditBox(this.font, i + 29, j + 61, 54, 12, Component.empty()) {
             @Override
             public boolean charTyped(char typedChar, int keyCode) {
-                if (Character.isDigit(typedChar) || GuiEffect.this.isHelperKey(keyCode)) {
+                if (Character.isDigit(typedChar) || EffectScreen.this.isHelperKey(keyCode)) {
                     if (super.charTyped(typedChar, keyCode) && !this.getValue().isEmpty()) {
                         try {
-                            GuiEffect.this.effect = GuiEffect.this.effect.withDuration(Integer.parseInt(this.getValue()));
+                            EffectScreen.this.effect = EffectScreen.this.effect.withDuration(Integer.parseInt(this.getValue()));
                         } catch (NumberFormatException e) {
                             MobBattle.LOGGER.error(this.getValue() + " not a number");
                         }
@@ -98,13 +98,13 @@ public class GuiEffect extends Screen {
 
             @Override
             public boolean charTyped(char typedChar, int keyCode) {
-                if (Character.isDigit(typedChar) || GuiEffect.this.isHelperKey(keyCode)) {
+                if (Character.isDigit(typedChar) || EffectScreen.this.isHelperKey(keyCode)) {
                     if (super.charTyped(typedChar, keyCode) && !this.getValue().isEmpty()) {
                         try {
                             int i = Integer.parseInt(this.getValue());
                             if (i > 255)
                                 this.setValue("" + 255);
-                            GuiEffect.this.effect = GuiEffect.this.effect.withAmplifier(Integer.parseInt(this.getValue()));
+                            EffectScreen.this.effect = EffectScreen.this.effect.withAmplifier(Integer.parseInt(this.getValue()));
                         } catch (NumberFormatException e) {
                             MobBattle.LOGGER.error(this.getValue() + " not a number");
                         }
@@ -122,7 +122,7 @@ public class GuiEffect extends Screen {
         this.particleButton = new ButtonCheck(i + 160, j + 62, (button) -> {
             ButtonCheck check = (ButtonCheck) button;
             check.checkUncheck(!check.isChecked());
-            GuiEffect.this.effect = GuiEffect.this.effect.withParticles(((ButtonCheck) button).isChecked());
+            EffectScreen.this.effect = EffectScreen.this.effect.withParticles(((ButtonCheck) button).isChecked());
         });
         this.addRenderableWidget(this.particleButton);
         this.particleButton.checkUncheck(this.effect.particles());

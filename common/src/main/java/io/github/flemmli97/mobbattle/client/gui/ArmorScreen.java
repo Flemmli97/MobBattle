@@ -8,12 +8,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class GuiArmor extends AbstractContainerScreen<ContainerArmor> {
+public class ArmorScreen extends AbstractContainerScreen<ContainerArmor> {
 
     private final Component chatComponent;
     private static final ResourceLocation ARMOR_GUI = MobBattle.of("textures/gui/armor.png");
 
-    public GuiArmor(ContainerArmor container, Inventory playerInv, Component title) {
+    public ArmorScreen(ContainerArmor container, Inventory playerInv, Component title) {
         super(container, playerInv, title);
         this.chatComponent = title;
     }

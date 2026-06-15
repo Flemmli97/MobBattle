@@ -2,7 +2,7 @@ package io.github.flemmli97.mobbattle.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.flemmli97.mobbattle.MobBattle;
-import io.github.flemmli97.mobbattle.client.gui.GuiEffect;
+import io.github.flemmli97.mobbattle.client.gui.EffectScreen;
 import io.github.flemmli97.mobbattle.client.gui.SpawnEggScreen;
 import io.github.flemmli97.mobbattle.common.components.AreaPositionComponent;
 import io.github.flemmli97.mobbattle.common.components.UuidComponent;
@@ -80,7 +80,7 @@ public class ClientHandler {
     }
 
     public static void openEffectGui() {
-        Minecraft.getInstance().setScreen(new GuiEffect());
+        Minecraft.getInstance().setScreen(new EffectScreen());
     }
 
     public static void renderBlockOutline(PoseStack stack, MultiBufferSource.BufferSource buffer, BlockPos pos, BlockPos pos2) {

@@ -2,8 +2,8 @@ package io.github.flemmli97.mobbattle.common.utils;
 
 import io.github.flemmli97.mobbattle.MobBattle;
 import io.github.flemmli97.mobbattle.common.Config;
-import io.github.flemmli97.mobbattle.common.entity.ai.EntityAIHurt;
-import io.github.flemmli97.mobbattle.common.entity.ai.EntityAITeamTarget;
+import io.github.flemmli97.mobbattle.common.entity.goal.HurtGoal;
+import io.github.flemmli97.mobbattle.common.entity.goal.TeamTargetGoal;
 import io.github.flemmli97.mobbattle.platform.CrossPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -97,8 +97,8 @@ public class Utils {
             return;
         removeGoal(CrossPlatformStuff.INSTANCE.goalSelectorFrom(mob, true), targetGoal);
         increaseFollow(mob);
-        CrossPlatformStuff.INSTANCE.goalSelectorFrom(mob, true).addGoal(0, new EntityAIHurt(mob));
-        CrossPlatformStuff.INSTANCE.goalSelectorFrom(mob, true).addGoal(3, new EntityAITeamTarget(mob, false, true));
+        CrossPlatformStuff.INSTANCE.goalSelectorFrom(mob, true).addGoal(0, new HurtGoal(mob));
+        CrossPlatformStuff.INSTANCE.goalSelectorFrom(mob, true).addGoal(3, new TeamTargetGoal(mob, false, true));
     }
 
     /**
