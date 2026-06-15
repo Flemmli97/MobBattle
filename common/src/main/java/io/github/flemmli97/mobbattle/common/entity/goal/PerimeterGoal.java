@@ -9,6 +9,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
+import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -20,9 +21,11 @@ public class PerimeterGoal extends Goal {
 
     private PerimeterData.Perimeter perimeter;
 
+    private Path path;
+
     public PerimeterGoal(Mob mob) {
         this.mob = mob;
-        this.setFlags(EnumSet.of(Goal.Flag.MOVE));
+        this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
     @Override
@@ -32,8 +35,32 @@ public class PerimeterGoal extends Goal {
             return false;
         } else {
             this.perimeter = perimeter;
-            this.mob.getNavigation().stop();
-            return true;
+            if (this.perimeter.shouldTeleport(this.mob.position())) {
+                this.path = null;
+                return true;
+            }
+            Vec3 target = Vec3.atBottomCenterOf(this.perimeter.center());
+            Path path = null;
+            if (this.mob.distanceToSqr(target) < 11 * 11) {
+                path = this.mob.getNavigation().createPath(target.x(), target.y(), target.z(), 1);
+            } else {
+                Vec3 pos;
+                if (this.mob instanceof PathfinderMob pathfinderMob) {
+                    pos = DefaultRandomPos.getPosTowards(pathfinderMob, 10, 7, Vec3.atBottomCenterOf(this.perimeter.center()), Mth.HALF_PI);
+                    int tries = 0;
+                    while (pos == null && tries < 10) {
+                        pos = DefaultRandomPos.getPosTowards(pathfinderMob, 10, 7, Vec3.atBottomCenterOf(this.perimeter.center()), Mth.HALF_PI);
+                        tries++;
+                    }
+                } else {
+                    pos = Vec3.atCenterOf(this.perimeter.center());
+                }
+                if (pos != null) {
+                    path = this.mob.getNavigation().createPath(pos.x(), pos.y(), pos.z(), 1);
+                }
+            }
+            this.path = path;
+            return this.path != null;
         }
     }
 
@@ -43,26 +70,19 @@ public class PerimeterGoal extends Goal {
     }
 
     @Override
+    public void stop() {
+        this.path = null;
+    }
+
+    @Override
     public void start() {
         if (this.perimeter == null)
             return;
-        if (this.perimeter.shouldTeleport(this.mob.position())) {
+        this.mob.getNavigation().stop();
+        if (this.path == null) {
             this.teleportTo(this.perimeter.center());
-        } else if (this.mob instanceof PathfinderMob path) {
-            Vec3 target = Vec3.atBottomCenterOf(this.perimeter.center());
-            if (this.mob.distanceToSqr(target) < 11 * 11) {
-                this.mob.getNavigation().moveTo(target.x(), target.y(), target.z(), 1);
-            } else {
-                Vec3 pos = DefaultRandomPos.getPosTowards(path, 10, 7, Vec3.atBottomCenterOf(this.perimeter.center()), Mth.HALF_PI);
-                int tries = 0;
-                while (pos == null && tries < 10) {
-                    pos = DefaultRandomPos.getPosTowards(path, 10, 7, Vec3.atBottomCenterOf(this.perimeter.center()), Mth.HALF_PI);
-                    tries++;
-                }
-                if (pos != null) {
-                    this.mob.getNavigation().moveTo(pos.x(), pos.y(), pos.z(), 1);
-                }
-            }
+        } else {
+            this.mob.getNavigation().moveTo(this.path, 1);
         }
     }
 
