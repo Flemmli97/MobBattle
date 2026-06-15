@@ -46,6 +46,7 @@ public class Lang implements DataProvider {
         this.add("item.mobbattle.mob_mount", "Mob Mount");
         this.add("item.mobbattle.mob_equip", "Mob Equip");
         this.add("item.mobbattle.boss_bar_adder", "Boss Bar Adder");
+        this.add("item.mobbattle.perimeter_tool", "Perimeter Tool");
         this.add("item.mobbattle.egg_ex", "Mob Spawner");
 
         this.add("mobbattle.tab", "Mob Battle");
@@ -61,6 +62,10 @@ public class Lang implements DataProvider {
         this.add("mobbattle.gui.amount", "Amount");
         this.add("mobbattle.gui.spacing", "Spacing");
         this.add("mobbattle.gui.save", "Save");
+
+        this.add("mobbattle.gui.perimeter.shape", "Shape");
+        this.add("mobbattle.gui.perimeter.inner", "Inner Radius");
+        this.add("mobbattle.gui.perimeter.outer", "Outer Radius");
 
         this.add("tooltip.mobbattle.spawnegg", "Left click an entity to save it. Shift while doing saves nbt too.");
         this.add("tooltip.mobbattle.spawnegg.spawn", "Spawns %s");
@@ -123,6 +128,17 @@ public class Lang implements DataProvider {
         this.add("tooltip.mobbattle.stick.second", "Right click to reset");
         this.add("tooltip.mobbattle.stick.reset", "Reset entities");
         this.add("tooltip.mobbattle.stick.add", "First entity set, hit another entity to set target");
+
+        this.add("tooltip.mobbattle.perimeter.1", "Creates a mob battle perimeter with an outer and inner radius");
+        this.add("tooltip.mobbattle.perimeter.2", "Mobs outside the inner radius but not the outer will try to move back into the perimeter");
+        this.add("tooltip.mobbattle.perimeter.3", "Mobs outside the outer radius will get teleported to the center");
+        this.add("tooltip.mobbattle.perimeter.mode", "Press [%s] to switch modes");
+        this.add("tooltip.mobbattle.perimeter.add", "Right click on a block to set the perimeters center to it");
+        this.add("tooltip.mobbattle.perimeter.remove", "Right click to remove current perimeter");
+        this.add("tooltip.mobbattle.perimeter.setting", "Perimeter Setting (%s): Inner=%s Outer=%s");
+        this.add("mobbattle.shape.circle", "Circle");
+        this.add("mobbattle.shape.square", "Square");
+
         this.add("mobbattle.gui.potions", "Potions");
 
         this.add("mobbattle.keycategory", "Mob Battle");

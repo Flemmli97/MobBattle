@@ -1,6 +1,7 @@
 package io.github.flemmli97.mobbattle.neoforge.data;
 
 import io.github.flemmli97.mobbattle.MobBattle;
+import io.github.flemmli97.mobbattle.client.ItemModelProps;
 import io.github.flemmli97.mobbattle.common.registry.MobBattleItems;
 import io.github.flemmli97.mobbattle.neoforge.registry.Registers;
 import net.minecraft.data.PackOutput;
@@ -25,6 +26,14 @@ public class ItemModels extends ItemModelProvider {
                 this.withExistingParent(reg.getId().toString(), ModelLocationUtils.decorateItemModelLocation("handheld"))
                         .texture("layer0", ResourceLocation.fromNamespaceAndPath(reg.getId().getNamespace(), "item/" + reg.getId().getPath()))
                         .texture("layer1", ResourceLocation.fromNamespaceAndPath(reg.getId().getNamespace(), "item/" + reg.getId().getPath() + "_overlay"));
+            } else if (reg == MobBattleItems.PERIMETER_TOOL) {
+                this.withExistingParent(reg.getId().toString(), ModelLocationUtils.decorateItemModelLocation("handheld"))
+                        .override()
+                        .model(this.withExistingParent(reg.getId().getPath() + "_remove", ModelLocationUtils.decorateItemModelLocation("handheld"))
+                                .texture("layer0", ResourceLocation.fromNamespaceAndPath(reg.getId().getNamespace(), "item/" + reg.getId().getPath() + "_remove")))
+                        .predicate(ItemModelProps.PERIMETER_REMOVE, 1)
+                        .end()
+                        .texture("layer0", ResourceLocation.fromNamespaceAndPath(reg.getId().getNamespace(), "item/" + reg.getId().getPath()));
             } else
                 this.withExistingParent(reg.getId().toString(), ModelLocationUtils.decorateItemModelLocation("handheld"))
                         .texture("layer0", ResourceLocation.fromNamespaceAndPath(reg.getId().getNamespace(), "item/" + reg.getId().getPath()));

@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/handheld",
+  "overrides": [
+    {
+      "model": "mobbattle:item/perimeter_tool_remove",
+      "predicate": {
+        "mobbattle:perimeter_remove": 1.0
+      }
+    }
+  ],
+  "textures": {
+    "layer0": "mobbattle:item/perimeter_tool"
+  }
+}

@@ -1,3 +1,11 @@
+Mob Battle 2.8.0
+================
+- Adds a perimeter tool:
+  - Allows creation of a perimeter for mob battles
+  - Creates an outer and inner perimeter:
+    - If mobs are outside the inner but not the outer perimeter they try to walk back in
+    - If mobs are outside the outer perimeter they get teleported to the center of the perimeter
+
 Mob Battle 2.7.1
 ================
 - Fix offset not reset for suggestion box (effect item)

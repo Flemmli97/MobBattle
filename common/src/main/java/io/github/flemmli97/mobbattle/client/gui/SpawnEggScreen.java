@@ -15,6 +15,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.CommonColors;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -78,11 +79,11 @@ public class SpawnEggScreen extends Screen {
         int width = this.font.width(this.entity.getType().getDescription());
         guiGraphics.drawString(this.font, this.entity.getType().getDescription(), (int) (this.leftPos + this.sizeX * 0.5f - width * 0.5f), this.topPos + yOff, ChatFormatting.GOLD.getColor());
         yOff += 16;
-        guiGraphics.drawString(this.font, Component.translatable("mobbattle.gui.team"), this.leftPos + xPadding, this.topPos + yOff, 0xffffff);
+        guiGraphics.drawString(this.font, Component.translatable("mobbattle.gui.team"), this.leftPos + xPadding, this.topPos + yOff, CommonColors.WHITE);
         yOff += 16 + 20 + 8;
-        guiGraphics.drawString(this.font, Component.translatable("mobbattle.gui.amount"), this.leftPos + xPadding, this.topPos + yOff, 0xffffff);
+        guiGraphics.drawString(this.font, Component.translatable("mobbattle.gui.amount"), this.leftPos + xPadding, this.topPos + yOff, CommonColors.WHITE);
         yOff += 16 + 20;
-        guiGraphics.drawString(this.font, Component.translatable("mobbattle.gui.spacing"), this.leftPos + xPadding, this.topPos + yOff, 0xffffff);
+        guiGraphics.drawString(this.font, Component.translatable("mobbattle.gui.spacing"), this.leftPos + xPadding, this.topPos + yOff, CommonColors.WHITE);
 
         renderEntityMouseNoClip(guiGraphics,
                 this.leftPos + this.sizeX - xPadding - (3 * 30), this.topPos + xPadding + 16, 30, 3f, 3,

@@ -9,6 +9,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
@@ -61,5 +62,10 @@ public class EventHandler {
         if (event.getTarget() instanceof LivingEntity living && !living.level().isClientSide()) {
             EventCalls.onStopTracking((ServerPlayer) event.getEntity(), living);
         }
+    }
+
+    @SubscribeEvent
+    public void equipmentchange(LivingEquipmentChangeEvent event) {
+        EventCalls.onEquipmentChange(event.getEntity(), event.getSlot(), event.getTo());
     }
 }

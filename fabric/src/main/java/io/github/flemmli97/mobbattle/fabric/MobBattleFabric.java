@@ -10,7 +10,9 @@ import io.github.flemmli97.mobbattle.fabric.handler.EventHandler;
 import io.github.flemmli97.mobbattle.fabric.platform.CrossPlatformStuffImpl;
 import io.github.flemmli97.mobbattle.network.C2SEffectStack;
 import io.github.flemmli97.mobbattle.network.C2SItemFunctionPress;
+import io.github.flemmli97.mobbattle.network.C2SPerimeterComponent;
 import io.github.flemmli97.mobbattle.network.C2SSpawnEgg;
+import io.github.flemmli97.mobbattle.network.S2CPerimeterInfo;
 import io.github.flemmli97.mobbattle.network.S2CSpawnEggScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
@@ -63,6 +65,7 @@ public class MobBattleFabric implements ModInitializer {
             }
         });
         ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> EventCalls.handleJoinLevel(entity));
+        ServerEntityEvents.EQUIPMENT_CHANGE.register(((entity, slot, from, to) -> EventCalls.onEquipmentChange(entity, slot, to)));
         registerPackets();
         ConfigLoader.initConfig();
         MobBattle.tenshiLib = FabricLoader.getInstance().isModLoaded("tenshilib");
@@ -100,10 +103,16 @@ public class MobBattleFabric implements ModInitializer {
         ServerPlayNetworking.registerGlobalReceiver(C2SSpawnEgg.TYPE, (pkt, ctx) -> C2SSpawnEgg.handle(pkt, ctx.player()));
         PayloadTypeRegistry.playC2S().register(C2SItemFunctionPress.TYPE, C2SItemFunctionPress.STREAM_CODEC);
         ServerPlayNetworking.registerGlobalReceiver(C2SItemFunctionPress.TYPE, (pkt, ctx) -> C2SItemFunctionPress.handle(pkt, ctx.player()));
+        PayloadTypeRegistry.playC2S().register(C2SPerimeterComponent.TYPE, C2SPerimeterComponent.STREAM_CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(C2SPerimeterComponent.TYPE, (pkt, ctx) -> C2SPerimeterComponent.handle(pkt, ctx.player()));
 
         PayloadTypeRegistry.playS2C().register(S2CSpawnEggScreen.TYPE, S2CSpawnEggScreen.STREAM_CODEC);
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
             ClientPlayNetworking.registerGlobalReceiver(S2CSpawnEggScreen.TYPE, (pkt, ctx) -> S2CSpawnEggScreen.handle(pkt));
+        }
+        PayloadTypeRegistry.playS2C().register(S2CPerimeterInfo.TYPE, S2CPerimeterInfo.STREAM_CODEC);
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            ClientPlayNetworking.registerGlobalReceiver(S2CPerimeterInfo.TYPE, (pkt, ctx) -> S2CPerimeterInfo.handle(pkt));
         }
     }
 }
