@@ -66,7 +66,7 @@ public class PerimeterGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return !this.mob.getNavigation().isDone();
+        return !this.mob.getNavigation().isDone() && !this.perimeter.shouldTeleport(this.mob.position());
     }
 
     @Override
