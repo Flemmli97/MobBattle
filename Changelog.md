@@ -1,3 +1,9 @@
+Mob Battle 2.8.2
+================
+- Fix magmacube crash
+- Fix nearby creative players causing attack target reset
+- Update chinese langs [@qianyxm](https://github.com/qianyxm)
+
 Mob Battle 2.8.1
 ================
 - Update 26.3
