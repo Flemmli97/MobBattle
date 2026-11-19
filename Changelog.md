@@ -1,3 +1,7 @@
+Mob Battle 2.8.2.b
+================
+- NeoForge: Update neoforge version
+
 Mob Battle 2.8.2
 ================
 - Fix magmacube crash

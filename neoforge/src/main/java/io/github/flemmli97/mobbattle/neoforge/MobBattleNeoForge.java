@@ -43,7 +43,7 @@ public class MobBattleNeoForge {
 
     public MobBattleNeoForge(IEventBus modBus) {
         ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.CLIENT, ConfigLoader.CLIENT_SPEC, MobBattle.MODID + "-client.toml");
-        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, ConfigLoader.COMMON_SPEC, MobBattle.MODID + ".toml");
+        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.LOCAL, ConfigLoader.COMMON_SPEC, MobBattle.MODID + ".toml");
         NeoForge.EVENT_BUS.register(new EventHandler());
         modBus.addListener(MobBattleNeoForge::preInit);
         modBus.addListener(MobBattleNeoForge::creativeTabContents);
